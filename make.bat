@@ -1,0 +1,1 @@
+javac -cp "../ext/*" @options_win @classes
