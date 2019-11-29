@@ -33,12 +33,14 @@ src/collidable/PathTracker.java
 src/collidable/Person.java
 src/collidable/RescueWorker.java
 src/collidable/behaviors/BehaviorModule.java
+src/collidable/behaviors/AntiSocialModule.java 
 src/collidable/behaviors/AvoidModule.java 
 src/collidable/behaviors/ClimbModule.java
 src/collidable/behaviors/FormationModule.java
 src/collidable/behaviors/LaunchModule.java 
 src/collidable/behaviors/MaintainHeightModule.java
 src/collidable/behaviors/RechargeModule.java 
+src/collidable/behaviors/RelayModule.java 
 src/collidable/behaviors/RepelModule.java 
 src/collidable/behaviors/ScatterSearchModule.java 
 src/collidable/behaviors/SearchPatternModule.java 

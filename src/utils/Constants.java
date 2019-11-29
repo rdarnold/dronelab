@@ -42,10 +42,12 @@ public final class Constants {
     public static final String STR_SPIRAL = "Spiral";
     public static final String STR_SCATTER = "Scatter";
     public static final String STR_REPEL = "Repel";
+    public static final String STR_RELAY = "Relay";
+    public static final String STR_ANTI = "Antisocial";
 
     public static final String[] STR_BEHAVIORS = { 
         STR_AVOID, STR_SEEK, STR_SEARCH, STR_WANDER, STR_FORM, STR_RECHARGE, STR_LAUNCH,
-        STR_MAINTAIN_HEIGHT, STR_CLIMB, STR_SPIRAL, STR_SCATTER, STR_REPEL
+        STR_MAINTAIN_HEIGHT, STR_CLIMB, STR_SPIRAL, STR_SCATTER, STR_REPEL, STR_RELAY, STR_ANTI
     };
 
     public static final String STR_AVOID_J = "避ける";
@@ -60,10 +62,12 @@ public final class Constants {
     public static final String STR_SPIRAL_J = "スパイラル検索";
     public static final String STR_SCATTER_J  = "Scatter";
     public static final String STR_REPEL_J  = "Repel";
+    public static final String STR_RELAY_J = "Relay";
+    public static final String STR_ANTI_J = "Antisocial";
 
     public static final String[] STR_BEHAVIORS_J = { 
         STR_AVOID_J, STR_SEEK_J, STR_SEARCH_J, STR_WANDER_J, STR_FORM_J, STR_RECHARGE_J, 
-        STR_LAUNCH_J, STR_MAINTAIN_HEIGHT_J, STR_CLIMB_J, STR_SPIRAL_J, STR_SCATTER_J, STR_REPEL_J
+        STR_LAUNCH_J, STR_MAINTAIN_HEIGHT_J, STR_CLIMB_J, STR_SPIRAL_J, STR_SCATTER_J, STR_REPEL_J, STR_RELAY_J, STR_ANTI_J
     };
 
     public static final String STR_SENSOR_SONAR = "Sonar";

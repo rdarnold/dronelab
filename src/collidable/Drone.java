@@ -32,8 +32,24 @@ public class Drone extends Mobile {
         }
     }
 
+    public static enum DroneRole {
+        SEARCH(0), 
+        RELAY(1), 
+        ANTISOCIAL(2);
+
+        private final int value;
+        private DroneRole(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+
     // Private variables
     private DroneType droneType = DroneType.DJI_PHANTOM_4;
+    private DroneRole droneRole = DroneRole.SEARCH;
     private double rotorHeading = 0; // Just for visual effect
     private int rotorSpeed = 16; //31;
 
@@ -137,8 +153,10 @@ public class Drone extends Mobile {
         behaviorOrder.add(Constants.STR_MAINTAIN_HEIGHT);
         behaviorOrder.add(Constants.STR_SPIRAL);
         behaviorOrder.add(Constants.STR_FORM);
+        behaviorOrder.add(Constants.STR_RELAY);
         behaviorOrder.add(Constants.STR_REPEL);
         behaviorOrder.add(Constants.STR_SEEK);
+        behaviorOrder.add(Constants.STR_ANTI);
         behaviorOrder.add(Constants.STR_SCATTER);
         behaviorOrder.add(Constants.STR_SEARCH);
         behaviorOrder.add(Constants.STR_WANDER);

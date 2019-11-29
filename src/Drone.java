@@ -32,6 +32,8 @@ public class Drone extends Mobile {
     LaunchModule lnch = null;
     MaintainHeightModule mhgt = null;
     ClimbModule clmb = null;
+    RelayModule rly = null;
+    AntiSocialMdoule anti = null;
 
     WiFiCommunicator wifi = null;
 

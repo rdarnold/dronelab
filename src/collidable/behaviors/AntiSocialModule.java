@@ -8,12 +8,13 @@ import javafx.scene.paint.Color;
 import dronelab.utils.*;
 import dronelab.collidable.*;
 
-public class RepelModule extends BehaviorModule {
-    private double desiredRange = Distance.pixelsFromMeters(10); // Let start with this
+// This is basically the same as Repel but with a larger desiredRange
+public class AntiSocialModule extends BehaviorModule {
+    private double desiredRange = Distance.pixelsFromMeters(50); 
 
-    public RepelModule() {
-        super(Constants.STR_REPEL, Constants.STR_REPEL_J);
-        drawLetter = "E";
+    public AntiSocialModule() {
+        super(Constants.STR_ANTI, Constants.STR_ANTI_J);
+        drawLetter = "Y";
     }
 
     @Override

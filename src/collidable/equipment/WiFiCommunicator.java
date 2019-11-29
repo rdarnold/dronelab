@@ -17,7 +17,7 @@ public class WiFiCommunicator {
 
     // The Solo from 3DR has a Wi Fi HD range of half a mile.
     // We can use that as a guide here.
-    private double range = Distance.pixelsFromMeters(805); 
+    private double range = Distance.pixelsFromMeters(800); 
 
     public double getRange() { return range; }
     public void setRangeMeters(double nMeters) {
