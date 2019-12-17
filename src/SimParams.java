@@ -17,11 +17,23 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.ObjectProperty;
-
-import dronelab.utils.TimeData;
+import dronelab.collidable.Drone.DroneRole;
+import dronelab.collidable.Drone;
+import dronelab.utils.*;
 
 public class SimParams {
     
+    // Params can have a simulation matrix read in from file which dictates the distributions
+    // of drones of different roles for each run
+    private SimMatrix simMatrix = null;
+    public void setSimMatrix(SimMatrix mat) { simMatrix = mat; }
+    public SimMatrix getSimMatrix() { return simMatrix; }
+
+    // Which item are we "currently" on during the simulation:
+    private SimMatrixItem currentItem = null;
+    public void setSimMatrixItem(SimMatrixItem item) { currentItem = item; }
+    public SimMatrixItem getSimMatrixItem() { return currentItem; }
+
     // Conversely I can name them differently fro the ones in the actual
     // XML using the annotation @XmlElement(name="XYZ") where XYZ is the actual
     // name in the XML file.  If not specified it defaults to the name of the variable.
@@ -54,7 +66,7 @@ public class SimParams {
 
     // Bit flag on which algorithms to test
     // This is kind of weird as a bit flag.  We don't test these at the 
-    // same time.
+    // same time.  -- Update, what the hell did I mean here???  same time???
     public static enum AlgorithmFlag {
         /*NOT_DEFINED (1 << 0),
         STANDARD    (1 << 1),
@@ -63,7 +75,8 @@ public class SimParams {
         NOT_DEFINED (0, "NotDefined"),
         STANDARD    (1, "Standard"),
         SPIRAL      (2, "Spiral"),
-        SCATTER     (3, "Scatter");
+        SCATTER     (3, "Scatter"),
+        MIX_SRA     (4, "MixSocialRelayAnti");  // Mixes are defined by a simulation matrix file
 
         private final long value;
         private final String name;
@@ -88,6 +101,7 @@ public class SimParams {
     //private final IntegerProperty timeLimitSeconds = new SimpleIntegerProperty(TimeData.ONE_HOUR_IN_SECONDS);
     private final IntegerProperty numRandomSurvivors = new SimpleIntegerProperty(300);
     private final IntegerProperty numDrones = new SimpleIntegerProperty(1);
+    private final IntegerProperty numRepetitions = new SimpleIntegerProperty(1);
     
     // Start with the full gambit of algorithms whatever they are.
     // No that's not the way I do it anymore, each algorithm is a set of behaviors
@@ -95,6 +109,23 @@ public class SimParams {
     //private EnumSet<AlgorithmFlag> algorithmFlags = AlgorithmFlag.NONE;//EnumSet.allOf(AlgorithmFlag.class);
     // Does not need to be a flag
     private AlgorithmFlag algorithmFlag = AlgorithmFlag.STANDARD;
+
+    // Why do I have everything as properties?  Don't think I do any XML processing here???
+    // These will just be normal member vars for now...
+    Drone.DroneRole role1 = Drone.DroneRole.SOCIAL;
+    int role1_num = 0;
+    public Drone.DroneRole getRole1() { return role1; }
+    public int getNumRole1() { return role1_num; }
+
+    Drone.DroneRole role2 = Drone.DroneRole.RELAY;
+    int role2_num = 0;
+    public Drone.DroneRole getRole2() { return role2; }
+    public int getNumRole2() { return role2_num; }
+
+    Drone.DroneRole role3 = Drone.DroneRole.ANTISOCIAL;
+    int role3_num = 0;
+    public Drone.DroneRole getRole3() { return role3; }
+    public int getNumRole3() { return role3_num; }
 
     public SimParams() { 
     }
@@ -153,6 +184,52 @@ public class SimParams {
 
     public IntegerProperty numDronesProperty() {
         return numDrones;
+    }
+
+    public int getNumRepetitions() {
+        return numRepetitions.get();
+    }
+
+    public void setNumRepetitions(int num) {
+        numRepetitions.set(num);
+    }
+
+    public IntegerProperty numRepetitionsProperty() {
+        return numRepetitions;
+    }
+
+
+    // Added to support loading different role distributions from a simulation matrix
+    public boolean setup(int numRuns) {
+        if (simMatrix == null) {
+            Utils.log("ERROR - tried to run setup on SimParams without a simulation matrix");
+            return false;
+        }
+
+        if (numRuns >= simMatrix.size()) {
+            Utils.log("ERROR - numRuns is larger than sim matrix size in SimParams setup");
+            return false;
+        }
+
+        SimMatrixItem item = simMatrix.get(numRuns);
+        if (item == null) {
+            Utils.log("ERROR - tried to load sim matrix item " + numRuns + "but it does not exist");
+            return false;
+        }
+
+        currentItem = item;
+
+        role1_num = item.getSocialNum();
+        role2_num = item.getRelayNum();
+        role3_num = item.getAntiNum();
+
+        //Utils.log(role1_num);
+        //Utils.log(role2_num);
+        //Utils.log(role3_num);
+
+        setNumDrones(role1_num + role2_num + role3_num);
+
+        return true;
     }
 
     /*public AnswerType getAnswerType() {

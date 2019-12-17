@@ -110,7 +110,7 @@ public class DroneLab extends Application {
     double canvasVisibleWid = 0;
     double canvasVisibleHgt = 0;
 
-    String strVersion = "v0.1";
+    String strVersion = "v1.1";
 
     // Are we ctually running anything or not.  Wish we could just
     // check the animation timer.
@@ -180,6 +180,8 @@ public class DroneLab extends Application {
     Gui3D gui3D = null;
     public SimRunner runner = null;
 
+    public SimMatrix simMatrix = null;
+
     ////////////////////////
     /// End GUI controls ///
     ////////////////////////
@@ -197,6 +199,9 @@ public class DroneLab extends Application {
         Utils.init();
         BehaviorLoader.load();
         runner = new SimRunner(this);
+
+        simMatrix = new SimMatrix();
+        simMatrix.load(Constants.INPUT_LOAD_PATH + "Simulation_Matrix.xlsx");
 
         setupGenericGui();
         
@@ -561,6 +566,8 @@ public class DroneLab extends Application {
             filename += "sp_"; 
         else if (params.getAlgorithmFlag() == SimParams.AlgorithmFlag.SCATTER)
             filename += "sc_"; 
+            else if (params.getAlgorithmFlag() == SimParams.AlgorithmFlag.MIX_SRA)
+                filename += "mix_"; 
         else
             filename += "nd_"; 
 
@@ -569,6 +576,52 @@ public class DroneLab extends Application {
         filename += params.getTimeLimitMinutes() + "min_"; 
         filename += strDate;
         return filename;
+    }
+
+    public void recordSimMatrixData() {
+        SimParams params = scenario.simParams;
+        SimMatrixItem item = params.getSimMatrixItem();
+        // Only register it if we got to 90% or above
+        //if (strMaxSeen)
+        // These were set already when the benchmark was reached
+        int seen90Perc = vBoxCurrentData.getSeen90PercSeconds();
+        int loc90Perc = vBoxCurrentData.getLocated90PercSeconds();
+        if (seen90Perc > 0) {
+            item.setSecondsTakenCamera(runner.getCurrentRepetitionNum()-1, seen90Perc);
+        }
+        if (loc90Perc > 0) {
+            item.setSecondsTakenFINDER(runner.getCurrentRepetitionNum()-1, loc90Perc);
+        }
+
+        String str = "";
+
+        for (SimMatrixItem item2 : params.getSimMatrix().getItems()) {
+            for (int i = 0; i < params.getNumRepetitions(); i++) {
+                str += item2.getSecondsTakenCamera(i);
+                if (i != params.getNumRepetitions()-1) {
+                    str += ", ";
+                } 
+            }
+            str += "\r\n";
+        }
+
+        // Write out the excel spreadsheet now too, or just a text file with all the data
+        Utils.writeFile(str, Constants.DATA_SAVE_PATH + "matrix_output_camera.txt");
+
+        str = "";
+
+        for (SimMatrixItem item2 : params.getSimMatrix().getItems()) {
+            for (int i = 0; i < params.getNumRepetitions(); i++) {
+                str += item2.getSecondsTakenFINDER(i);
+                if (i != params.getNumRepetitions()-1) {
+                    str += ", ";
+                } 
+            }
+            str += "\r\n";
+        }
+
+        // Write out the excel spreadsheet now too, or just a text file with all the data
+        Utils.writeFile(str, Constants.DATA_SAVE_PATH + "matrix_output_FINDER.txt");
     }
 
     // Record the data for one sim run
@@ -581,6 +634,11 @@ public class DroneLab extends Application {
 
         SimParams params = scenario.simParams;
         String str = "";
+
+        // Save out the data in a format that works for our simulation matrix
+        if (params.getSimMatrixItem() != null) {
+            recordSimMatrixData();
+        }
         
         if (params.getAlgorithmFlag() == SimParams.AlgorithmFlag.STANDARD)
             str += "Algorithm: Standard"; 
@@ -588,6 +646,8 @@ public class DroneLab extends Application {
             str += "Algorithm: Spiral"; 
         else if (params.getAlgorithmFlag() == SimParams.AlgorithmFlag.SCATTER)
             str += "Algorithm: Scatter"; 
+        else if (params.getAlgorithmFlag() == SimParams.AlgorithmFlag.MIX_SRA)
+            str += "Algorithm: MixSRA"; 
         else
             str += "Algorithm: NotDefined"; 
         str += "\r\n"; 
@@ -619,14 +679,18 @@ public class DroneLab extends Application {
         Utils.log("Filename: " + filename);
         Utils.log(str);
 
-        Utils.writeFile(str, Constants.DATA_SAVE_PATH + filename);
+        // Comment this out for now; I don't want to write 1000 files for all the simulation runs
+        //Utils.writeFile(str, Constants.DATA_SAVE_PATH + filename);
     }
 
-    public void signalPercentComplete(int perc) {
-       /* if (perc >= 90) {
+    public boolean signalPercentComplete(int perc) {
+        if (perc >= 89) {
             // We are going to end at 90% for now to save time.
             scenario.endRun();
-        }*/
+            return true;
+        }
+
+        return false;
     }
 
     public void signalComplete() {

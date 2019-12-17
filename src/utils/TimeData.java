@@ -28,6 +28,10 @@ public class TimeData {
         maxSeconds = sec;
     }
 
+    public int getTotalSeconds() {
+        return totalSeconds;
+    }
+
     public void advanceHour() {
         hour++;
     }

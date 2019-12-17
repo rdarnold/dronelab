@@ -18,6 +18,7 @@ public final class Constants {
     public static final String SCENARIO_LOAD_PATH = "/scenario/";
     public static final String SCENARIO_SAVE_PATH = "scenario/";
     public static final String OUTPUT_SAVE_PATH = "output/";
+    public static final String INPUT_LOAD_PATH = "/input/";
     public static final String DATA_SAVE_PATH = "output/data/";
     public static final String DATASET_SAVE_PATH = "output/data/datasets/";
 
@@ -43,7 +44,7 @@ public final class Constants {
     public static final String STR_SCATTER = "Scatter";
     public static final String STR_REPEL = "Repel";
     public static final String STR_RELAY = "Relay";
-    public static final String STR_ANTI = "Antisocial";
+    public static final String STR_ANTI = "AntiSocial";
 
     public static final String[] STR_BEHAVIORS = { 
         STR_AVOID, STR_SEEK, STR_SEARCH, STR_WANDER, STR_FORM, STR_RECHARGE, STR_LAUNCH,
@@ -63,7 +64,7 @@ public final class Constants {
     public static final String STR_SCATTER_J  = "Scatter";
     public static final String STR_REPEL_J  = "Repel";
     public static final String STR_RELAY_J = "Relay";
-    public static final String STR_ANTI_J = "Antisocial";
+    public static final String STR_ANTI_J = "AntiSocial";
 
     public static final String[] STR_BEHAVIORS_J = { 
         STR_AVOID_J, STR_SEEK_J, STR_SEARCH_J, STR_WANDER_J, STR_FORM_J, STR_RECHARGE_J, 

@@ -127,6 +127,54 @@ public class Scenario extends ScenarioLoader {
             processAddBehavior(Constants.STR_REPEL);
             processAddBehavior(Constants.STR_SCATTER);
         }
+        else if (flag == SimParams.AlgorithmFlag.MIX_SRA) {
+            // This was loaded from a sim matrix and we have mixed roles with different
+            // behaviors we want to assign, so this works differently.
+            // All drones receive these common behaviors
+            processAddBehavior(Constants.STR_AVOID);
+            processAddBehavior(Constants.STR_SEEK);
+            processAddBehavior(Constants.STR_SEARCH);
+            processAddBehavior(Constants.STR_WANDER);
+            processAddBehavior(Constants.STR_RECHARGE);
+            processAddBehavior(Constants.STR_LAUNCH);
+            processAddBehavior(Constants.STR_MAINTAIN_HEIGHT);
+            processAddBehavior(Constants.STR_CLIMB);
+
+            // Now only ones with certain roles receive other behaviors
+            // This really should be done within the drone class itself, like it assigns its own
+            // behaviors based on the role it has - TODO future improvement
+
+            // Just for debugging
+            int numRole1 = 0;
+            int numRole2 = 0;
+            int numRole3 = 0;
+            int numRole_boo = 0;
+            for (Drone d : drones) {
+                switch (d.getDroneRole()) {
+                    case SOCIAL:
+                        numRole1++;
+                        d.addBehavior(GuiUtils.getBehaviorModuleNameBilingual(Constants.STR_FORM));
+                        d.addBehavior(GuiUtils.getBehaviorModuleNameBilingual(Constants.STR_SPIRAL));
+                        break;
+                    case RELAY:
+                        numRole2++;
+                        d.addBehavior(GuiUtils.getBehaviorModuleNameBilingual(Constants.STR_RELAY));
+                        break;
+                    case ANTISOCIAL:
+                        numRole3++;
+                        d.addBehavior(GuiUtils.getBehaviorModuleNameBilingual(Constants.STR_SPIRAL));
+                        d.addBehavior(GuiUtils.getBehaviorModuleNameBilingual(Constants.STR_ANTI));
+                        break;
+                    default:
+                        numRole_boo++;
+                        break;
+                }
+            }
+            if (numRole_boo > 0) {
+                Utils.log("UNDEFINED ROLE: " + numRole_boo);
+            }
+            Utils.log("NEW SIM SETUP; SOCIAL: " + numRole1 + ", RELAY: " + numRole2 + ", ANTI: " + numRole3);
+        }
         else {
             // Just add 'em all if we didn't specify.
             for (int i = 0; i < Constants.STR_BEHAVIORS.length; i++) {

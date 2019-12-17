@@ -75,8 +75,11 @@ src/utils/CanvasRectangle.java
 src/utils/ColorSet.java 
 src/utils/Constants.java
 src/utils/Distance.java
+src/utils/ExcelUtils.java
 src/utils/GraphicsHelper.java 
 src/utils/GuiUtils.java
 src/utils/Physics.java 
+src/utils/SimMatrix.java
+src/utils/SimMatrixItem.java
 src/utils/TimeData.java
 src/utils/Utils.java 

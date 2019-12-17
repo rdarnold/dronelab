@@ -59,7 +59,21 @@ public class WiFiCommunicator {
     }
 
     public void broadcast(String msg) {
-	    //Utils.log("broadcast: " + msg);
+        //Utils.log("broadcast: " + msg);
+        // So first check to make sure we don't have the same kind of message in the queue already; if we do,
+        // just overwrite it.  This can happen if the system is delayed to the point where the number of outgoing
+        // messages cannot be consumed fast enough by the broadcast system
+        if (queue.size() > 0) {
+            String strType = "";
+            for (int i = queue.size()-1; i >= 0; i--) {
+                strType = queue.get(i).substring(0, 3);
+                if (strType.equals("POS") == true) {
+                    // Remove any dupes for position messages and just broadcast our latest one
+                    Utils.log("REMOVED");
+                    queue.remove(i);
+                }
+            }
+        }
 
         // Slap it onto some kind of outgoing message queue
         queue.add(msg);

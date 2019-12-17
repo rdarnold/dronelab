@@ -40,6 +40,13 @@ public class VBoxCurrentData extends VBoxCustom {
     ListView<HBox> benchmarkSeenList;
     ListView<HBox> benchmarkLocatedList;
 
+    // We keep track of the times we reached 90% on both measures, this is not
+    // really a great place to do this but I'm under the gun
+    int seen90PercSeconds = 0;
+    int located90PercSeconds = 0;
+    public int getSeen90PercSeconds() { return seen90PercSeconds; }
+    public int getLocated90PercSeconds() { return located90PercSeconds; }
+
     //Text fpsText;
     Label lblPos;
     Label lblHeading;
@@ -165,6 +172,15 @@ public class VBoxCurrentData extends VBoxCustom {
             addBenchmark(list, percText);
             String data = (String)list.getUserData();
             list.setUserData(data + scenario.simTime.toString() + " ");
+
+            // Keep track of when/if we hit 90%; these really should just be arrays and we record
+            // the seconds for every benchmark
+            if (list.equals(benchmarkSeenList) == true && ((int)percCheck == 90)) {
+                seen90PercSeconds = scenario.simTime.getTotalSeconds();
+            }
+            else if (list.equals(benchmarkLocatedList) == true && ((int)percCheck == 90)) {
+                located90PercSeconds = scenario.simTime.getTotalSeconds();
+            }
             return true;
         }
         return false;
@@ -173,12 +189,20 @@ public class VBoxCurrentData extends VBoxCustom {
     private void checkSeenBenchmarks() {
         double perc = 100.0 * (double)scenario.getNumVictimsSeen() / (double)scenario.getNumVictims();
         // No increase, do nothing.
-        if (perc <= m_fLastSeenPercent) {
+        if (perc <= m_fLastSeenPercent) { 
             return;
         }
 
         for (int i = 10; i <= 100; i += 10) {
-            checkOneBenchmark(benchmarkSeenList, i, perc, m_fLastSeenPercent);
+            //Utils.log("BLARGE: " + i);
+            if (checkOneBenchmark(benchmarkSeenList, i, perc, m_fLastSeenPercent) == true) {
+                // Remove this later if we want the FINDER completness to be able to get up
+                // to 90% too; this makes it so that only camera can go up to 90%, and then
+                // once that happens, the sim will stop there
+                if (sim.signalPercentComplete(i) == true) {
+                    return;
+                }
+            }
         }
 
         m_fLastSeenPercent = perc;
@@ -193,7 +217,9 @@ public class VBoxCurrentData extends VBoxCustom {
 
         for (int i = 10; i <= 100; i += 10) {
             if (checkOneBenchmark(benchmarkLocatedList, i, perc, m_fLastLocatedPercent) == true) {
-                sim.signalPercentComplete(i);
+                /*if (sim.signalPercentComplete(i) == true) {
+                    return;
+                }*/
             }
         }
 
@@ -241,6 +267,9 @@ public class VBoxCurrentData extends VBoxCustom {
     }
 
     public void resetBenchmarkLists() {
+        seen90PercSeconds = 0;
+        located90PercSeconds = 0;
+
         benchmarkSeenList.getItems().clear();
         benchmarkLocatedList.getItems().clear();
         

@@ -1,1 +1,1 @@
-java -Dfile.encoding=UTF8 -cp "bin;../ext/*;." dronelab.DroneLab
+java -Dfile.encoding=UTF8 -Xmx2048m -cp "bin;../ext/*;." dronelab.DroneLab

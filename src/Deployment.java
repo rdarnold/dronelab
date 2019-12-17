@@ -61,19 +61,70 @@ public class Deployment extends CanvasRectangle {
     }
 
     public void deploy(Scenario scen) {
-        // Set number of drones to whatever we wanted in the simulation
-        nNumDrones = scen.simParams.getNumDrones();
+        SimParams params = scen.simParams;
 
-        // Deploy all our drones randomly in the deployment area.
-        int x = 0;
-        int y = 0;
-        for (int i = 0; i < nNumDrones; i++) {
-            // For some reason I have X as the top right corner...
-            // I should fix that.  But until then, this has to
-            // be a minus for the X coord.
-            x = (int)origX - Utils.number(0, (int)origWid);
-            y = (int)origY + Utils.number(0, (int)origLen);
-            scen.addDrone(x, y);
+        if (params.getSimMatrixItem() != null) {
+            // We have a simulation matrix, use that
+            // Set number of drones to whatever we wanted in the simulation
+            Drone drone = null;
+
+            // Deploy all our drones randomly in the deployment area.
+            int x = 0;
+            int y = 0;
+            for (int i = 0; i < params.getNumRole1(); i++) {
+                // For some reason I have X as the top right corner...
+                // I should fix that.  But until then, this has to
+                // be a minus for the X coord.
+                x = (int)origX - Utils.number(0, (int)origWid);
+                y = (int)origY + Utils.number(0, (int)origLen);
+                drone = scen.addDrone(x, y);
+                drone.setDroneRole(params.getRole1());
+                //Utils.log(" " + params.getRole1());
+            }
+
+            x = 0;
+            y = 0;
+            for (int i = 0; i < params.getNumRole2(); i++) {
+                // For some reason I have X as the top right corner...
+                // I should fix that.  But until then, this has to
+                // be a minus for the X coord.
+                x = (int)origX - Utils.number(0, (int)origWid);
+                y = (int)origY + Utils.number(0, (int)origLen);
+                drone = scen.addDrone(x, y);
+                drone.setDroneRole(params.getRole2());
+                //Utils.log(" " + params.getRole2());
+            }
+
+            x = 0;
+            y = 0;
+            for (int i = 0; i < params.getNumRole3(); i++) {
+                // For some reason I have X as the top right corner...
+                // I should fix that.  But until then, this has to
+                // be a minus for the X coord.
+                x = (int)origX - Utils.number(0, (int)origWid);
+                y = (int)origY + Utils.number(0, (int)origLen);
+                drone = scen.addDrone(x, y);
+                drone.setDroneRole(params.getRole3());
+                //Utils.log(" " + params.getRole3());
+            }
+        }
+        else {
+            // No matrix, just run a normal scenario
+
+            // Set number of drones to whatever we wanted in the simulation
+            nNumDrones = params.getNumDrones();
+
+            // Deploy all our drones randomly in the deployment area.
+            int x = 0;
+            int y = 0;
+            for (int i = 0; i < nNumDrones; i++) {
+                // For some reason I have X as the top right corner...
+                // I should fix that.  But until then, this has to
+                // be a minus for the X coord.
+                x = (int)origX - Utils.number(0, (int)origWid);
+                y = (int)origY + Utils.number(0, (int)origLen);
+                scen.addDrone(x, y);
+            }
         }
     }
 }

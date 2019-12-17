@@ -33,7 +33,7 @@ public class Drone extends Mobile {
     }
 
     public static enum DroneRole {
-        SEARCH(0), 
+        SOCIAL(0), 
         RELAY(1), 
         ANTISOCIAL(2);
 
@@ -49,7 +49,7 @@ public class Drone extends Mobile {
 
     // Private variables
     private DroneType droneType = DroneType.DJI_PHANTOM_4;
-    private DroneRole droneRole = DroneRole.SEARCH;
+    private DroneRole droneRole = DroneRole.SOCIAL;
     private double rotorHeading = 0; // Just for visual effect
     private int rotorSpeed = 16; //31;
 
@@ -174,6 +174,9 @@ public class Drone extends Mobile {
     public DroneType getDroneType() {
         return droneType;
     }
+    public DroneRole getDroneRole() {
+        return droneRole;
+    }
 
     public boolean hasCamera()          { return cam != null; }
     public boolean hasSonarSensor()     { return ss != null; }
@@ -185,6 +188,22 @@ public class Drone extends Mobile {
 
     public void setSeekLocation(double x, double y) {
         seekLocation = new Point2D(x, y);
+    }
+
+    public void setDroneRole(DroneRole role) {
+        droneRole = role;
+        
+        // Now set up the behaviors based on the role; we should be able to do
+        // whatever we need here as this is called after the initial drone setup
+        // Actually this is currently done within the scenario itself
+        switch (role) {
+            case SOCIAL: 
+                break;
+            case RELAY: 
+                break;
+            case ANTISOCIAL: 
+                break;
+        }
     }
 
     public void setDroneType(String typeName) {
@@ -771,15 +790,19 @@ public class Drone extends Mobile {
     }
 
     public void updateSixTimesASecond() {
-        // Right now we do nothing
-    }
-
-    public void updateTenTimesASecond() {
         // Broadcast our position.  This is probably
         // enough.  If we do it too often we kinda overload the system.
         if (wifi != null) {
             wifi.broadcastPosition();
         }
+    }
+
+    public void updateTenTimesASecond() {
+        // Broadcast our position.  This is probably
+        // enough.  If we do it too often we kinda overload the system.
+        /*if (wifi != null) {
+            wifi.broadcastPosition();
+        }*/
     }
 
     public boolean checkModule(boolean activated, BehaviorModule mod) {
