@@ -178,7 +178,7 @@ public class VBoxCurrentData extends VBoxCustom {
             if (list.equals(benchmarkSeenList) == true && ((int)percCheck == 90)) {
                 seen90PercSeconds = scenario.simTime.getTotalSeconds();
             }
-            else if (list.equals(benchmarkLocatedList) == true && ((int)percCheck == 90)) {
+            else if (list.equals(benchmarkLocatedList) ==  true && ((int)percCheck == 90)) {
                 located90PercSeconds = scenario.simTime.getTotalSeconds();
             }
             return true;
