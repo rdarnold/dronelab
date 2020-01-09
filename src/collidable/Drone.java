@@ -22,13 +22,21 @@ public class Drone extends Mobile {
         DJI_INSPIRE_1(2), 
         MAVIC_PRO(3);
 
-        private final int value;
+        private final int _value;
         private DroneType(int value) {
-            this.value = value;
+            this._value = value;
         }
 
         public int getValue() {
-            return value;
+            return _value;
+        }
+
+        private static DroneType[] cachedValues = null;
+        public static DroneType fromInt(int i) {
+            if (DroneType.cachedValues == null) {
+                DroneType.cachedValues = DroneType.values();
+            }
+            return DroneType.cachedValues[i];
         }
     }
 
@@ -37,13 +45,21 @@ public class Drone extends Mobile {
         RELAY(1), 
         ANTISOCIAL(2);
 
-        private final int value;
+        private final int _value;
         private DroneRole(int value) {
-            this.value = value;
+            this._value = value;
         }
 
         public int getValue() {
-            return value;
+            return _value;
+        }
+
+        private static DroneRole[] cachedValues = null;
+        public static DroneRole fromInt(int i) {
+            if (DroneRole.cachedValues == null) {
+                DroneRole.cachedValues = DroneRole.values();
+            }
+            return DroneRole.cachedValues[i];
         }
     }
 
@@ -152,11 +168,11 @@ public class Drone extends Mobile {
         behaviorOrder.add(Constants.STR_RECHARGE);
         behaviorOrder.add(Constants.STR_MAINTAIN_HEIGHT);
         behaviorOrder.add(Constants.STR_SPIRAL);
-        behaviorOrder.add(Constants.STR_FORM);
         behaviorOrder.add(Constants.STR_RELAY);
+        behaviorOrder.add(Constants.STR_FORM);
+        behaviorOrder.add(Constants.STR_ANTI);
         behaviorOrder.add(Constants.STR_REPEL);
         behaviorOrder.add(Constants.STR_SEEK);
-        behaviorOrder.add(Constants.STR_ANTI);
         behaviorOrder.add(Constants.STR_SCATTER);
         behaviorOrder.add(Constants.STR_SEARCH);
         behaviorOrder.add(Constants.STR_WANDER);
@@ -441,7 +457,7 @@ public class Drone extends Mobile {
     }
 
     // This is called from communication modules like wifi
-    public void updateDroneDataXY(int droneId, double newX, double newY) {
+    public void updateDroneDataXY(int droneId, int roleNum, double newX, double newY) {
         if (droneId == id) {
             return;
         }
@@ -455,6 +471,7 @@ public class Drone extends Mobile {
 	    data.lastDetectedTimeMillis = System.currentTimeMillis();
         data.x = newX;
         data.y = newY;
+        data.role = DroneRole.fromInt(roleNum);
     }
 
     public void drawSensors(GraphicsContext gc) {
@@ -788,8 +805,12 @@ public class Drone extends Mobile {
         // See if anyone on our drone list has expired.
         pruneDroneList();
     }
+    
+    public void updateTwoTimesASecond() {
+        // Can add anything here
+    }
 
-    public void updateSixTimesASecond() {
+    public void updateThreeTimesASecond() {
         // Broadcast our position.  This is probably
         // enough.  If we do it too often we kinda overload the system.
         if (wifi != null) {
@@ -797,12 +818,12 @@ public class Drone extends Mobile {
         }
     }
 
+    public void updateSixTimesASecond() {
+        // Can add anything here
+    }
+
     public void updateTenTimesASecond() {
-        // Broadcast our position.  This is probably
-        // enough.  If we do it too often we kinda overload the system.
-        /*if (wifi != null) {
-            wifi.broadcastPosition();
-        }*/
+        // Can add anything here
     }
 
     public boolean checkModule(boolean activated, BehaviorModule mod) {
@@ -858,9 +879,17 @@ public class Drone extends Mobile {
             updateTenTimesASecond();
         }
 
-        /*if (ticks % 10 == 0) {
+        if (ticks % 10 == 0) {
             updateSixTimesASecond();
-        }*/
+        }
+
+        if (ticks % 20 == 0) {
+            updateThreeTimesASecond();
+        }
+
+        if (ticks % 30 == 0) {
+            updateTwoTimesASecond();
+        }
 
         // We set 60 FPS for the simulation.  This is the timescale it runs on.
         // So 60 ticks can be considered one second of simulation time.

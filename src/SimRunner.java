@@ -65,7 +65,7 @@ public class SimRunner {
         params.setNumRepetitions(10);
         params.setTimeLimitSeconds(TimeData.ONE_HOUR_IN_SECONDS * timeLimitHours);
         params.setAlgorithmFlag(currentAlgorithm);
-        params.setup(87);
+        params.setup(87); // Why is it 87?  I forget
         performRunFromMatrix();
     }
 
@@ -110,7 +110,7 @@ public class SimRunner {
         // There are X number of reps within each ONE run
         currentRepetition++;
 
-        sim.draw = false; // Change this to true if we want to watch it in action.
+        //sim.draw = false; // Change this to true if we want to watch it in action.
 
         if (currentRepetition == (params.getNumRepetitions()+1)) {
             currentRepetition = 1;

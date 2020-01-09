@@ -43,7 +43,7 @@ public class FormationModule extends BehaviorModule {
         }
         // Basically we check to see if we are in formation with other drones.
         // If we see them, we try to form up.  If we dont, we just dont care.
-        if (drone.ls == null || drone.getDroneList() == null || drone.getDroneList().size() == 0) {
+        if ((drone.ls == null) || drone.getDroneList() == null || drone.getDroneList().size() == 0) {
             return false;
         }
 
@@ -52,7 +52,10 @@ public class FormationModule extends BehaviorModule {
 
         // So its simple, from our closest drone, just try to make the distance correct.
         // So if we are too close, try to get further away.  If we are too far, try to get closer.
-        DroneData data = findClosestDroneData();
+        DroneData data = findClosestSocialDroneData();
+        if (data == null) {
+            return false;
+        }
         double dist = Physics.calcDistance(x, y, data.x, data.y);
 
         // If we are within a reasonable threshold, we are ok.
@@ -80,14 +83,21 @@ public class FormationModule extends BehaviorModule {
         return true;
     }
 
-    private DroneData findClosestDroneData() {
+    // If you are forming, you only form with SOCIAL drones
+    private DroneData findClosestSocialDroneData() {
         double x = drone.ls.x();
         double y = drone.ls.y();
-        DroneData closest = drone.getDroneList().get(0);
-        double closestDist = Physics.calcDistance(x, y, closest.x, closest.y);
+        double closestDist = 0;
+        DroneData closest = null;
+
+        // DroneData closest = drone.getDroneList().get(0);
+        // closestDist = Physics.calcDistance(x, y, closest.x, closest.y);
         for (DroneData data : drone.getDroneList()) {
+            if (data.role != Drone.DroneRole.SOCIAL) {
+                continue;
+            }
             double dist = Physics.calcDistance(x, y, data.x, data.y);
-            if (dist < closestDist) {
+            if (closestDist == 0 || dist < closestDist) {
                 closestDist = dist;
                 closest = data; 
             }

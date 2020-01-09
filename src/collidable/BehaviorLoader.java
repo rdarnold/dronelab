@@ -204,35 +204,6 @@ public final class BehaviorLoader {
     public static BehaviorModule addModule(ArrayList<BehaviorModule> list, 
                                            ArrayList<String> order, 
                                            String strName) {
-        /*BehaviorModule mod = null;
-
-        if (strName == Constants.STR_AVOID)
-            mod = new AvoidModule();
-        else if (strName == Constants.STR_SEEK)
-            mod = new SeekModule();
-	    else if (strName == Constants.STR_SEARCH)
-            mod = new SearchPatternModule();
-	    else if (strName == Constants.STR_WANDER)
-            mod = new WanderModule();
-	    else if (strName == Constants.STR_FORM)
-            mod = new FormationModule();
-	    else if (strName == Constants.STR_RECHARGE)
-            mod = new RechargeModule();
-	    else if (strName == Constants.STR_LAUNCH)
-            mod = new LaunchModule();
-	    else if (strName == Constants.STR_MAINTAIN_HEIGHT)
-            mod = new MaintainHeightModule();
-	    else if (strName == Constants.STR_CLIMB)
-            mod = new ClimbModule();
-
-        if (mod != null) {
-            list.add(mod);
-            if (order != null) {
-                orderBehaviors(list, order);
-            }
-        } 
-        return mod;*/
-
         // Look through our list of loaded behaviors, find one with a matching name,
         // and add it.
         BehaviorModule added = null;

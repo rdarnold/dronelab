@@ -10,11 +10,11 @@ import dronelab.collidable.*;
 
 // This is basically the same as Repel but with a larger desiredRange
 public class AntiSocialModule extends BehaviorModule {
-    private double desiredRange = Distance.pixelsFromMeters(50); 
+    private double desiredRange = Distance.pixelsFromMeters(100); 
 
     public AntiSocialModule() {
         super(Constants.STR_ANTI, Constants.STR_ANTI_J);
-        drawLetter = "Y";
+        drawLetter = "N";
     }
 
     @Override
@@ -53,6 +53,9 @@ public class AntiSocialModule extends BehaviorModule {
         // So its simple, from our closest drone, just try to make the distance correct.
         // So if we are too close, try to get further away.  If we are too far, try to get closer.
         DroneData data = findClosestDroneData();
+        if (data == null) {
+            return false;
+        }
         double dist = Physics.calcDistance(x, y, data.x, data.y);
 
         // If we are within a reasonable threshold, we are ok.
@@ -70,6 +73,28 @@ public class AntiSocialModule extends BehaviorModule {
         drone.setHeadingRadians(Physics.getAngleRadians(data.x, data.y, x, y));
         drone.maxAcceleration();
         return true;
+    }
+
+    // If you are anti, you only anti-form with SOCIAL and ANTISOCIAL drones
+    private DroneData findClosestSocialOrAntiDroneData() {
+        double x = drone.ls.x();
+        double y = drone.ls.y();
+        double closestDist = 0;
+        DroneData closest = null;
+
+        // DroneData closest = drone.getDroneList().get(0);
+        // closestDist = Physics.calcDistance(x, y, closest.x, closest.y);
+        for (DroneData data : drone.getDroneList()) {
+            if (data.role != Drone.DroneRole.SOCIAL && data.role != Drone.DroneRole.ANTISOCIAL) {
+                continue;
+            }
+            double dist = Physics.calcDistance(x, y, data.x, data.y);
+            if (closestDist == 0 || dist < closestDist) {
+                closestDist = dist;
+                closest = data; 
+            }
+        }
+        return closest;
     }
 
     private DroneData findClosestDroneData() {

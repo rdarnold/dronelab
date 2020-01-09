@@ -60,6 +60,7 @@ public class WiFiCommunicator {
 
     public void broadcast(String msg) {
         //Utils.log("broadcast: " + msg);
+        
         // So first check to make sure we don't have the same kind of message in the queue already; if we do,
         // just overwrite it.  This can happen if the system is delayed to the point where the number of outgoing
         // messages cannot be consumed fast enough by the broadcast system
@@ -116,12 +117,16 @@ public class WiFiCommunicator {
             //Utils.log(id);
             start = index + 1;
             index = msg.indexOf(":", start);
+            int roleNum = Utils.tryParseInt(msg.substring(start, index));
+            //Utils.log(roleNum);
+            start = index + 1;
+            index = msg.indexOf(":", start);
             double x = Utils.tryParseDouble(msg.substring(start, index));
             //Utils.log(x);
             start = index + 1;
             double y = Utils.tryParseDouble(msg.substring(start, msg.length()));
             //Utils.log(y);
-            drone.updateDroneDataXY(id, x, y); 
+            drone.updateDroneDataXY(id, roleNum, x, y); 
         } 
         else if (strType.equals("PSN")) {
             /*String contents = msg.substring(index + 1, msg.length());
@@ -194,6 +199,8 @@ public class WiFiCommunicator {
         msg += y;*/
         StringBuilder msg = new StringBuilder("POS:");
         msg.append(drone.getId());
+        msg.append(":");
+        msg.append(drone.getDroneRole().getValue());
         msg.append(":");
         msg.append(x);
         msg.append(":");

@@ -11,11 +11,11 @@ import dronelab.collidable.*;
 // Relay is basically Formation but with a longer distance
 public class RelayModule extends BehaviorModule {
     private double desiredRange = Distance.pixelsFromMeters(400);  // Make it half the effective range; seems reasonable
-    private double threshold = 0.1;
+    private double threshold = 0.05;
 
     public RelayModule() {
         super(Constants.STR_RELAY, Constants.STR_RELAY_J);
-        drawLetter = "F";
+        drawLetter = "R";
     }
 
     @Override
