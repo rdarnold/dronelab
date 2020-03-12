@@ -115,7 +115,7 @@ public class DroneLab extends Application {
     // Are we ctually running anything or not.  Wish we could just
     // check the animation timer.
     boolean running = false;
-    public boolean draw = true; // If false, we don't draw, we are grinding sim results
+    public boolean draw = false; // If false, we don't draw, we are grinding sim results
 
     //used to store the current time to calculate fps
     private long currentTime = 0;

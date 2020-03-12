@@ -8,7 +8,8 @@ import dronelab.utils.*;
 // Try to keep this decoupled from the UI
 public class SimRunner {
     DroneLab sim;
-    int numRuns = 870;
+    int numRuns = 0; 
+    int firstLine = numRuns / 10;  /// So if we start from run 320, we start on line 32, this is just for loading from the matrix
     int currentRepetition = 0;
     SimParams.AlgorithmFlag currentAlgorithm = SimParams.AlgorithmFlag.STANDARD;
     boolean runningFullSet = false; // Are we running all scenarios back to back or not?
@@ -65,7 +66,7 @@ public class SimRunner {
         params.setNumRepetitions(10);
         params.setTimeLimitSeconds(TimeData.ONE_HOUR_IN_SECONDS * timeLimitHours);
         params.setAlgorithmFlag(currentAlgorithm);
-        params.setup(87); // Why is it 87?  I forget
+        params.setup(firstLine); // Start from the first line in our matrix
         performRunFromMatrix();
     }
 
