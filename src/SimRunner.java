@@ -8,7 +8,7 @@ import dronelab.utils.*;
 // Try to keep this decoupled from the UI
 public class SimRunner {
     DroneLab sim;
-    int numRuns = 0; 
+    int numRuns = 0;  // Set this to the run number you want to start from (120, 840, etc.) 
     int firstLine = numRuns / 10;  /// So if we start from run 320, we start on line 32, this is just for loading from the matrix
     int currentRepetition = 0;
     SimParams.AlgorithmFlag currentAlgorithm = SimParams.AlgorithmFlag.STANDARD;
@@ -178,7 +178,7 @@ public class SimRunner {
         }
 
         Scenario scenario = sim.scenario;
-        sim.draw = false; // Change this to true if we want to watch it in action.
+        sim.draw = true; // Change this to true if we want to watch it in action.
 
         SimParams params = scenario.simParams;
         if (numRuns == params.getNumRepetitions()) {
