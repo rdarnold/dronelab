@@ -81,10 +81,10 @@ public class EnvironmentGenerator  {
     }
 
     private void generateBuildingsVictims(int nNum) {
-        Utils.log("I must beat you");
+        Utils.log("generateBuildingsVictims not done");
     }
 
     private void generateTallBuildingsVictims(int nNum) {
-        Utils.log("I must beat you now");
+        Utils.log("generateTallBuildingsVictims not done");
     }
 }

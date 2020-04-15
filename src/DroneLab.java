@@ -90,7 +90,7 @@ import javafx.util.converter.NumberStringConverter;*/
 public class DroneLab extends Application {
 
     int wid = 1000;
-    int hgt = 1100;
+    int hgt = 900;
 
     public double clickedX = 0;
     public double clickedY = 0;
@@ -207,7 +207,7 @@ public class DroneLab extends Application {
         
         scenario = new Scenario();
         //scenario.init(this);
-        scenario.init(this, "Arahama");
+        scenario.init(this, "Kobe");
 
         // The gui elements that are specific to the scenario, need sizing, need populating, etc.
         setupScenarioSpecificGui();
