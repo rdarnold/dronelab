@@ -17,11 +17,22 @@ public class WiFiCommunicator {
 
     // The Solo from 3DR has a Wi Fi HD range of half a mile.
     // We can use that as a guide here.
-    private double range = Distance.pixelsFromMeters(800); 
+    private double rangeMeters = Constants.MAX_WIFI_RANGE; 
+    private double range = Distance.pixelsFromMeters(rangeMeters); 
 
+    public double getRangeMeters() { return rangeMeters; }
     public double getRange() { return range; }
     public void setRangeMeters(double nMeters) {
+        rangeMeters = nMeters;
         range = Distance.pixelsFromMeters(nMeters); 
+    }
+
+    // Var is a variable between 0 and 1, where 0 is the
+    // min range and 1 is the max range
+    public void setRangeByVariable(double var) {
+        double diff = Constants.MAX_WIFI_RANGE - Constants.MIN_WIFI_RANGE;
+        diff *= var;
+        setRangeMeters(Constants.MIN_WIFI_RANGE + diff);
     }
 
     public WiFiCommunicator(Drone d) {

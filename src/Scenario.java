@@ -149,7 +149,9 @@ public class Scenario extends ScenarioLoader {
             int numRole2 = 0;
             int numRole3 = 0;
             int numRole_boo = 0;
+            int wifi_range = (int)Constants.MAX_WIFI_RANGE;
             for (Drone d : drones) {
+                wifi_range = (int)d.wifi.getRangeMeters();
                 switch (d.getDroneRole()) {
                     case SOCIAL:
                         numRole1++;
@@ -173,7 +175,8 @@ public class Scenario extends ScenarioLoader {
             if (numRole_boo > 0) {
                 Utils.log("UNDEFINED ROLE: " + numRole_boo);
             }
-            Utils.log("NEW SIM SETUP; SOCIAL: " + numRole1 + ", RELAY: " + numRole2 + ", ANTI: " + numRole3);
+            Utils.log("NEW SIM SETUP; SOCIAL: " + numRole1 + ", RELAY: " + numRole2 + ", ANTI: " + numRole3 + 
+                ", WIFI: " + wifi_range);
         }
         else {
             // Just add 'em all if we didn't specify.

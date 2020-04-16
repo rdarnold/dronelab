@@ -13,6 +13,7 @@ public class SimMatrixItem {
     public int relayNum = 0;
     public int socialNum = 0;
     public int antiNum = 0;
+    public double wifiRange = 1.0;
 
     // One entry for each reptition; could create this on the fly later based on the simulation matrix
     public int[] secondsTakenCameraArray = new int[10];  // How long did it actually take to do this run?  We can record it here then save it out
@@ -22,6 +23,7 @@ public class SimMatrixItem {
     public int getRelayNum() { return relayNum; }
     public int getSocialNum() { return socialNum; }
     public int getAntiNum() { return antiNum; }
+    public double getWifiRange() { return wifiRange; }
 
     public int getSecondsTakenCamera(int index) { return secondsTakenCameraArray[index]; }
     public void setSecondsTakenCamera(int index, int sec) { secondsTakenCameraArray[index] = sec; }
@@ -48,6 +50,7 @@ public class SimMatrixItem {
         strRetv += ", NumRelays: " + relayNum ;
         strRetv += ", NumSocs: " + socialNum;
         strRetv += ", NumAntis: " + antiNum;
+        strRetv += ", WifiRange: " + wifiRange;
         strRetv += "\r\n";
         if (secondsTakenCameraArray[0] > 0) {
             strRetv += ", CAM SECONDS TAKEN: ";
@@ -62,7 +65,6 @@ public class SimMatrixItem {
                 strRetv += "" + secondsTakenFINDERArray[i] + ", ";
             }
         }
-
 
         return strRetv;
     }

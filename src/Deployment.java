@@ -79,6 +79,7 @@ public class Deployment extends CanvasRectangle {
                 y = (int)origY + Utils.number(0, (int)origLen);
                 drone = scen.addDrone(x, y);
                 drone.setDroneRole(params.getRole1());
+                drone.wifi.setRangeByVariable(params.getWifiRange());
                 //Utils.log(" " + params.getRole1());
             }
 
@@ -92,6 +93,7 @@ public class Deployment extends CanvasRectangle {
                 y = (int)origY + Utils.number(0, (int)origLen);
                 drone = scen.addDrone(x, y);
                 drone.setDroneRole(params.getRole2());
+                drone.wifi.setRangeByVariable(params.getWifiRange());
                 //Utils.log(" " + params.getRole2());
             }
 
@@ -105,6 +107,7 @@ public class Deployment extends CanvasRectangle {
                 y = (int)origY + Utils.number(0, (int)origLen);
                 drone = scen.addDrone(x, y);
                 drone.setDroneRole(params.getRole3());
+                drone.wifi.setRangeByVariable(params.getWifiRange());
                 //Utils.log(" " + params.getRole3());
             }
         }

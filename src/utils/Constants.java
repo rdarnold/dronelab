@@ -29,6 +29,12 @@ public final class Constants {
     // communicating.  No issue if they drop off the list and are re-added either.
     public static final long droneDataStaleThresholdMillis = 5 * 1000;
 
+    // The Solo from 3DR has a Wi Fi HD range of half a mile.
+    // We can use that as a guide here.
+    public static final double MAX_WIFI_RANGE = 800.0;
+    // ~150 ft. is like home wifi indoors
+    public static final double MIN_WIFI_RANGE = 50.0; 
+
     public static final int MAX_FFW_RATE = 200;
 
     public static final String STR_AVOID = "Avoid";

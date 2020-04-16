@@ -127,6 +127,9 @@ public class SimParams {
     public Drone.DroneRole getRole3() { return role3; }
     public int getNumRole3() { return role3_num; }
 
+    double wifi_range = 1.0;
+    public double getWifiRange() { return wifi_range; }
+
     public SimParams() { 
     }
 
@@ -222,6 +225,8 @@ public class SimParams {
         role1_num = item.getSocialNum();
         role2_num = item.getRelayNum();
         role3_num = item.getAntiNum();
+
+        wifi_range = item.getWifiRange();
 
         //Utils.log(role1_num);
         //Utils.log(role2_num);

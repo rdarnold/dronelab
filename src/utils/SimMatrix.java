@@ -58,10 +58,10 @@ public class SimMatrix {
             Cell cell;
 
             int numRows = sheet.getPhysicalNumberOfRows();
-            int numCols = 4; //ExcelUtils.getNumberOfColumns(wb, sheet);
+            int numCols = 7; //ExcelUtils.getNumberOfColumns(wb, sheet);
 
-            // Start at row three
-            int r = 2;
+            // Start at row 2
+            int r = 1;
             for (; r <= numRows; r++) {
                 row = sheet.getRow(r);
                 if (row == null) 
@@ -83,15 +83,24 @@ public class SimMatrix {
                             item.simulationNum = ExcelUtils.getIntForCell(cell);
                             break;
                         case 1:
-                            item.relayNum = ExcelUtils.getIntForCell(cell);
+                            // Batch ID - we ignore this
                             break;
                         case 2:
-                            item.socialNum = ExcelUtils.getIntForCell(cell);
+                            item.relayNum = ExcelUtils.getIntForCell(cell);
                             break;
                         case 3:
+                            item.socialNum = ExcelUtils.getIntForCell(cell);
+                            break;
+                        case 4:
                             item.antiNum = ExcelUtils.getIntForCell(cell);
                             break;
-                    }
+                        case 5:
+                            // Total - we ignore this
+                            break;
+                        case 6:
+                            item.wifiRange = ExcelUtils.getDoubleForCell(cell);
+                            break;
+                }
                 } 
             }
             Utils.log(fileName + " successfully loaded.");

@@ -98,6 +98,10 @@ public final class ExcelUtils {
         return cell.getNumericCellValue();
     }    
 
+    public static double getDoubleForCell(Cell cell) {
+        return getNumberForCell(cell);
+    }    
+
     public static int getIntForCell(Cell cell) {
         return (int)getNumberForCell(cell);
     }    
