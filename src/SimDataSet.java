@@ -8,6 +8,7 @@ import dronelab.collidable.*;
 import dronelab.utils.*;
 
 // An entire set of SimData objects (simulation runs) that are all matching.
+// UPDATE I DO NOT THINK I USE THIS CLASS AT ALL ANYMORE!!!!!
 public class SimDataSet {
     public ArrayList<SimData> dataSet = new ArrayList<SimData>();
 

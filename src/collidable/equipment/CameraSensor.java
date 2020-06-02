@@ -5,6 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
+import dronelab.*;
 import dronelab.utils.*;
 import dronelab.collidable.*;
 import dronelab.Scenario;
@@ -26,6 +27,11 @@ public class CameraSensor extends Sensor {
                 p.setSeen();
                 if (drone != null) {
                     drone.signalPersonSeen(p);
+                }
+
+                // Write the timestamp out to text file now
+                if (Constants.RECORD_ALL_TIMESTAMPS == true) {
+                    DroneLab.sim.addSurvivorTimestamp();
                 }
             }
         }

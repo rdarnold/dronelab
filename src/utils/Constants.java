@@ -21,9 +21,14 @@ public final class Constants {
     public static final String INPUT_LOAD_PATH = "/input/";
     public static final String DATA_SAVE_PATH = "output/data/";
     public static final String DATASET_SAVE_PATH = "output/data/datasets/";
+    public static final String SEEN_DATA_SAVE_PATH = "output/data/seen/";
 
     //one second in nanoseconds
     public static final long ONE_SECOND_IN_NANOSECONDS = 1000000000;
+
+    // Set this to true if we want to write out the timestamp we "see" every single
+    // survivor to a file for each particular sim run.
+    public static final boolean RECORD_ALL_TIMESTAMPS = true;
 
     // How long until drones considered stale?  Not long here since they are constantly
     // communicating.  No issue if they drop off the list and are re-added either.

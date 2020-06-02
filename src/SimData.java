@@ -8,6 +8,9 @@ import dronelab.collidable.*;
 import dronelab.utils.*;
 
 // Basically, the data generated from one run of a simulation.
+
+
+// UPDATE I DO NOT THINK I USE THIS CLASS AT ALL ANYMORE!!!
 public class SimData {
     
     // How many data sets is this an average of?  This lets us average in other

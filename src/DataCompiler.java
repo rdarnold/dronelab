@@ -12,6 +12,8 @@ import dronelab.utils.*;
 // Reads all the data in the output/data folder and compiles it into
 // a single file that includes averages of all the corresponding simulation
 // runs as well as lists all the data for corresponding runs.
+
+// UPDATE I DO NOT THINK I USE THIS CLASS AT ALL ANYMORE!!!!!
 public final class DataCompiler {
 
     private static ArrayList<SimDataSet> dataSets;

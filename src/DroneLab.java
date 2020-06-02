@@ -110,12 +110,12 @@ public class DroneLab extends Application {
     double canvasVisibleWid = 0;
     double canvasVisibleHgt = 0;
 
-    String strVersion = "v1.1";
+    String strVersion = "v1.2";
 
     // Are we ctually running anything or not.  Wish we could just
     // check the animation timer.
     boolean running = false;
-    public boolean draw = true; // If false, we don't draw, we are grinding sim results
+    public boolean draw = false; // If false, we don't draw, we are grinding sim results
 
     //used to store the current time to calculate fps
     private long currentTime = 0;
@@ -131,12 +131,19 @@ public class DroneLab extends Application {
     //private int skipCount = 0;
     //int desiredSkipCount = 0; //1;
     
+    // Just a list of the timestamps each survivor was found during this sim run, this is
+    // part of our updated simulation for SNA ILIR.  It is a little weird to have it here
+    // but this is where we are recording the data for now.  This stuff would be better suited
+    // to a separate class.
+    private String survivorFoundTimes = "";
+
     Stage stage;
     Scene scene;
 
 	//Robot robot = null;
 
-    public Scenario scenario = null;
+    public static Scenario scenario = null;
+    public static DroneLab sim = null;
 
     public Constants.Language language = Constants.Language.ENGLISH;
 
@@ -189,6 +196,7 @@ public class DroneLab extends Application {
     @Override
     public void start(Stage primaryStage) {
         stage = primaryStage;
+        sim = this;
 
         /*try {
             robot = new Robot();
@@ -384,6 +392,7 @@ public class DroneLab extends Application {
 
     public void reset() {
         //scenario.reset();
+        survivorFoundTimes = "";
         scenario.deployAll();
         vBoxCurrentData.clear();
         vBoxCurrentData.update();
@@ -578,6 +587,17 @@ public class DroneLab extends Application {
         return filename;
     }
 
+    // ************************************************************
+    // NOTE TO SELF THIS DATA RECORDING SHOULD MOVE ELSEWHERE
+
+    // This is treated differently and is not part of the regular "package" of data, rather,
+    // we just write out all survivor timestamps as a list to one single file when we finish
+    // a simulation run.
+    public String ls = System.getProperty("line.separator");
+    public void addSurvivorTimestamp() {
+        survivorFoundTimes += "" + scenario.simTime.getTotalSeconds() + ls;
+    }
+
     public void recordSimMatrixData() {
         SimParams params = scenario.simParams;
         SimMatrixItem item = params.getSimMatrixItem();
@@ -681,7 +701,14 @@ public class DroneLab extends Application {
 
         // Comment this out for now; I don't want to write 1000 files for all the simulation runs
         //Utils.writeFile(str, Constants.DATA_SAVE_PATH + filename);
+
+        // Now write out the survivor time data as just a plain text file
+        String fname = "" + (runner.getCurrentRunNum() + 1)+ ".txt";
+        Utils.writeFile(survivorFoundTimes, Constants.SEEN_DATA_SAVE_PATH + fname);
     }
+    
+    // END NOTE TO SELF THE ABOVE DATA RECORDING SHOULD MOVE ELSEWHERE
+    // ************************************************************
 
     public boolean signalPercentComplete(int perc) {
         if (perc >= 89) {

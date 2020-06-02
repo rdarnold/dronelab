@@ -19,6 +19,7 @@ public class SimRunner {
     long lastRunStartTime = 0;
     long lastRunEndTime = 0;
 
+    public int getCurrentRunNum() { return numRuns; }
     public int getCurrentRepetitionNum() { return currentRepetition; }
 
     // This is basically our class that allows us to run multiple
