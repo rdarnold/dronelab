@@ -34,9 +34,16 @@ public final class Config {
 
     public static int numRunsLoaded = 0;
     public static int autoLoaded = 0;
+    public static int drawLoaded = 1;
     public static String simMatrixFilename = "Simulation_Matrix.xlsx";  // Default to the regular one
 
     public static String getSimMatrixFilename() { return simMatrixFilename; }
+    public static boolean getDrawLoaded() { 
+        if (drawLoaded != 0) { 
+            return true;
+        }
+        return false;
+    }
     public static boolean getAutoLoaded() { 
         if (autoLoaded != 0) { 
             return true;
@@ -62,6 +69,9 @@ public final class Config {
             if (Utils.stringStartsWith(line, "Matrix: ") == true) {
                 simMatrixFilename = line.substring(("Matrix: ").length(), line.length());
             }
+            else if (Utils.stringStartsWith(line, "draw: ") == true) {
+                drawLoaded = Utils.tryParseInt(line.substring(("draw: ").length(), line.length()));
+            }
             else if (Utils.stringStartsWith(line, "numRuns: ") == true) {
                 numRunsLoaded = Utils.tryParseInt(line.substring(("numRuns: ").length(), line.length()));
             }
@@ -78,7 +88,12 @@ public final class Config {
 
     public static void save(int numRuns, boolean auto) {
         // Save config data
-        String contents = "Matrix: " + simMatrixFilename + "\r\nnumRuns: " + numRuns + "\r\nauto: ";
+        String contents = "";
+        
+        contents += "Matrix: " + simMatrixFilename + "\r\n";
+        contents += "draw: " + drawLoaded + "\r\n" ;
+        contents += "numRuns: " + numRuns + "\r\n" ;
+        contents += "auto: ";
         if (auto == true) {
             contents += "1";
         }

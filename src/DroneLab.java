@@ -212,6 +212,8 @@ public class DroneLab extends Application {
         simMatrix = new SimMatrix();
         simMatrix.load(Constants.INPUT_LOAD_PATH + Config.getSimMatrixFilename());
 
+        draw = Config.getDrawLoaded();
+
         setupGenericGui();
         
         scenario = new Scenario();
