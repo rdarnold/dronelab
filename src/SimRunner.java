@@ -1,5 +1,6 @@
 package dronelab;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import dronelab.*;
@@ -27,10 +28,45 @@ public class SimRunner {
     // a sim, then adjust parameters, run another, etc.
     public SimRunner(DroneLab theSim) {
         sim = theSim;
+
+        if (Config.autoLoaded != 0) {
+            // Automatically loaded; so let's do this!
+            // Load up the run we were on
+            int num = Config.numRunsLoaded;
+            int nearestTen = num / 10;
+            num = nearestTen * 10;
+            firstLine = num / 10;
+
+            setNumRuns(num);
+
+            // Set our time to 200x
+            sim.scenario.setTimeFactor(Constants.MAX_FFW_RATE);
+
+            sim.updateNumRunText(numRuns);
+
+            // And start up!
+            startRunsFromMatrix();
+        }
     }
 
     public void signalSimComplete() {
-        numRuns++;
+        setNumRuns(numRuns + 1);
+
+        // Every 100 runs, restart automatically
+        if (numRuns % 100 == 0) {
+            Config.save(numRuns, true);
+            // Restart now
+            try {
+                Runtime.getRuntime().exec("cmd /c \"\"" + Constants.RESTART_BATCH_FILE_NAME_PATH);
+                System.exit(0);
+            }
+            catch (IOException e) {
+                Utils.log("RESTART FAILED: " + e.toString());
+            }
+        }
+        else {
+            Config.save(numRuns, false);
+        }
 
         // Now print out some data for us, if we are doing full runs
         if (runningFullSet == true && lastRunStartTime > 0) {
@@ -211,7 +247,7 @@ public class SimRunner {
             Utils.log("One set of algorithm runs complete.  Total time taken: " + strTimePassed);
             Utils.log("Proceeding to next set.");
             scenario.applyAlgorithm();
-            numRuns = 0;
+            setNumRuns(0);
             params.setNumDrones(1);
             params.setTimeLimitSeconds(TimeData.ONE_HOUR_IN_SECONDS * timeLimitHours);
         }
@@ -222,6 +258,11 @@ public class SimRunner {
         sim.reset();
         sim.start();
         return true;
+    }
+
+    private void setNumRuns(int num) {
+        numRuns = num;
+        sim.updateNumRunText(numRuns);
     }
 
     private boolean nextAlgorithm() {

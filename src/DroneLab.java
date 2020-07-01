@@ -115,7 +115,7 @@ public class DroneLab extends Application {
     // Are we ctually running anything or not.  Wish we could just
     // check the animation timer.
     boolean running = false;
-    public boolean draw = false; // If false, we don't draw, we are grinding sim results
+    public boolean draw = true; // If false, we don't draw, we are grinding sim results
 
     //used to store the current time to calculate fps
     private long currentTime = 0;
@@ -162,6 +162,7 @@ public class DroneLab extends Application {
     SimText displayText = new SimText();
 
     // Top bar
+    Text numRunText = new Text();
     Text fpsText = new Text();
     Text timeText = new Text();
     Button btnStart = new Button();
@@ -206,7 +207,7 @@ public class DroneLab extends Application {
         }*/
         Utils.init();
         BehaviorLoader.load();
-        runner = new SimRunner(this);
+        Config.load();
 
         simMatrix = new SimMatrix();
         simMatrix.load(Constants.INPUT_LOAD_PATH + "Simulation_Matrix_WiFi.xlsx");
@@ -215,7 +216,15 @@ public class DroneLab extends Application {
         
         scenario = new Scenario();
         //scenario.init(this);
-        scenario.init(this, "Arahama");
+
+        // If we auto-loaded from a prior sim run, reload the last scenario including
+        // generated survivors
+        if (Config.getAutoLoaded() == true) {
+            scenario.init(this, Constants.SCENARIO_CURRENT_FILE_NAME);
+        }
+        else {
+            scenario.init(this, "Arahama");
+        }
 
         // The gui elements that are specific to the scenario, need sizing, need populating, etc.
         setupScenarioSpecificGui();
@@ -250,6 +259,9 @@ public class DroneLab extends Application {
         //handlePauseButton();
         initMainLoop();
         reset();
+
+        // Do this last, because it auto-starts the sim in some circumstances
+        runner = new SimRunner(this);
 
         // And then let's actually start but we are paused
         //start();
@@ -322,6 +334,15 @@ public class DroneLab extends Application {
     //////////////////////
     //// Start Drawing ///
     //////////////////////
+
+    public void updateNumRunText(int num) {
+        if (num <= 0) {
+            numRunText.setText("");
+        }
+        else {
+            numRunText.setText("Run: " + num);
+        }
+    }
 
     public void updateFpsText(int newFps) {
         fpsText.setText("FPS: " + newFps);
@@ -987,6 +1008,9 @@ public class DroneLab extends Application {
         //newHb.setPadding(new Insets(15, 12, 15, 12));
         newHb.setSpacing(10);
         newHb.setAlignment(Pos.CENTER_RIGHT);     // Right-justify nodes in hbox
+        numRunText.setFont(Font.font("Verdana", FontWeight.BOLD, 16));
+        numRunText.setFill(Color.WHITE);
+        newHb.getChildren().addAll(numRunText); //, stack);
         timeText.setFont(Font.font("Verdana", FontWeight.BOLD, 16));
         timeText.setFill(Color.WHITE);
         newHb.getChildren().addAll(timeText); //, stack);

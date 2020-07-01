@@ -144,13 +144,15 @@ public final class Utils {
     public static boolean writeFile(String str, String fileName) {
         // Make the folder if we dont have it.
         Path pathToFile = Paths.get(fileName);
-        try {
-            Files.createDirectories(pathToFile.getParent());
-        }
-        catch (IOException e) {
-            err("Could not create folder " + pathToFile.getParent().toString());
-            e.printStackTrace();
-            return false;
+        if (pathToFile.toString().contains("/") || pathToFile.toString().contains("\\")) {
+            try {
+                Files.createDirectories(pathToFile.getParent());
+            }
+            catch (IOException e) {
+                err("Could not create folder " + pathToFile.getParent().toString());
+                e.printStackTrace();
+                return false;
+            }
         }
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, false))) {

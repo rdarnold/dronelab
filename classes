@@ -73,6 +73,7 @@ src/utils/BoundingRectangle.java
 src/utils/CanvasPolygon.java 
 src/utils/CanvasRectangle.java 
 src/utils/ColorSet.java 
+src/utils/Config.java
 src/utils/Constants.java
 src/utils/Distance.java
 src/utils/ExcelUtils.java

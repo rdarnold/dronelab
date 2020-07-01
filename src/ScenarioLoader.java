@@ -441,6 +441,10 @@ public class ScenarioLoader extends ScenarioCreator {
     }
 
     public void saveFile() {
+        saveFile(name);
+    }
+
+    public void saveFile(String strFileName) {
         JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
 
         jsonBuilder.add("Name", name);
@@ -568,7 +572,7 @@ public class ScenarioLoader extends ScenarioCreator {
         String jsonData = stWriter.toString();
         //System.out.println(jsonData);
 
-        Utils.writeFile(jsonData, Constants.SCENARIO_SAVE_PATH + name + ".json");
+        Utils.writeFile(jsonData, Constants.SCENARIO_SAVE_PATH + strFileName + ".json");
         // true to append, false to overwrite
         /*try (BufferedWriter bw = new BufferedWriter(new FileWriter("Scenario1.json", false))) {
 	        bw.write(jsonData);

@@ -223,10 +223,23 @@ public class Scenario extends ScenarioLoader {
 
         // Generate random survivors as needed, this really should
         // happen when we start the sim, like "do one sim run"
-        int nNumRandomSurvivors = simParams.getNumRandomSurvivors();
-        if (nNumRandomSurvivors > 0) {
-            generator.generateVictims(nNumRandomSurvivors);
+        // But only generate if we did not autoload the previously generated
+        // file.
+        if (Config.getAutoLoaded() == false) {
+            int nNumRandomSurvivors = simParams.getNumRandomSurvivors();
+            if (nNumRandomSurvivors > 0) {
+                generator.generateVictims(nNumRandomSurvivors);
+    
+                // Now that we've generated, let's actually save this out as the
+                // current scenario.
+                saveFile(Constants.SCENARIO_CURRENT_FILE_NAME);
+            }
         }
+        else {
+            // At this point we can turn off the autoload
+            Config.save();
+        }
+
 
         if (drones != null && drones.size() > 0) {
             setSelectedDrone(drones.get(0));
