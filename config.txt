@@ -1,2 +1,0 @@
-numRuns 0
-auto 0
