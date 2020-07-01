@@ -210,7 +210,7 @@ public class DroneLab extends Application {
         Config.load();
 
         simMatrix = new SimMatrix();
-        simMatrix.load(Constants.INPUT_LOAD_PATH + "Simulation_Matrix_WiFi.xlsx");
+        simMatrix.load(Constants.INPUT_LOAD_PATH + Config.getSimMatrixFilename());
 
         setupGenericGui();
         

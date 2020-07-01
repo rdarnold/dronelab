@@ -95,6 +95,16 @@ public final class Utils {
         return filename.substring(0, extensionIndex);
     }
 
+    public static boolean stringStartsWith(String str, String strStartsWith) {
+        if (str == null || strStartsWith == null || str.equals("") == true || strStartsWith.equals("") == true) {
+            return false;
+        }
+        if (str.length() >= strStartsWith.length() && str.substring(0, strStartsWith.length()).equals(strStartsWith)) {
+            return true;
+        }
+        return false;
+    }
+
     public static String readFile(String fileName) {
         try {
             // Man, Java sucks here.  We can't check Files.exists using the same

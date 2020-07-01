@@ -34,7 +34,9 @@ public final class Config {
 
     public static int numRunsLoaded = 0;
     public static int autoLoaded = 0;
+    public static String simMatrixFilename = "Simulation_Matrix.xlsx";  // Default to the regular one
 
+    public static String getSimMatrixFilename() { return simMatrixFilename; }
     public static boolean getAutoLoaded() { 
         if (autoLoaded != 0) { 
             return true;
@@ -56,14 +58,18 @@ public final class Config {
             return;
         }
         for (String line : lines) {
-            if (line.contains("numRuns")) {
-                numRunsLoaded = Utils.tryParseInt(line.substring(("numRuns ").length(), line.length()));
+            // If we wrote a matrix to the config file, use it, otherwise just default
+            if (Utils.stringStartsWith(line, "Matrix: ") == true) {
+                simMatrixFilename = line.substring(("Matrix: ").length(), line.length());
             }
-            else if (line.contains("auto")) {
-                autoLoaded = Utils.tryParseInt(line.substring(("auto ").length(), line.length()));
+            else if (Utils.stringStartsWith(line, "numRuns: ") == true) {
+                numRunsLoaded = Utils.tryParseInt(line.substring(("numRuns: ").length(), line.length()));
+            }
+            else if (Utils.stringStartsWith(line, "auto: ") == true) {
+                autoLoaded = Utils.tryParseInt(line.substring(("auto: ").length(), line.length()));
             }
         }
-        Utils.log("numRunsLoaded: " + numRunsLoaded +", autoLoaded: " + autoLoaded);
+        Utils.log("numRunsLoaded: " + numRunsLoaded + ", autoLoaded: " + autoLoaded);
     }
 
     public static void save() {
@@ -72,7 +78,7 @@ public final class Config {
 
     public static void save(int numRuns, boolean auto) {
         // Save config data
-        String contents = "numRuns " + numRuns + "\r\nauto ";
+        String contents = "Matrix: " + simMatrixFilename + "\r\nnumRuns: " + numRuns + "\r\nauto: ";
         if (auto == true) {
             contents += "1";
         }
