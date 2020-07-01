@@ -46,7 +46,9 @@ public final class Config {
     
     public static void load() {
         String config = Utils.readFile(Constants.CONFIG_LOAD_PATH + strConfigFilename);
-        if (config == null) {
+        if (config == null || config.length() <= 0) {
+            // If we didn't have one just save out a blank one
+            save();
             return;
         }
         String lines[] = config.split("\\r?\\n");

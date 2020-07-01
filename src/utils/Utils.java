@@ -97,6 +97,14 @@ public final class Utils {
 
     public static String readFile(String fileName) {
         try {
+            // Man, Java sucks here.  We can't check Files.exists using the same
+            // path as we use to read the file !!  we have to actually strip off
+            // the first slash or it will give false negative...
+            String existsPath = fileName.substring(1, fileName.length());
+            if (Files.exists(Paths.get(existsPath)) == false) {
+                Utils.log("readFile: " + existsPath + " not found");
+                return "";
+            }
             //BufferedReader reader = new BufferedReader(new FileReader (file));
             // This way works both inside and outside of a jar file.  Using a File as
             // above does not.
