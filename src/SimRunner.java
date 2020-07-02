@@ -105,6 +105,9 @@ public class SimRunner {
         params.setTimeLimitSeconds(TimeData.ONE_HOUR_IN_SECONDS * timeLimitHours);
         params.setAlgorithmFlag(currentAlgorithm);
         params.setup(firstLine); // Start from the first line in our matrix
+
+        Utils.log("Scenario started with " + sim.scenario.victims.size() + " survivors");
+
         performRunFromMatrix();
     }
 

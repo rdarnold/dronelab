@@ -240,7 +240,6 @@ public class Scenario extends ScenarioLoader {
             Config.save();
         }
 
-
         if (drones != null && drones.size() > 0) {
             setSelectedDrone(drones.get(0));
         }
