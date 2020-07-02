@@ -29,6 +29,26 @@ public class SimMatrix {
 
     public ArrayList<SimMatrixItem> getItems() { return matrixItems; }
 
+    private int numRepsPerItem = Constants.NUM_MATRIX_REPETITIONS;
+    public void setNumRepetitionsPerItem(int num) {
+        // If it's already the same, just ignore it.
+        if (num == numRepsPerItem) {
+            return;
+        }
+
+        numRepsPerItem = num;
+
+        // If we have items, reset them to work properly
+        if (matrixItems == null) {
+            return;
+        }
+        
+        // If this has reps already, this will wipe out the data in there
+        for (SimMatrixItem item : matrixItems) {
+            item.setNumRepetitions(num);
+        }
+    }
+
     public int size() { 
         return matrixItems.size(); 
     }
@@ -49,6 +69,25 @@ public class SimMatrix {
         return strRetv;
     }
     
+    // Take an existing matrix and populate just the completed items
+    // from the existing.
+    public void populateCompletedItemsFrom(SimMatrix mat) {
+        if (mat == null) {
+            return;
+        }
+
+        // So go through and set any of our incomplete matrix items to
+        // any that are complete in the passed in one.
+        int index = 0;
+        for (SimMatrixItem fromItem : mat.getItems()) {
+            SimMatrixItem toItem = get(index);
+            for (int i = 0; i < fromItem.getNumRepetitions() && i < toItem.getNumRepetitions(); i++) {
+                toItem.setSecondsTakenCamera(i, fromItem.getSecondsTakenCamera(i));
+            }
+            index++;
+        }
+    }
+
     public void load(String fileName) {
         try {
             InputStream stream = ExcelUtils.class.getResourceAsStream(fileName);
@@ -66,7 +105,7 @@ public class SimMatrix {
                 row = sheet.getRow(r);
                 if (row == null) 
                     continue;
-                SimMatrixItem item = new SimMatrixItem();
+                SimMatrixItem item = new SimMatrixItem(numRepsPerItem);
                 matrixItems.add(item);
                 for (int c = 0; c < numCols; c++) {
                     cell = row.getCell(c);
@@ -111,5 +150,47 @@ public class SimMatrix {
         }
 
         //Utils.log(toString());
+    }
+    
+    // This loads up a set of comma-delimeted data that had previously been recorded
+    // in the text, and is only the result values of each item; doesn't have any
+    // configurations or anything
+    public void loadPreviousDataFromText(String strData) {
+        // What we'll do is, we will see if we have a matrix item at a certain index;
+        // if we do, we'll populate that, but only if it's not already populated.
+        // Basically we "fill in the blanks" with this loaded data.  And if we don't
+        // have a matrix item, we create one and fill it in.
+        String lines[] = strData.split("\\r?\\n");
+        if (lines == null) {
+            return;
+        }
+        int index = 0;
+        for (String line : lines) {
+            SimMatrixItem item;
+            if (matrixItems.size() > index) {
+                // We have an item then
+                item = matrixItems.get(index);
+            }
+            else {
+                item = new SimMatrixItem(numRepsPerItem);
+                matrixItems.add(item);
+            }
+
+            // Now go through the lines
+            String entries[] = line.split(",");
+            int numReps = entries.length;
+            if (numReps > this.numRepsPerItem) {
+                this.setNumRepetitionsPerItem(numReps);
+            }
+            item.setNumRepetitions(numReps);
+            int i = 0;
+            for (String entry : entries) {
+                int sec = Utils.tryParseInt(entry); // Let's hope this works every time
+                item.setSecondsTakenCamera(i, sec);
+                i++;
+            }
+
+            index++;
+        }
     }
 }

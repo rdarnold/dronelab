@@ -20,13 +20,19 @@ public final class Constants {
     public static final String OUTPUT_SAVE_PATH = "output/";
     public static final String INPUT_LOAD_PATH = "/input/";
     public static final String DATA_SAVE_PATH = "output/data/";
+    public static final String DATA_LOAD_PATH = "/output/data/";
     public static final String DATASET_SAVE_PATH = "output/data/datasets/";
     public static final String SEEN_DATA_SAVE_PATH = "output/data/seen/";
     public static final String CONFIG_LOAD_PATH = "/";
     public static final String CONFIG_SAVE_PATH = "";
 
+    public static final String DATA_FILE_CAMERA = "matrix_output_camera.txt";
+    public static final String DATA_FILE_FINDER = "matrix_output_FINDER.txt";
+
     public static final String RESTART_BATCH_FILE_NAME_PATH = "restart.bat";
     public static final String SCENARIO_CURRENT_FILE_NAME = "current_scenario";
+
+    public static final int NUM_MATRIX_REPETITIONS = 10;
 
     //one second in nanoseconds
     public static final long ONE_SECOND_IN_NANOSECONDS = 1000000000;

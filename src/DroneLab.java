@@ -649,7 +649,7 @@ public class DroneLab extends Application {
         }
 
         // Write out the excel spreadsheet now too, or just a text file with all the data
-        Utils.writeFile(str, Constants.DATA_SAVE_PATH + "matrix_output_camera.txt");
+        Utils.writeFile(str, Constants.DATA_SAVE_PATH + Constants.DATA_FILE_CAMERA);
 
         str = "";
 
@@ -664,7 +664,7 @@ public class DroneLab extends Application {
         }
 
         // Write out the excel spreadsheet now too, or just a text file with all the data
-        Utils.writeFile(str, Constants.DATA_SAVE_PATH + "matrix_output_FINDER.txt");
+        Utils.writeFile(str, Constants.DATA_SAVE_PATH + Constants.DATA_FILE_FINDER);
     }
 
     // Record the data for one sim run

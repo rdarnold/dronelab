@@ -195,6 +195,13 @@ public class SimParams {
 
     public void setNumRepetitions(int num) {
         numRepetitions.set(num);
+
+        // If we have a simulation matrix (which we should), then when we
+        // set the number of reps, we need to tell that to the matrix so
+        // it can allocate enough space
+        if (getSimMatrix() != null) {
+            getSimMatrix().setNumRepetitionsPerItem(num);
+        }
     }
 
     public IntegerProperty numRepetitionsProperty() {

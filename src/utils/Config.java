@@ -10,6 +10,9 @@ import javax.json.JsonNumber;
 import javax.json.JsonString;
 import javax.json.stream.JsonParser;
 
+import dronelab.SimParams;
+import dronelab.utils.SimMatrixItem;
+
 
 /*
 Allowances for auto-running so that it doesn't get too laggy:
@@ -32,14 +35,20 @@ public final class Config {
     private Config () { // private constructor
     }
 
-    public static int numRunsLoaded = 0;
-    public static int autoLoaded = 0;
-    public static int drawLoaded = 1;
-    public static String simMatrixFilename = "Simulation_Matrix.xlsx";  // Default to the regular one
-    public static String scenarioName = "Arahama1";
+    private static int numRunsLoaded = 0;
+    private static int autoLoaded = 0;
+    private static int drawLoaded = 1;
+    private static String simMatrixFilename = "Simulation_Matrix.xlsx";  // Default to the regular one
+    private static String scenarioName = "Arahama1";
+    
+    // This matrix is not fully populated; it only has the output data from the previous/current
+    // experiment in it, it doesn't contain any of the configurations or anything.
+    private static SimMatrix previousMatrix = null;
 
+    public static SimMatrix getPreviousMatrix() { return previousMatrix; }
     public static String getSimMatrixFilename() { return simMatrixFilename; }
     public static String getScenarioName() { return scenarioName; }
+    public static int getNumRunsLoaded() { return numRunsLoaded; }
     public static boolean getDrawLoaded() { 
         if (drawLoaded != 0) { 
             return true;
@@ -84,7 +93,27 @@ public final class Config {
                 autoLoaded = Utils.tryParseInt(line.substring(("auto: ").length(), line.length()));
             }
         }
+
+        // OK if we auto-loaded, then auto-load previous data too.
+        if (getAutoLoaded() == true) {
+            loadPreviousData();
+        }
+
         Utils.log("numRunsLoaded: " + numRunsLoaded + ", autoLoaded: " + autoLoaded);
+    }
+
+    private static void loadPreviousData() {
+        // We will try to maintain the single-file list of times, even though it's not our primary
+        // source of data which is now the list of text files.  The single file of times is still
+        // useful for analysis using excel and getting an idea of which approaches worked the best.
+        String data = Utils.readFile(Constants.DATA_LOAD_PATH + Constants.DATA_FILE_CAMERA);
+
+        // Now we could either just try to paste this onto the beginning of the file, or actually
+        // generate our simulation matrix based on the data.  I think let's actually regenerate the
+        // matrix; we're continuing from where we left off because we loaded from an auto-load, so
+        // it's better to have it in the matrix which would let us overwrite as needed.
+        previousMatrix = new SimMatrix();
+        previousMatrix.loadPreviousDataFromText(data);
     }
 
     public static void save() {

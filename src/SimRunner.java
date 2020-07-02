@@ -29,10 +29,10 @@ public class SimRunner {
     public SimRunner(DroneLab theSim) {
         sim = theSim;
 
-        if (Config.autoLoaded != 0) {
+        if (Config.getAutoLoaded() == true) {
             // Automatically loaded; so let's do this!
             // Load up the run we were on
-            int num = Config.numRunsLoaded;
+            int num = Config.getNumRunsLoaded();
             int nearestTen = num / 10;
             num = nearestTen * 10;
             firstLine = num / 10;
@@ -40,9 +40,12 @@ public class SimRunner {
             setNumRuns(num);
 
             // Set our time to 200x
-            sim.scenario.setTimeFactor(Constants.MAX_FFW_RATE);
+            DroneLab.scenario.setTimeFactor(Constants.MAX_FFW_RATE);
 
             sim.updateNumRunText(numRuns);
+
+            // And fill in the sim matrix with loaded items if we have them
+            sim.simMatrix.populateCompletedItemsFrom(Config.getPreviousMatrix());
 
             // And start up!
             startRunsFromMatrix();
@@ -54,7 +57,7 @@ public class SimRunner {
 
         // Every x runs, restart automatically; this only takes a few seconds
         // and it saves us a lot of time as the system eventually gets bogged down
-        if (numRuns % 50 == 0) {
+        if (numRuns % 2 == 0) {
             Config.save(numRuns, true);
             // Restart now
             try {
@@ -101,7 +104,7 @@ public class SimRunner {
         SimParams params = sim.scenario.simParams;
         params.setSimMatrix(sim.simMatrix);
         params.setSimMatrixItem(null); // We will set this correctly in a moment
-        params.setNumRepetitions(10);
+        params.setNumRepetitions(Constants.NUM_MATRIX_REPETITIONS);
         params.setTimeLimitSeconds(TimeData.ONE_HOUR_IN_SECONDS * timeLimitHours);
         params.setAlgorithmFlag(currentAlgorithm);
         params.setup(firstLine); // Start from the first line in our matrix

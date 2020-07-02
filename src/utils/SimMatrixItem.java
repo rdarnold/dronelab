@@ -7,7 +7,7 @@ import dronelab.*;
 // This contains the data from the simulation matrix to tell us which sims to run using which parameters
 public class SimMatrixItem {
 
-    SimMatrixItem() { }
+    SimMatrixItem(int num) { setNumRepetitions(num); }
 
     public int simulationNum = 0;
     public int relayNum = 0;
@@ -15,9 +15,33 @@ public class SimMatrixItem {
     public int antiNum = 0;
     public double wifiRange = 1.0;
 
+    private int numRepetitions = Constants.NUM_MATRIX_REPETITIONS;
+    public int getNumRepetitions() { return numRepetitions; }
+    public void setNumRepetitions(int num) { 
+        numRepetitions = num; 
+        // Let's copy over our data so we don't wipe everything out if we call
+        // the set function a few times.  If we want to wipe this out we'll just
+        // remove the item entirely from the matrix and create a new one.
+        int[] newSecondsTakenCameraArray = new int[numRepetitions]; 
+        int[] newSecondsTakenFINDERArray = new int[numRepetitions]; 
+        if (secondsTakenCameraArray != null) {
+            for (int i = 0; i < secondsTakenCameraArray.length && i < newSecondsTakenCameraArray.length; i++) {
+                newSecondsTakenCameraArray[i] = secondsTakenCameraArray[i];
+            }
+        }
+        if (secondsTakenFINDERArray != null) {
+            for (int i = 0; i < secondsTakenFINDERArray.length && i < newSecondsTakenFINDERArray.length; i++) {
+                newSecondsTakenFINDERArray[i] = secondsTakenFINDERArray[i];
+            }
+        }
+        
+        secondsTakenCameraArray = newSecondsTakenCameraArray;
+        secondsTakenFINDERArray = newSecondsTakenFINDERArray;
+    }
+
     // One entry for each reptition; could create this on the fly later based on the simulation matrix
-    public int[] secondsTakenCameraArray = new int[10];  // How long did it actually take to do this run?  We can record it here then save it out
-    public int[] secondsTakenFINDERArray = new int[10];  // How long did it actually take to do this run?  We can record it here then save it out
+    public int[] secondsTakenCameraArray = null; //new int[numRepetitions];  // How long did it actually take to do this run?  We can record it here then save it out
+    public int[] secondsTakenFINDERArray = null; //new int[numRepetitions];  // How long did it actually take to do this run?  We can record it here then save it out
 
     public int getSimulationNum() { return simulationNum; }
     public int getRelayNum() { return relayNum; }
@@ -54,14 +78,14 @@ public class SimMatrixItem {
         strRetv += "\r\n";
         if (secondsTakenCameraArray[0] > 0) {
             strRetv += ", CAM SECONDS TAKEN: ";
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < numRepetitions; i++) {
                 strRetv += "" + secondsTakenCameraArray[i] + ", ";
             }
         }
         strRetv += "\r\n";
         if (secondsTakenFINDERArray[0] > 0) {
             strRetv += ", FINDER SECONDS TAKEN: ";
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < numRepetitions; i++) {
                 strRetv += "" + secondsTakenFINDERArray[i] + ", ";
             }
         }
