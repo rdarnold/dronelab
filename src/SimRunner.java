@@ -57,7 +57,7 @@ public class SimRunner {
 
         // Every x runs, restart automatically; this only takes a few seconds
         // and it saves us a lot of time as the system eventually gets bogged down
-        if (numRuns % 2 == 0) {
+        if (numRuns % 50 == 0) {
             Config.save(numRuns, true);
             // Restart now
             try {
