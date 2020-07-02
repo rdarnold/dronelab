@@ -52,8 +52,9 @@ public class SimRunner {
     public void signalSimComplete() {
         setNumRuns(numRuns + 1);
 
-        // Every 100 runs, restart automatically
-        if (numRuns % 100 == 0) {
+        // Every x runs, restart automatically; this only takes a few seconds
+        // and it saves us a lot of time as the system eventually gets bogged down
+        if (numRuns % 50 == 0) {
             Config.save(numRuns, true);
             // Restart now
             try {
