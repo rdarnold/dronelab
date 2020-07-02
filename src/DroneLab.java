@@ -225,7 +225,7 @@ public class DroneLab extends Application {
             scenario.init(this, Constants.SCENARIO_CURRENT_FILE_NAME);
         }
         else {
-            scenario.init(this, "Arahama");
+            scenario.init(this, Config.getScenarioName());
         }
 
         // The gui elements that are specific to the scenario, need sizing, need populating, etc.
