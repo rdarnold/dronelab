@@ -284,7 +284,17 @@ public class DroneLab extends Application {
         launch(args);
     }
 
+    private static long lastMS = 0;
     public void updateOneFrame() {
+        // Write out the 'stay alive' file so external programs know if we're still running
+        long currentMS = System.currentTimeMillis();
+        // Write the file out every 30 seconds
+        if (currentMS - lastMS > 30000) {
+            lastMS = currentMS;
+            Config.saveProcMonFile(runner.getCurrentRunNum());
+        }
+
+        // Now do the rest
         if (scenario.update() == false) {
             return;
         }

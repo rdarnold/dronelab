@@ -40,10 +40,17 @@ public final class Config {
     private static int drawLoaded = 1;
     private static String simMatrixFilename = "Simulation_Matrix.xlsx";  // Default to the regular one
     private static String scenarioName = "Arahama1";
+
+    // This is just for the process monitor which also uses the Config class, not the main program
+    private static long timeStampLoaded = 0;
+    public static long getTimeStampLoaded() { return timeStampLoaded; }
     
     // This matrix is not fully populated; it only has the output data from the previous/current
     // experiment in it, it doesn't contain any of the configurations or anything.
     private static SimMatrix previousMatrix = null;
+    
+    private static String strConfigFilename = "config.txt";
+    private static String strProcMonFilename = "procmon.txt";
 
     public static SimMatrix getPreviousMatrix() { return previousMatrix; }
     public static String getSimMatrixFilename() { return simMatrixFilename; }
@@ -61,8 +68,6 @@ public final class Config {
         }
         return false;
     }
-
-    private static String strConfigFilename = "config.txt";
     
     public static void load() {
         String config = Utils.readFile(Constants.CONFIG_LOAD_PATH + strConfigFilename);
@@ -136,5 +141,36 @@ public final class Config {
             contents += "0";
         }
         Utils.writeFile(contents, Constants.CONFIG_SAVE_PATH + strConfigFilename);
+    }
+
+    // The following are for the process monitor which restarts the sim if it freezes
+    public static void saveProcMonFile(int numRuns) {
+        String contents = "";
+        contents += "ts: " + System.currentTimeMillis() + "\r\n";
+        contents += "numRuns: " + numRuns;
+
+        Utils.writeFile(contents, Constants.CONFIG_SAVE_PATH + strProcMonFilename);
+    }
+
+    public static void loadProcMonFile() {
+        String contents = Utils.readFile(Constants.CONFIG_LOAD_PATH + strProcMonFilename);
+        if (contents == null || contents.length() <= 0) {
+            return;
+        }
+        String lines[] = contents.split("\\r?\\n");
+        if (lines == null) {
+            return;
+        }
+        for (String line : lines) {
+            // If we wrote a matrix to the config file, use it, otherwise just default
+            if (Utils.stringStartsWith(line, "ts: ") == true) {
+                timeStampLoaded = Utils.tryParseLong(line.substring(("ts: ").length(), line.length()));
+            }
+            else if (Utils.stringStartsWith(line, "numRuns: ") == true) {
+                numRunsLoaded = Utils.tryParseInt(line.substring(("numRuns: ").length(), line.length()));
+            }
+        }
+
+        Utils.log("ts: " + timeStampLoaded + ", numRuns: " + numRunsLoaded);
     }
 }

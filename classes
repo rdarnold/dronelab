@@ -69,6 +69,7 @@ src/gui/VBoxCustom.java
 src/gui/VBoxDroneConfig.java 
 src/gui/VBoxSensor.java 
 src/gui/VBoxSimulation.java
+src/procmon/DLProcMon.java
 src/utils/BoundingRectangle.java
 src/utils/CanvasPolygon.java 
 src/utils/CanvasRectangle.java 

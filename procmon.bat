@@ -1,0 +1,1 @@
+java -Dfile.encoding=UTF8 -Xmx100M -d64 -cp "bin;../ext/*;." dronelab.procmon.DLProcMon

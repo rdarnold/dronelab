@@ -256,6 +256,15 @@ public final class Utils {
         }  
     }
 
+    public static long tryParseLong(String value) {  
+        try {  
+            long i = Long.parseLong(value);  
+            return i;  
+        } catch (NumberFormatException e) {  
+            return 0;  
+        }  
+    }
+
     public static double tryParseDoublePercent(String value) {  
         // Strip a % sign off the end of it 
         int index = value.indexOf("%");
