@@ -153,7 +153,7 @@ public final class Config {
     }
 
     public static void loadProcMonFile() {
-        String contents = Utils.readFile(Constants.CONFIG_LOAD_PATH + strProcMonFilename);
+        String contents = Utils.readFile(Constants.CONFIG_LOAD_PATH + strProcMonFilename, false);
         if (contents == null || contents.length() <= 0) {
             return;
         }

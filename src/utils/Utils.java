@@ -105,7 +105,12 @@ public final class Utils {
         return false;
     }
 
+    
     public static String readFile(String fileName) {
+        return readFile(fileName, true);
+    }
+
+    public static String readFile(String fileName, boolean printLog) {
         try {
             // Man, Java sucks here.  We can't check Files.exists using the same
             // path as we use to read the file !!  we have to actually strip off
@@ -118,7 +123,9 @@ public final class Utils {
             //BufferedReader reader = new BufferedReader(new FileReader (file));
             // This way works both inside and outside of a jar file.  Using a File as
             // above does not.
-            Utils.log("readFile: " + fileName);
+            if (printLog == true) {
+                Utils.log("readFile: " + fileName);
+            }
             BufferedReader reader = new BufferedReader(
                 new InputStreamReader(Utils.class.getResourceAsStream(fileName)));
             String         line = null;
