@@ -171,6 +171,6 @@ public final class Config {
             }
         }
 
-        Utils.log("ts: " + timeStampLoaded + ", numRuns: " + numRunsLoaded);
+        //Utils.log("ts: " + timeStampLoaded + ", numRuns: " + numRunsLoaded);
     }
 }
