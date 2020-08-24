@@ -736,7 +736,7 @@ public class DroneLab extends Application {
         //Utils.writeFile(str, Constants.DATA_SAVE_PATH + filename);
 
         // Now write out the survivor time data as just a plain text file
-        String fname = "" + (runner.getCurrentRunNum() + 1)+ ".txt";
+        String fname = "" + (runner.getCurrentRunNum() + 1) + ".txt";
         Utils.writeFile(survivorFoundTimes, Constants.SEEN_DATA_SAVE_PATH + fname);
     }
     

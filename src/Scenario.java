@@ -188,20 +188,6 @@ public class Scenario extends ScenarioLoader {
 
     public void applyAlgorithm() {
         setupAlgorithm(simParams.getAlgorithmFlag());
-        // Really I should just have like algorithms
-        // which are behavior sets that can be applied or not.
-        /*if (simParams.getAlgorithmFlag() == SimParams.AlgorithmFlag.STANDARD) {
-            setupAlgorithm(SimParams.AlgorithmFlag.STANDARD);
-        } 
-        else if (simParams.getAlgorithmFlag() == SimParams.AlgorithmFlag.SPIRAL) {
-            setupAlgorithm(SimParams.AlgorithmFlag.SPIRAL);
-        } 
-        else if (simParams.getAlgorithmFlag() == SimParams.AlgorithmFlag.SCATTER) {
-            setupAlgorithm(SimParams.AlgorithmFlag.SCATTER);
-        }
-        else {
-            setupAlgorithm(SimParams.AlgorithmFlag.NOT_DEFINED);
-        }*/
     }
 
     // Get the simulation ready to be run.  Deploy drones in the

@@ -89,25 +89,35 @@ public class ScenarioCreator {
     int nextDroneId = 0;
 
     public void clear() {
+        clearVictims();
+        clearDrones();
+        clearObstacles();
+        
         drone = null;
-        mobiles.clear();
-    	people.clear();
     	drones.clear();
     	obstacles.clear();
     	collisions.clear();
-    	victims.clear();
     	rescueWorkers.clear();
     	broadcasts.clear();
     	deployments.clear();
+        mobiles.clear();
+    	people.clear();
+        victims.clear();
     }
 
     public void clearVictims() {
+        for (Person pers : victims) {
+            removeFromSectors(pers);
+        }
         mobiles.removeAll(victims);
         people.removeAll(victims);
         victims.clear();
     }
 
     public void clearDrones() {
+        for (Drone dro : drones) {
+            removeFromSectors(dro);
+        }
         drone = null;
         mobiles.removeAll(drones);
         drones.clear();
@@ -120,6 +130,9 @@ public class ScenarioCreator {
     }
 
     public void clearObstacles() {
+        for (Obstacle obs : obstacles) {
+            removeFromSectors(obs);
+        }
         obstacles.clear();
     }
 
@@ -135,7 +148,7 @@ public class ScenarioCreator {
         removeFromSectors(obs);
     }
 
-    public void removeDrone(Drone d) {
+    /*public void removeDrone(Drone d) {
         drones.remove(d);
         mobiles.remove(d);
 
@@ -150,7 +163,7 @@ public class ScenarioCreator {
 
         // And remove from sector
         removeFromSectors(vict);
-    }
+    }*/
 
     public void addDeployment(Deployment dep) {
         deployments.add(dep);
@@ -240,18 +253,27 @@ public class ScenarioCreator {
     }
 
     public void removeFromSectors(Drone drone) {
+        if (sectors == null) {
+            return;
+        }
         for (Sector sect : sectors) {
             sect.remove(drone);
         }
     }
 
     public void removeFromSectors(Obstacle obs) {
+        if (sectors == null) {
+            return;
+        }
         for (Sector sect : sectors) {
             sect.remove(obs);
         }
     }
     
     public void removeFromSectors(Person pers) {
+        if (sectors == null) {
+            return;
+        }
         for (Sector sect : sectors) {
             sect.remove(pers);
         }
