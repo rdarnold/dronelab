@@ -288,7 +288,7 @@ public class SimData {
         str += "\r\n"; 
         str += "Drones: " + params.getNumDrones();
         str += "\r\n"; 
-        str += "Survivors: " + scenario.victims.size();
+        str += "Survivors: " + scenario.getNumVictims();
         str += "\r\n"; 
         str += "SimTimeLimit: " + params.getTimeLimitSeconds();
         str += "\r\n"; 

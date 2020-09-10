@@ -118,7 +118,7 @@ public final class DataCompiler {
             filename += "nd_"; 
 
         filename += params.getNumDrones() + "uav_"; 
-        filename += scenario.victims.size() + "ppl_"; 
+        filename += scenario.getNumVictims() + "ppl_"; 
         filename += params.getTimeLimitMinutes() + "min_"; 
         filename += strDate;
         return filename;
@@ -149,7 +149,7 @@ public final class DataCompiler {
         str += "\r\n"; 
         str += "Drones: " + params.getNumDrones();
         str += "\r\n"; 
-        str += "Survivors: " + scenario.victims.size();
+        str += "Survivors: " + scenario.getNumVictims();
         str += "\r\n"; 
         str += "SimTimeLimit: " + params.getTimeLimitSeconds();
         str += "\r\n"; 

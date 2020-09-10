@@ -433,7 +433,7 @@ public class EnvironmentBuilder  {
                         break;
                     case VICTIMS:
                         addVictim(x, y);
-                        Utils.log("" + scen.victims.size() + " survivors");
+                        Utils.log("" + scen.getNumVictims() + " survivors");
                         break;
                     case DRONES:
                         addDrone(x, y);

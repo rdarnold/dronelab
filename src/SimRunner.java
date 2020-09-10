@@ -109,8 +109,6 @@ public class SimRunner {
         params.setAlgorithmFlag(currentAlgorithm);
         params.setup(firstLine); // Start from the first line in our matrix
 
-        Utils.log("Scenario started with " + sim.scenario.victims.size() + " survivors");
-
         performRunFromMatrix();
     }
 

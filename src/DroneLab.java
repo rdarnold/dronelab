@@ -614,7 +614,7 @@ public class DroneLab extends Application {
             filename += "nd_"; 
 
         filename += params.getNumDrones() + "uav_"; 
-        filename += scenario.victims.size() + "ppl_"; 
+        filename += scenario.getNumVictims() + "ppl_"; 
         filename += params.getTimeLimitMinutes() + "min_"; 
         filename += strDate;
         return filename;
@@ -640,6 +640,7 @@ public class DroneLab extends Application {
         int seen90Perc = vBoxCurrentData.getSeen90PercSeconds();
         int loc90Perc = vBoxCurrentData.getLocated90PercSeconds();
         if (seen90Perc > 0) {
+            Utils.log("Reached 90% seen (" + sim.scenario.getNumVictimsSeen() + "/" + sim.scenario.getNumVictims() + " survivors)");
             item.setSecondsTakenCamera(runner.getCurrentRepetitionNum()-1, seen90Perc);
         }
         if (loc90Perc > 0) {
@@ -709,7 +710,7 @@ public class DroneLab extends Application {
         str += "\r\n"; 
         str += "Drones: " + params.getNumDrones();
         str += "\r\n"; 
-        str += "Survivors: " + scenario.victims.size();
+        str += "Survivors: " + scenario.getNumVictims();
         str += "\r\n"; 
         str += "SimTimeLimit: " + params.getTimeLimitSeconds();
         str += "\r\n"; 

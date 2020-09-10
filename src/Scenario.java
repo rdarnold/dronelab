@@ -175,7 +175,7 @@ public class Scenario extends ScenarioLoader {
             if (numRole_boo > 0) {
                 Utils.log("UNDEFINED ROLE: " + numRole_boo);
             }
-            Utils.log("NEW SIM SETUP; SOCIAL: " + numRole1 + ", RELAY: " + numRole2 + ", ANTI: " + numRole3 + 
+            Utils.log("NEW SIM SETUP (" + sim.scenario.getNumVictims() + " survivors); SOCIAL: " + numRole1 + ", RELAY: " + numRole2 + ", ANTI: " + numRole3 + 
                 ", WIFI: " + wifi_range);
         }
         else {
