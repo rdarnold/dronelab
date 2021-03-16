@@ -45,7 +45,9 @@ public class SimRunner {
             sim.updateNumRunText(numRuns);
 
             // And fill in the sim matrix with loaded items if we have them
-            sim.simMatrix.populateCompletedItemsFrom(Config.getPreviousMatrix());
+            if (numRuns > 0) {
+                sim.simMatrix.populateCompletedItemsFrom(Config.getPreviousMatrix());
+            }
 
             // And start up!
             startRunsFromMatrix();
