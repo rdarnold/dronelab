@@ -175,7 +175,7 @@ public class Scenario extends ScenarioLoader {
             if (numRole_boo > 0) {
                 Utils.log("UNDEFINED ROLE: " + numRole_boo);
             }
-            Utils.log("NEW SIM SETUP (" + sim.scenario.getNumVictims() + " survivors); SOCIAL: " + numRole1 + ", RELAY: " + numRole2 + ", ANTI: " + numRole3 + 
+            Utils.log("APPLIED SIM SETUP (" + sim.scenario.getNumVictims() + " survivors); SOCIAL: " + numRole1 + ", RELAY: " + numRole2 + ", ANTI: " + numRole3 + 
                 ", WIFI: " + wifi_range);
         }
         else {
@@ -211,7 +211,7 @@ public class Scenario extends ScenarioLoader {
         // happen when we start the sim, like "do one sim run"
         // But only generate if we did not autoload the previously generated
         // file.
-        if (Config.getAutoLoaded() == false) {
+        if (Config.getStartNew() == true || Config.getAutoLoaded() == false) {
             int nNumRandomSurvivors = simParams.getNumRandomSurvivors();
             if (nNumRandomSurvivors > 0) {
                 generator.generateVictims(nNumRandomSurvivors);
@@ -221,10 +221,9 @@ public class Scenario extends ScenarioLoader {
                 saveFile(Constants.SCENARIO_CURRENT_FILE_NAME);
             }
         }
-        else {
-            // At this point we can turn off the autoload
-            Config.save();
-        }
+
+        // At this point we can turn off the autoload
+        Config.save();
 
         if (drones != null && drones.size() > 0) {
             setSelectedDrone(drones.get(0));

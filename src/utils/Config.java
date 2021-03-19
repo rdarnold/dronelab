@@ -19,7 +19,7 @@ Allowances for auto-running so that it doesn't get too laggy:
 - save numRuns to config file
 - if sim restarts itself, save auto 1 to config file
 - Load from config file when program opens
-- if "auto" is set to 1, then:
+- if "auto" is set to 1 AND startNew is 0, then:
     - load up current_scenario.json
     - automatically start from numRuns rounded to nearest 10
 - if "auto" is set to 0, then:
@@ -36,8 +36,10 @@ public final class Config {
     }
 
     private static int numRunsLoaded = 0;
+    private static int numRandomSurvivorsLoaded = 300;
     private static int autoLoaded = 0;
     private static int drawLoaded = 1;
+    private static int startNew = 0;
     private static String simMatrixFilename = "Simulation_Matrix.xlsx";  // Default to the regular one
     private static String scenarioName = "Arahama1";
 
@@ -56,18 +58,10 @@ public final class Config {
     public static String getSimMatrixFilename() { return simMatrixFilename; }
     public static String getScenarioName() { return scenarioName; }
     public static int getNumRunsLoaded() { return numRunsLoaded; }
-    public static boolean getDrawLoaded() { 
-        if (drawLoaded != 0) { 
-            return true;
-        }
-        return false;
-    }
-    public static boolean getAutoLoaded() { 
-        if (autoLoaded != 0) { 
-            return true;
-        }
-        return false;
-    }
+    public static int getNumRandomSurvivorsLoaded() { return numRandomSurvivorsLoaded; }
+    public static boolean getStartNew() { if (startNew != 0)   { return true; } return false; }
+    public static boolean getDrawLoaded() { if (drawLoaded != 0) { return true; } return false; }
+    public static boolean getAutoLoaded() { if (autoLoaded != 0) { return true; } return false; }
     
     public static void load() {
         String config = Utils.readFile(Constants.CONFIG_LOAD_PATH + strConfigFilename);
@@ -88,6 +82,13 @@ public final class Config {
             else if (Utils.stringStartsWith(line, "Scenario: ") == true) {
                 scenarioName = line.substring(("Scenario: ").length(), line.length());
             }
+            else if (Utils.stringStartsWith(line, "numRandomSurvivors: ") == true) {
+                // Only used if startNew is 1 / true, or loading the previous config fails
+                numRandomSurvivorsLoaded = Utils.tryParseInt(line.substring(("numRandomSurvivors: ").length(), line.length()));
+            }
+            else if (Utils.stringStartsWith(line, "startNew: ") == true) {
+                startNew = Utils.tryParseInt(line.substring(("startNew: ").length(), line.length()));
+            }
             else if (Utils.stringStartsWith(line, "draw: ") == true) {
                 drawLoaded = Utils.tryParseInt(line.substring(("draw: ").length(), line.length()));
             }
@@ -104,7 +105,13 @@ public final class Config {
             loadPreviousData();
         }
 
+        // Always log this
         Utils.log("numRunsLoaded: " + numRunsLoaded + ", autoLoaded: " + autoLoaded);
+
+        // Only log these if we are starting a new batch and did not load previous
+        if (startNew != 0) {
+            Utils.log("startNew: 1, numRandomSurvivorsLoaded: " + numRandomSurvivorsLoaded);
+        }
     }
 
     private static void loadPreviousData() {
@@ -131,6 +138,8 @@ public final class Config {
         
         contents += "Matrix: " + simMatrixFilename + "\r\n";
         contents += "Scenario: " + scenarioName + "\r\n";
+        contents += "numRandomSurvivors: " + numRandomSurvivorsLoaded + "\r\n" ;  // Only used if startNew is 1 / true
+        contents += "startNew: 0\r\n"; // startNew can ONLY be set manually in config file, always saves to zero/false
         contents += "draw: " + drawLoaded + "\r\n" ;
         contents += "numRuns: " + numRuns + "\r\n" ;
         contents += "auto: ";
