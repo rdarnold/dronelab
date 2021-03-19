@@ -31,23 +31,23 @@ public class SimRunner {
 
         if (Config.getAutoLoaded() == true) {
             // Automatically loaded; so let's do this!
-            // Load up the run we were on
-            int num = Config.getNumRunsLoaded();
-            int nearestTen = num / 10;
-            num = nearestTen * 10;
-            firstLine = num / 10;
+            if (Config.getStartNew() == false) {
+                // Load up the run we were on
+                int num = Config.getNumRunsLoaded();
+                int nearestTen = num / 10;
+                num = nearestTen * 10;
+                firstLine = num / 10;
 
-            setNumRuns(num);
+                setNumRuns(num);
 
-            // Set our time to 200x
-            DroneLab.scenario.setTimeFactor(Constants.MAX_FFW_RATE);
+                sim.updateNumRunText(numRuns);
 
-            sim.updateNumRunText(numRuns);
-
-            // And fill in the sim matrix with loaded items if we have them
-            if (numRuns > 0) {
+                // And fill in the sim matrix with loaded items if we have them
                 sim.simMatrix.populateCompletedItemsFrom(Config.getPreviousMatrix());
             }
+
+            // Set our time to 200x
+            sim.scenario.setTimeFactor(Constants.MAX_FFW_RATE);
 
             // And start up!
             startRunsFromMatrix();
@@ -112,6 +112,9 @@ public class SimRunner {
         params.setup(firstLine); // Start from the first line in our matrix
 
         performRunFromMatrix();
+
+        // Update the GUI so that it is correct
+        sim.resetVBoxSimulationFields();
     }
 
     

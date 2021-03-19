@@ -221,7 +221,7 @@ public class DroneLab extends Application {
 
         // If we auto-loaded from a prior sim run, reload the last scenario including
         // generated survivors
-        if (Config.getAutoLoaded() == true) {
+        if (Config.getAutoLoaded() == true && Config.getStartNew() == false) {
             scenario.init(this, Constants.SCENARIO_CURRENT_FILE_NAME);
         }
         else {
@@ -231,6 +231,10 @@ public class DroneLab extends Application {
         // The gui elements that are specific to the scenario, need sizing, need populating, etc.
         setupScenarioSpecificGui();
         //border.setRight(addFlowPane());
+
+        // Controls are now all created, so populate whatever we need to from config, like the
+        // number of random survivors that we loaded
+        applyLoadedConfig();
 
         //StackPane root = new StackPane();
         scene = new Scene(border, wid, hgt);
@@ -1162,6 +1166,23 @@ public class DroneLab extends Application {
         tp.setText("Build Options");
         tp.setContent(vBoxBuilderOptions);
         builderVBox.getChildren().add(tp);
+    }
+
+    public void applyLoadedConfig() {
+        // This should be set because it gets pulled later
+        vBoxSimulation.setNumRandomSurvivorsFromConfig();
+
+        // This does'nt necessarily have to be set because we automatically run at
+        // 200x speed when auto-loading but just makes it more intuitive when looking
+        // at the GUI if it's set to the right value
+        if (Config.getAutoLoaded() == true) {
+            vBoxSimulation.setFFW(200);
+        }
+    }
+
+    // To set our fields in the GUI so that htey match what we auto-loaded
+    public void resetVBoxSimulationFields() {
+        vBoxSimulation.resetFields();
     }
 
     /////////////////////////

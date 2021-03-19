@@ -275,7 +275,8 @@ public class VBoxSimulation extends VBoxCustom {
             "None", 
             "Standard", 
             "Spiral",
-            "Scatter"
+            "Scatter",
+            "MixSocialRelayAnti"
             )
         );
         cbAlgorithm.getSelectionModel().selectFirst();
@@ -309,6 +310,12 @@ public class VBoxSimulation extends VBoxCustom {
             case 2:
                 ltfNumRandomSurvivors.setFieldText(numPeople);
                 ltfNumDrones.setFieldText(20);
+                ltfTimeLimit.setFieldText(hours);
+                //cbAlgorithm.getSelectionModel().select(0);
+                break;
+            case 3:
+                ltfNumRandomSurvivors.setFieldText(numPeople);
+                ltfNumDrones.setFieldText(30);  // We'll default to 30 for no particular reason
                 ltfTimeLimit.setFieldText(hours);
                 //cbAlgorithm.getSelectionModel().select(0);
                 break;
@@ -351,9 +358,16 @@ public class VBoxSimulation extends VBoxCustom {
             case 3:
                 params.setAlgorithmFlag(SimParams.AlgorithmFlag.SCATTER);
                 break;
+            case 4:
+                params.setAlgorithmFlag(SimParams.AlgorithmFlag.MIX_SRA);
+                break;
         }
         // And apply it to the scenario immediately.
         scenario.applyAlgorithm();
+    }
+    
+    public void setNumRandomSurvivorsFromConfig() {
+        ltfNumRandomSurvivors.setFieldText(Config.getNumRandomSurvivorsLoaded());
     }
 
     public void apply() {
@@ -378,6 +392,10 @@ public class VBoxSimulation extends VBoxCustom {
 
         // Get the selection
         setAlgorithm();
+    }
+
+    public void setFFW(int factor) {
+        ltfSimSpeed.setFieldText(factor);
     }
 
     private void applyFastForward() {
@@ -407,6 +425,8 @@ public class VBoxSimulation extends VBoxCustom {
             cbAlgorithm.getSelectionModel().select(2);
         } else if (params.getAlgorithmFlag() == SimParams.AlgorithmFlag.SCATTER) {
             cbAlgorithm.getSelectionModel().select(3);
+        } else if (params.getAlgorithmFlag() == SimParams.AlgorithmFlag.MIX_SRA) {
+            cbAlgorithm.getSelectionModel().select(4);
         } else  {
             cbAlgorithm.getSelectionModel().select(0);
         }

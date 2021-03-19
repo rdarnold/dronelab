@@ -131,6 +131,9 @@ public class SimParams {
     public double getWifiRange() { return wifi_range; }
 
     public SimParams() { 
+        // Set the num survivors to whatever we have set in the config
+        setNumRandomSurvivors(Config.getNumRandomSurvivorsLoaded());
+        Utils.log("SimParams set to " + Config.getNumRandomSurvivorsLoaded() + " random survivors");
     }
 
     /*public EnumSet<AlgorithmFlag> getAlgorithmFlags() {
