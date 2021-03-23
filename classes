@@ -1,5 +1,6 @@
 src/BroadcastMessage.java
 src/Collision.java 
+src/ControllingEntity.java
 src/DataCompiler.java
 src/Deployment.java 
 src/DroneLab.java
@@ -34,6 +35,7 @@ src/collidable/Person.java
 src/collidable/RescueWorker.java
 src/collidable/behaviors/BehaviorModule.java
 src/collidable/behaviors/AntiSocialModule.java 
+src/collidable/behaviors/AssignedPathModule.java
 src/collidable/behaviors/AvoidModule.java 
 src/collidable/behaviors/ClimbModule.java
 src/collidable/behaviors/FormationModule.java

@@ -109,10 +109,14 @@ public class ScenarioLoader extends ScenarioCreator {
         //Utils.log(width);
         getNativeWidthHeight(fileName);
 
-        // 2000 meters is the entire scale of the map.  We need to get some
-        // constants in place that let us understand how that tranlates to
-        // movement and drawing on the map based on realistic measurements and
-        // speeds
+        // We have, by this time, loaded metersWidth from the JSON file, or we had
+        // no JSON file and therefore defaulted to 2000 meters.
+        // metersWidth meters is the entire scale of the map.  
+        // currentWidth is the draw width in pixels.  So it might be a 6800 pixel wide
+        // map that is only 2000 meters wide.
+        // We need to get some constants in place that let us understand how that 
+        // translates to movement and drawing on the map based on realistic 
+        // measurements and speeds
         Distance.setGlobalScale(metersWidth, currentWidth);
 
         memorySafeLoadBackground(fileName);

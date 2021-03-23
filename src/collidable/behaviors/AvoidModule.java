@@ -19,7 +19,7 @@ public class AvoidModule extends BehaviorModule {
 
     public AvoidModule() {
         super(Constants.STR_AVOID, Constants.STR_AVOID_J);
-        drawLetter = "A";
+        drawLetter = "V";
         startAvoidTime = System.currentTimeMillis();
         fakeDrone = new Drone(true);
     }

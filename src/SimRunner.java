@@ -102,7 +102,8 @@ public class SimRunner {
         sim.stop();
 
         // Now set up the params based on whatever we want to do
-        currentAlgorithm = SimParams.AlgorithmFlag.MIX_SRA;
+        //currentAlgorithm = SimParams.AlgorithmFlag.MIX_SRA;
+        currentAlgorithm = Config.getTacticFlag(); // We now load it from the config file 
         SimParams params = sim.scenario.simParams;
         params.setSimMatrix(sim.simMatrix);
         params.setSimMatrixItem(null); // We will set this correctly in a moment

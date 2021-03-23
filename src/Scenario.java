@@ -127,13 +127,22 @@ public class Scenario extends ScenarioLoader {
             processAddBehavior(Constants.STR_REPEL);
             processAddBehavior(Constants.STR_SCATTER);
         }
-        else if (flag == SimParams.AlgorithmFlag.MIX_SRA) {
+        else if (flag == SimParams.AlgorithmFlag.MIX_SRA ||
+                 flag == SimParams.AlgorithmFlag.MIX_SRA_C) {
             // This was loaded from a sim matrix and we have mixed roles with different
             // behaviors we want to assign, so this works differently.
             // All drones receive these common behaviors
             processAddBehavior(Constants.STR_AVOID);
             processAddBehavior(Constants.STR_SEEK);
-            processAddBehavior(Constants.STR_SEARCH);
+            // Only difference between SRA and SRA_C is to swap out the pattern search module
+            // with an assigned path module
+            if (flag == SimParams.AlgorithmFlag.MIX_SRA) {
+                processAddBehavior(Constants.STR_SEARCH);
+            }
+            else if (flag == SimParams.AlgorithmFlag.MIX_SRA_C) {
+                // TODO the centralized controller should establish the initial path now
+                processAddBehavior(Constants.STR_ASSIGNED_PATH);
+            }
             processAddBehavior(Constants.STR_WANDER);
             processAddBehavior(Constants.STR_RECHARGE);
             processAddBehavior(Constants.STR_LAUNCH);
@@ -144,7 +153,7 @@ public class Scenario extends ScenarioLoader {
             // This really should be done within the drone class itself, like it assigns its own
             // behaviors based on the role it has - TODO future improvement
 
-            // Just for debugging
+            // Just for debugging / visual purposes
             int numRole1 = 0;
             int numRole2 = 0;
             int numRole3 = 0;
@@ -175,7 +184,7 @@ public class Scenario extends ScenarioLoader {
             if (numRole_boo > 0) {
                 Utils.log("UNDEFINED ROLE: " + numRole_boo);
             }
-            Utils.log("APPLIED SIM SETUP (" + sim.scenario.getNumVictims() + " survivors); SOCIAL: " + numRole1 + ", RELAY: " + numRole2 + ", ANTI: " + numRole3 + 
+            Utils.log("APPLIED SIM SETUP: " + flag.toLoadString() + " (" + sim.scenario.getNumVictims() + " survivors); SOCIAL: " + numRole1 + ", RELAY: " + numRole2 + ", ANTI: " + numRole3 + 
                 ", WIFI: " + wifi_range);
         }
         else {
@@ -229,7 +238,7 @@ public class Scenario extends ScenarioLoader {
             setSelectedDrone(drones.get(0));
         }
 
-        // Also do the algorithms
+        // Finally setup the algorithm / tactic
         applyAlgorithm();
 
         m_nStartTicks = System.currentTimeMillis();

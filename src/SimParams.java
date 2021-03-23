@@ -66,23 +66,29 @@ public class SimParams {
 
     // Bit flag on which algorithms to test
     // This is kind of weird as a bit flag.  We don't test these at the 
-    // same time.  -- Update, what the hell did I mean here???  same time???
+    // same time.  -- Update, what the hell did I mean here???  same time??? 
+    // -- Update2, of course I meant we don't use them with two or more flags assigned to
+    // a single variable, so there's no need to make them bit flags.  Somehow that's
+    // more clear to me now at 2:45am on a Sunday night than it was when I last read this
     public static enum AlgorithmFlag {
         /*NOT_DEFINED (1 << 0),
         STANDARD    (1 << 1),
         SPIRAL      (1 << 2),
         SCATTER     (1 << 3);*/
-        NOT_DEFINED (0, "NotDefined"),
-        STANDARD    (1, "Standard"),
-        SPIRAL      (2, "Spiral"),
-        SCATTER     (3, "Scatter"),
-        MIX_SRA     (4, "MixSocialRelayAnti");  // Mixes are defined by a simulation matrix file
+        NOT_DEFINED (0, "NotDefined",           "NOT_DEFINED"),
+        STANDARD    (1, "Standard",             "STANDARD"),
+        SPIRAL      (2, "Spiral",               "SPIRAL"),
+        SCATTER     (3, "Scatter",              "SCATTER"),
+        MIX_SRA     (4, "MixSocialRelayAnti",   "MIX_SRA"),  // Mixes are defined by a simulation matrix file
+        MIX_SRA_C   (5, "C-MixSocialRelayAnti", "MIX_SRA_C");  // MIX_SRA but the pattern search is assigned by a centralized controller
 
         private final long value;
         private final String name;
-        private AlgorithmFlag(long value, String name) {
+        private final String loadName;
+        private AlgorithmFlag(long value, String name, String loadName) {
             this.value = value;
             this.name = name;
+            this.loadName = loadName;
         }
 
         public long getValue() {
@@ -91,6 +97,19 @@ public class SimParams {
 
         public String toString() {
             return name;
+        }
+
+        public String toLoadString() {
+            return loadName;
+        }
+
+        public static AlgorithmFlag fromLoadString(String strFrom) {
+            if (strFrom.equals("STANDARD"))         { return STANDARD; }
+            else if (strFrom.equals("SPIRAL"))      { return SPIRAL; }
+            else if (strFrom.equals("SCATTER"))     { return SCATTER; }
+            else if (strFrom.equals("MIX_SRA"))     { return MIX_SRA; }
+            else if (strFrom.equals("MIX_SRA_C"))   { return MIX_SRA_C; }
+            else                                    { return NOT_DEFINED; }
         }
         //public static final EnumSet<AlgorithmFlag> ALL = EnumSet.allOf(AlgorithmFlag.class);
         //public static final EnumSet<AlgorithmFlag> NONE = EnumSet.noneOf(AlgorithmFlag.class);

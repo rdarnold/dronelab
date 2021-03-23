@@ -5,20 +5,25 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import dronelab.*;
 import dronelab.utils.*;
 import dronelab.collidable.*;
 
-public class SearchPatternModule extends BehaviorModule {
+/*
+Behavior module for a waypoint path assigned by an external entity such as a controlling
+human or a Ground Control Station
+Could this inherit from the search pattern module as a base class, and then subclass
+the specific pattern that the search pattern module actually does now?
+*/
+public class AssignedPathModule extends BehaviorModule {
     private int lastLocationIndex = -1; // Last one we were moving towards
     private int locationIndex = -1; // Which one we are currently moving towards
     private int numLocations = 0; // Just so we dont have to call size() over and over
     private Point2D nextLocation = null;
     private ArrayList<Point2D> locations = new ArrayList<Point2D>();
 
-    public SearchPatternModule() {
-        super(Constants.STR_SEARCH, Constants.STR_SEARCH_J);
-        drawLetter = "P";
+    public AssignedPathModule() {
+        super(Constants.STR_ASSIGNED_PATH, Constants.STR_ASSIGNED_PATH_J);
+        drawLetter = "A";
         setSearchPattern();
     }
 
@@ -54,8 +59,8 @@ public class SearchPatternModule extends BehaviorModule {
     public boolean receive(String msg) { 
         //Utils.log(msg);
         String[] parts = msg.split("\\:"); // String array, each element is text between colons
-        if (parts[0].equals("PX") == true) {
-            setSearchPatternIndex(Utils.tryParseInt(parts[1]));
+        if (parts[0].equals("AX") == true) {
+            setAssignedPathIndex(Utils.tryParseInt(parts[1]));
             //Utils.log("Index: " + Utils.tryParseInt(parts[1]));
         }
         return true;
@@ -112,13 +117,7 @@ public class SearchPatternModule extends BehaviorModule {
         }
 
         locations.clear();
-        // The old way using magic numbers...
-        // UNCOMMENT THIS to retest any old experiments using Kobe scenario
-        //setSearchPattern(50, 50, 6300, 4800, 100);
-
-        // Using the actual scenario parameters...
-        // COMMENT THIS OUT to retest any old experiments using Kobe scenario
-        setSearchPattern(50, 50, (int)DroneLab.scenario.currentWidth - 50, (int)DroneLab.scenario.currentHeight - 50, 100);
+        setSearchPattern(50, 50, 6300, 4800, 100);
 
         // This one is for the paper, just showing a small portion.
         //setSearchPattern(1300, 3800, 700, 600, 300);
@@ -132,12 +131,12 @@ public class SearchPatternModule extends BehaviorModule {
             return;
         }
         // Behavior modules can broadcast messages like so.
-        drone.wifi.broadcastBehaviorMsg(this, "PX:" + patternIndex);
+        drone.wifi.broadcastBehaviorMsg(this, "AX:" + patternIndex);
         //Utils.log("Sent pattern index " + patternIndex);
     }
 
     private void setNextSearchLocation() {
-        setSearchPatternIndex(locationIndex + 1);
+        setAssignedPathIndex(locationIndex + 1);
         /*if (locations == null || locations.size() == 0) {
             return;
         }
@@ -149,7 +148,7 @@ public class SearchPatternModule extends BehaviorModule {
 	    nextLocation = locations.get(locationIndex);*/
     }
 
-    public void setSearchPatternIndex(int index) {
+    public void setAssignedPathIndex(int index) {
         if (locations == null || locations.size() == 0) {
             return;
         }

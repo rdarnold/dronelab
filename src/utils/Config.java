@@ -42,6 +42,8 @@ public final class Config {
     private static int startNew = 0;
     private static String simMatrixFilename = "Simulation_Matrix.xlsx";  // Default to the regular one
     private static String scenarioName = "Arahama1";
+    private static String tacticName = "MIX_SRA";
+    private static SimParams.AlgorithmFlag tacticFlag = SimParams.AlgorithmFlag.MIX_SRA; 
 
     // This is just for the process monitor which also uses the Config class, not the main program
     private static long timeStampLoaded = 0;
@@ -57,6 +59,8 @@ public final class Config {
     public static SimMatrix getPreviousMatrix() { return previousMatrix; }
     public static String getSimMatrixFilename() { return simMatrixFilename; }
     public static String getScenarioName() { return scenarioName; }
+    public static String getTacticName() { return tacticName; }
+    public static SimParams.AlgorithmFlag getTacticFlag() { return tacticFlag; }
     public static int getNumRunsLoaded() { return numRunsLoaded; }
     public static int getNumRandomSurvivorsLoaded() { return numRandomSurvivorsLoaded; }
     public static boolean getStartNew() { if (startNew != 0)   { return true; } return false; }
@@ -82,6 +86,10 @@ public final class Config {
             else if (Utils.stringStartsWith(line, "Scenario: ") == true) {
                 scenarioName = line.substring(("Scenario: ").length(), line.length());
             }
+            else if (Utils.stringStartsWith(line, "Tactic: ") == true) {
+                tacticName = line.substring(("Tactic: ").length(), line.length());
+                tacticFlag = SimParams.AlgorithmFlag.fromLoadString(tacticName);
+            }
             else if (Utils.stringStartsWith(line, "numRandomSurvivors: ") == true) {
                 // Only used if startNew is 1 / true, or loading the previous config fails
                 numRandomSurvivorsLoaded = Utils.tryParseInt(line.substring(("numRandomSurvivors: ").length(), line.length()));
@@ -106,7 +114,7 @@ public final class Config {
         }
 
         // Always log this
-        Utils.log("numRunsLoaded: " + numRunsLoaded + ", autoLoaded: " + autoLoaded);
+        Utils.log("numRunsLoaded: " + numRunsLoaded + ", autoLoaded: " + autoLoaded + ", Tactic: " + tacticName);
 
         // Only log these if we are starting a new batch and did not load previous
         if (startNew != 0) {
@@ -138,6 +146,7 @@ public final class Config {
         
         contents += "Matrix: " + simMatrixFilename + "\r\n";
         contents += "Scenario: " + scenarioName + "\r\n";
+        contents += "Tactic: " + tacticName + "\r\n";
         contents += "numRandomSurvivors: " + numRandomSurvivorsLoaded + "\r\n" ;  // Only used if startNew is 1 / true
         contents += "startNew: 0\r\n"; // startNew can ONLY be set manually in config file, always saves to zero/false
         contents += "draw: " + drawLoaded + "\r\n" ;

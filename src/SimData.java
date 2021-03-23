@@ -109,6 +109,9 @@ public class SimData {
         else if (cur.equals(SimParams.AlgorithmFlag.SCATTER.toString())) {
             algorithm = SimParams.AlgorithmFlag.SCATTER;
         }
+        else if (cur.equals(SimParams.AlgorithmFlag.MIX_SRA.toString())) {
+            algorithm = SimParams.AlgorithmFlag.MIX_SRA;
+        }
 
         cur = getStringForKey(dronesKey);
         numDrones = Utils.tryParseInt(cur);
