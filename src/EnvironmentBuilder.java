@@ -395,7 +395,7 @@ public class EnvironmentBuilder  {
         if (tempObs != null) {
             switch (tempObs.getShapeType()) {
                 case CIRCLE:
-                    int rad = (int)Math.round(Physics.calcDistance(x, y, tempObs.x(), tempObs.y()));
+                    int rad = (int)Math.round(Physics.calcDistancePixels(x, y, tempObs.x(), tempObs.y()));
                     tempObs.setRadius(rad);
                     triggerRedraw();
                     break;

@@ -174,8 +174,20 @@ public class Drone extends Mobile {
         behaviorOrder.add(Constants.STR_REPEL);
         behaviorOrder.add(Constants.STR_SEEK);
         behaviorOrder.add(Constants.STR_SCATTER);
+        behaviorOrder.add(Constants.STR_ASSIGNED_PATH);
         behaviorOrder.add(Constants.STR_SEARCH);
         behaviorOrder.add(Constants.STR_WANDER);
+
+        // They ALL must be ordered, even though they're not used at the same time.
+        // The system HAS to know how to prioritize them in the event that they WERE
+        // all used at the same time.
+        if (behaviorOrder.size() != Constants.STR_BEHAVIORS.length) {
+            Utils.log("************************************************");
+            Utils.log("ERROR:  Behavior not added to setupBehaviorOrder");
+            Utils.log("Did you code in a new behavior but not add it to");
+            Utils.log("setupBehaviorOrder() in Drone.java?");
+            Utils.log("************************************************");
+        }
     }
 
     /*@Override
@@ -412,6 +424,14 @@ public class Drone extends Mobile {
         mod.assign(this);
     }
 
+    public String printBehaviors() {
+        String str = "";
+        for (BehaviorModule mod : behaviors) {
+            str += mod.getName() + " ";
+        }
+        return str;
+    }
+
     // Duplicate the position parameters and possibly other ones
     // later if we need them
     public void copySizeTo(Drone other) {
@@ -433,7 +453,7 @@ public class Drone extends Mobile {
     public void pruneDroneList() {
         // Remove entries that are stale; i.e. we havent heard from in awhile.  Assume
         // those are broken or out of range or not in the mix anymore so we dont want to
-        // consider them to be part of the game.  Give them maybe 10 seconds.
+        // consider them to be part of the sim.  Give them maybe 10 seconds.
         for (int i = droneList.size()-1; i >= 0; i--) {
             //Utils.log(droneList.get(i).id);
             //Utils.log(droneList.get(i).x);
@@ -834,6 +854,16 @@ public class Drone extends Mobile {
             return true;
         }
         return false;
+    }
+    
+    // A way to reset a behavior module externally to the drone
+    public boolean resetModule(String strModuleName) {
+        BehaviorModule mod = BehaviorLoader.getModule(behaviors, strModuleName);
+        if (mod == null) {
+            return false;
+        }
+        mod.reset();
+        return true;
     }
 
     public void updateContinuous(Scenario scenario) {

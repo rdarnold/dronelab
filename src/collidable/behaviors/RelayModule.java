@@ -54,7 +54,7 @@ public class RelayModule extends BehaviorModule {
         // So its simple, from our closest drone, just try to make the distance correct.
         // So if we are too close, try to get further away.  If we are too far, try to get closer.
         DroneData data = findClosestDroneData();
-        double dist = Physics.calcDistance(x, y, data.x, data.y);
+        double dist = Physics.calcDistancePixels(x, y, data.x, data.y);
 
         // If we are within a reasonable threshold, we are ok.
         if ((dist >= desiredRange * (1 - threshold)) && (dist <= desiredRange * (1 + threshold))) {
@@ -85,9 +85,9 @@ public class RelayModule extends BehaviorModule {
         double x = drone.ls.x();
         double y = drone.ls.y();
         DroneData closest = drone.getDroneList().get(0);
-        double closestDist = Physics.calcDistance(x, y, closest.x, closest.y);
+        double closestDist = Physics.calcDistancePixels(x, y, closest.x, closest.y);
         for (DroneData data : drone.getDroneList()) {
-            double dist = Physics.calcDistance(x, y, data.x, data.y);
+            double dist = Physics.calcDistancePixels(x, y, data.x, data.y);
             if (dist < closestDist) {
                 closestDist = dist;
                 closest = data; 

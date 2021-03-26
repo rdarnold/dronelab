@@ -52,9 +52,9 @@ public class DistanceScale {
         // based on various factors
         switch (unit) {
             case METERS:
-                lineLength = scenario.currentWidth * ((double)distance / Distance.WIDTH_IN_METERS);
-                // This line would also work.  Keeping it as the above just for sanity checking.
-                //lineLength = Distance.pixelsFromMeters((double)distance);
+                //lineLength = scenario.currentWidth * ((double)distance / Distance.WIDTH_IN_METERS);
+                // The above is the old way and would also work.  
+                lineLength = Distance.pixelsFromMeters((double)distance);
                 break;
             case FEET:
                 lineLength = scenario.currentWidth * ((double)distance / Distance.WIDTH_IN_FEET);

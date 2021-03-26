@@ -145,6 +145,9 @@ public class DroneLab extends Application {
     public static Scenario scenario = null;
     public static DroneLab sim = null;
 
+    // A construct simulating a human operator of the swarm
+    public static ControllingEntity operator = new ControllingEntity();
+
     public Constants.Language language = Constants.Language.ENGLISH;
 
     ////////////////////
@@ -606,16 +609,19 @@ public class DroneLab extends Application {
         SimParams params = scenario.simParams;
 
         // Start with the algorithm so we can easily sort by name.
-        if (params.getAlgorithmFlag() == SimParams.AlgorithmFlag.STANDARD)
+        filename += params.getAlgorithmFlag().getFilePrefix();
+        /*if (params.getAlgorithmFlag() == SimParams.AlgorithmFlag.STANDARD)
             filename += "st_"; 
         else if (params.getAlgorithmFlag() == SimParams.AlgorithmFlag.SPIRAL)
             filename += "sp_"; 
         else if (params.getAlgorithmFlag() == SimParams.AlgorithmFlag.SCATTER)
             filename += "sc_"; 
-            else if (params.getAlgorithmFlag() == SimParams.AlgorithmFlag.MIX_SRA)
-                filename += "mix_"; 
+        else if (params.getAlgorithmFlag() == SimParams.AlgorithmFlag.MIX_SRA)
+            filename += "mix_"; 
+        else if (params.getAlgorithmFlag() == SimParams.AlgorithmFlag.MIX_SRA_C)
+            filename += "mixc_"; 
         else
-            filename += "nd_"; 
+            filename += "nd_"; */
 
         filename += params.getNumDrones() + "uav_"; 
         filename += scenario.getNumVictims() + "ppl_"; 
@@ -698,7 +704,8 @@ public class DroneLab extends Application {
             recordSimMatrixData();
         }
         
-        if (params.getAlgorithmFlag() == SimParams.AlgorithmFlag.STANDARD)
+        str += "Algorithm: " + params.getAlgorithmFlag().toString();
+        /*if (params.getAlgorithmFlag() == SimParams.AlgorithmFlag.STANDARD)
             str += "Algorithm: Standard"; 
         else if (params.getAlgorithmFlag() == SimParams.AlgorithmFlag.SPIRAL)
             str += "Algorithm: Spiral"; 
@@ -707,7 +714,7 @@ public class DroneLab extends Application {
         else if (params.getAlgorithmFlag() == SimParams.AlgorithmFlag.MIX_SRA)
             str += "Algorithm: MixSRA"; 
         else
-            str += "Algorithm: NotDefined"; 
+            str += "Algorithm: NotDefined"; */
         str += "\r\n"; 
         
         str += "RealSeconds: " + scenario.getLastRunSeconds();

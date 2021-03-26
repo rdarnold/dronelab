@@ -56,7 +56,7 @@ public class AntiSocialModule extends BehaviorModule {
         if (data == null) {
             return false;
         }
-        double dist = Physics.calcDistance(x, y, data.x, data.y);
+        double dist = Physics.calcDistancePixels(x, y, data.x, data.y);
 
         // If we are within a reasonable threshold, we are ok.
         if (dist >= desiredRange) {
@@ -83,12 +83,12 @@ public class AntiSocialModule extends BehaviorModule {
         DroneData closest = null;
 
         // DroneData closest = drone.getDroneList().get(0);
-        // closestDist = Physics.calcDistance(x, y, closest.x, closest.y);
+        // closestDist = Physics.calcDistancePixels(x, y, closest.x, closest.y);
         for (DroneData data : drone.getDroneList()) {
             if (data.role != Drone.DroneRole.SOCIAL && data.role != Drone.DroneRole.ANTISOCIAL) {
                 continue;
             }
-            double dist = Physics.calcDistance(x, y, data.x, data.y);
+            double dist = Physics.calcDistancePixels(x, y, data.x, data.y);
             if (closestDist == 0 || dist < closestDist) {
                 closestDist = dist;
                 closest = data; 
@@ -101,9 +101,9 @@ public class AntiSocialModule extends BehaviorModule {
         double x = drone.ls.x();
         double y = drone.ls.y();
         DroneData closest = drone.getDroneList().get(0);
-        double closestDist = Physics.calcDistance(x, y, closest.x, closest.y);
+        double closestDist = Physics.calcDistancePixels(x, y, closest.x, closest.y);
         for (DroneData data : drone.getDroneList()) {
-            double dist = Physics.calcDistance(x, y, data.x, data.y);
+            double dist = Physics.calcDistancePixels(x, y, data.x, data.y);
             if (dist < closestDist) {
                 closestDist = dist;
                 closest = data; 

@@ -140,7 +140,7 @@ public class Scenario extends ScenarioLoader {
                 processAddBehavior(Constants.STR_SEARCH);
             }
             else if (flag == SimParams.AlgorithmFlag.MIX_SRA_C) {
-                // TODO the centralized controller should establish the initial path now
+                DroneLab.operator.generateNewPath();
                 processAddBehavior(Constants.STR_ASSIGNED_PATH);
             }
             processAddBehavior(Constants.STR_WANDER);
@@ -186,9 +186,16 @@ public class Scenario extends ScenarioLoader {
             }
             Utils.log("APPLIED SIM SETUP: " + flag.toLoadString() + " (" + sim.scenario.getNumVictims() + " survivors); SOCIAL: " + numRole1 + ", RELAY: " + numRole2 + ", ANTI: " + numRole3 + 
                 ", WIFI: " + wifi_range);
+            // More detailed log
+            for (Drone d : drones) {
+                String s = "Drone: " + d.printBehaviors();
+                Utils.log(s);
+            }
         }
         else {
-            // Just add 'em all if we didn't specify.
+            // Just add 'em all if we didn't specify, but that would be strange 
+            // because they don't play nicely together.
+            Utils.log("ERROR: algorithm flag is " + flag.toString());
             for (int i = 0; i < Constants.STR_BEHAVIORS.length; i++) {
                 processAddBehavior(Constants.STR_BEHAVIORS[i]);
             }
@@ -701,9 +708,12 @@ public class Scenario extends ScenarioLoader {
         }
 
         for (Drone d : drones) {
-            if (d.isVisibleOnScreen(canvasVisibleRect) == false) {
-                continue;
-            }
+            //if (d.isVisibleOnScreen(canvasVisibleRect) == false) {
+            //    continue;
+            //}
+            // The problem is, if we only draw drones when they're visible, some aspects of the drones, 
+            // like their waypoint paths, will only draw when the drone is literally on screen and that's not
+            // what we necessarily want.  
             d.draw(gc, drawFlags);
         }
 

@@ -56,7 +56,13 @@ public class FormationModule extends BehaviorModule {
         if (data == null) {
             return false;
         }
-        double dist = Physics.calcDistance(x, y, data.x, data.y);
+
+        // TODO: calcDistance is in PIXELS not meters though so this is not doing what we think it's doing.
+        // It's not necessarily a "problem" it's just not maintaining 50 meters it's maintaining 50 pixels,
+        // so we should figure out what 50 pixels IS in meters and change it to that (so that we're consistent)
+        // and then change this to do distance in meters.  The behavior will not change on the original scenario
+        // but will be consistent to additional scenarios.
+        double dist = Physics.calcDistancePixels(x, y, data.x, data.y);
 
         // If we are within a reasonable threshold, we are ok.
         if ((dist >= desiredRange * (1 - threshold)) && (dist <= desiredRange * (1 + threshold))) {
@@ -91,12 +97,12 @@ public class FormationModule extends BehaviorModule {
         DroneData closest = null;
 
         // DroneData closest = drone.getDroneList().get(0);
-        // closestDist = Physics.calcDistance(x, y, closest.x, closest.y);
+        // closestDist = Physics.calcDistancePixels(x, y, closest.x, closest.y);
         for (DroneData data : drone.getDroneList()) {
             if (data.role != Drone.DroneRole.SOCIAL) {
                 continue;
             }
-            double dist = Physics.calcDistance(x, y, data.x, data.y);
+            double dist = Physics.calcDistancePixels(x, y, data.x, data.y);
             if (closestDist == 0 || dist < closestDist) {
                 closestDist = dist;
                 closest = data; 
