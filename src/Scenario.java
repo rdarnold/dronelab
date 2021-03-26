@@ -57,6 +57,10 @@ public class Scenario extends ScenarioLoader {
     private long m_nEndTicks = 0;
     private long m_nLastRunMilliseconds = 0;
 
+    // How many seconds last time we did an "update", used to save the network matrix
+    // and can be used for any other second-based processing
+    private int m_nLastSimSeconds = 0;
+
     // Unfortunately we need a pointer back to our main application in case
     // we want to trigger any draw events outside of the mainloop update cycle
     // like when it is turned off during build mode.
@@ -250,6 +254,7 @@ public class Scenario extends ScenarioLoader {
 
         m_nStartTicks = System.currentTimeMillis();
         m_nEndTicks = System.currentTimeMillis();
+        m_nLastSimSeconds = 0;  // start at time zero
     }
 
     // Do whatever weird stuff I want here after load.
@@ -326,6 +331,7 @@ public class Scenario extends ScenarioLoader {
         resetDeployments();
         collisions.clear();
         simTime.reset();
+        m_nLastSimSeconds = 0;
     }
 
     public void togglePause() {
@@ -564,7 +570,7 @@ public class Scenario extends ScenarioLoader {
         for (Drone d : drones) {
             if (d.wifi != null) {
                 for (String msg : d.wifi.getQueue()) {
-                    BroadcastMessage bc = new BroadcastMessage(d.getId(), d.x(), d.y(), d.wifi.getRange(), msg, Constants.CommType.WIFI);
+                    BroadcastMessage bc = new BroadcastMessage(d.getId(), d.x(), d.y(), d.wifi.getRangePixels(), msg, Constants.CommType.WIFI);
                     broadcasts.add(bc);
                 }
                 d.wifi.clearQueue();
@@ -608,6 +614,7 @@ public class Scenario extends ScenarioLoader {
     public void endRun() {
         m_nEndTicks = System.currentTimeMillis();
         m_nLastRunMilliseconds = m_nEndTicks - m_nStartTicks;
+        m_nLastSimSeconds = 0;
         sim.signalComplete();
     }
 
@@ -616,6 +623,13 @@ public class Scenario extends ScenarioLoader {
     }
 
     public boolean update() {
+
+        // Check to see if sim was reset or new run began, if so and we didn't reset the last seconds
+        // we should do that now.
+        if (simTime.getTotalSeconds() < m_nLastSimSeconds) {
+            m_nLastSimSeconds = 0;
+        }
+
         // So, we update X number of times here depending on our timeFactor
         for (int upd = 0; upd < timeFactor; upd++) {
             if (simTime.advanceFrame() == false) {
@@ -637,6 +651,13 @@ public class Scenario extends ScenarioLoader {
                 if (c.update() == false) {
                     i.remove();
                 }
+            }
+
+            // Every x seconds, write out the network matrix if we have that capablity enabled
+            int currentSimSeconds = simTime.getTotalSeconds();
+            if (currentSimSeconds - m_nLastSimSeconds >= NetworkMatrix.simSecondsBetweenSaves) {
+                NetworkMatrix.save();
+                m_nLastSimSeconds = currentSimSeconds;
             }
         }
         return true;

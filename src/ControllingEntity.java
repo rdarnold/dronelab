@@ -20,7 +20,7 @@ public class ControllingEntity {
     private ArrayList<Point2D> allSelectedLocations = new ArrayList<Point2D>();  // all of the locations provided for this particular sim run
 
     private int numPointsToChooseFrom = 1000;  // How many total points can we pick from to generate the wp path?
-    private int densityRadiusMeters = 100; // How many meters' radius do we use to calculate density of a particular point?
+    private int densityRadiusMeters = 50; // How many meters' radius do we use to calculate density of a particular point?
 
     public int getQuality() { return quality; }
     public int getPathSize() { return pathSize; }

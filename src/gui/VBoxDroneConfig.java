@@ -214,7 +214,7 @@ public class VBoxDroneConfig extends VBoxCustom {
             irTf.setText(""+ Math.round(Distance.metersFromPixels(drone.cam.getRange())));
         }
         if (drone.wifi != null) {
-            wifiTf.setText(""+ Math.round(Distance.metersFromPixels(drone.wifi.getRange())));
+            wifiTf.setText(""+ Math.round(Distance.metersFromPixels(drone.wifi.getRangePixels())));
         }
         batteryLtf.setFieldText(""+ Math.round(drone.getBatteryLifeMinutes()));
     }

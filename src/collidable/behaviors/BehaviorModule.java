@@ -95,8 +95,8 @@ public abstract class BehaviorModule {
     // If this behavior has an associated waypoint path, draw it commonly using this method.
     public boolean drawPath(GraphicsContext gc, ArrayList<Point2D> path) {
         int colorAmt = GraphicsHelper.getFlashColorLevel();
-        Color fillCol = Color.rgb(0, 0, colorAmt, 0.7);
-        Color strokeCol = Color.rgb(colorAmt, colorAmt, colorAmt, 0.8);
+        Color fillCol = Color.rgb(0, colorAmt, 0, 0.7);
+        Color strokeCol = Color.rgb(0, 0, 0, 0.8);
 
 	    //gc.setFill(Color.rgb(0, 0, 255, 0.7));
         //gc.setStroke(Color.rgb(255, 255, 255, 0.8));
@@ -104,20 +104,23 @@ public abstract class BehaviorModule {
         gc.setStroke(strokeCol);
         gc.setLineWidth(2);
 
+        int i = 0;
         for (Point2D point : path) {
             int x = (int)point.getX();
             int y = (int)point.getY();
 
-            int wid = (int)20;
-            int hgt = (int)20;
+            int wid = (int)24;
+            int hgt = (int)24;
             int drawX = x - wid/2;
             int drawY = y - hgt/2;
 
             gc.fillOval(drawX, drawY, wid, hgt);
 
-            int off = 4;
+            int xoff = 8;
+            int yoff = 4;
             //gc.strokeText("" + nDrawPriority, x - off, y + off);
-            gc.strokeText(drawLetter, x - off, y + off);
+            gc.strokeText(drawLetter + i, x - xoff, y + yoff);
+            i++;
         }
 
         // And now draw the priority number

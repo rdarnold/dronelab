@@ -410,7 +410,6 @@ public class Drone extends Mobile {
         wifi = new WiFiCommunicator(this);
     }
 
-    
     public void removeBehavior(String strName) {
         BehaviorLoader.removeModule(behaviors, strName);
     }
@@ -771,6 +770,20 @@ public class Drone extends Mobile {
             }
         }
         return true;
+    }
+
+    public double getWiFiRangeMeters() {
+        if (wifi == null) {
+            return 0;
+        }
+        return wifi.getRangeMeters();
+    }
+
+    public double getWiFiRangePixels() {
+        if (wifi == null) {
+            return 0;
+        }
+        return wifi.getRangePixels();
     }
 
     // All the life of all batteries added together

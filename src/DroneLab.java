@@ -189,7 +189,7 @@ public class DroneLab extends Application {
 
     PerspectiveViewer perspectiveViewer = null;
     Gui3D gui3D = null;
-    public SimRunner runner = null;
+    public static SimRunner runner = null;
 
     public SimMatrix simMatrix = null;
 
