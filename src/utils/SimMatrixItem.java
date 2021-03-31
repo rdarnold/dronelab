@@ -101,15 +101,15 @@ public class SimMatrixItem {
         strRetv += ", NumAntis: " + antiNum + " (" +antiNumLoaded + ")"; 
         strRetv += ", WifiRange: " + wifiRange + " (" + wifiRangeLoaded + ")"; 
         strRetv += ", QoK: " + QoK + " (" + QoKLoaded + ")"; 
-        strRetv += "\r\n";
         if (secondsTakenCameraArray[0] > 0) {
+            strRetv += "\r\n";
             strRetv += ", CAM SECONDS TAKEN: ";
             for (int i = 0; i < numRepetitions; i++) {
                 strRetv += "" + secondsTakenCameraArray[i] + ", ";
             }
         }
-        strRetv += "\r\n";
         if (secondsTakenFINDERArray[0] > 0) {
+            strRetv += "\r\n";
             strRetv += ", FINDER SECONDS TAKEN: ";
             for (int i = 0; i < numRepetitions; i++) {
                 strRetv += "" + secondsTakenFINDERArray[i] + ", ";
