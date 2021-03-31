@@ -72,6 +72,8 @@ public class Drone extends Mobile {
     private static final int dotSize = 6;
     private static final int rotarSize = 10;
 
+    private Color droneColor = Color.DARKBLUE;
+
     private boolean fake = false;
 
     private boolean flying = true;
@@ -132,6 +134,8 @@ public class Drone extends Mobile {
 
     public int getMaxHealth() { return maxHealth; }
     public int getHealth() { return health; }
+
+    public void setColor(Color col) { droneColor = col; }
 
     public ArrayList<DroneData> getDroneList() { return droneList; }
 
@@ -621,7 +625,7 @@ public class Drone extends Mobile {
             if (broken == true) {
                 gc.setStroke(Color.BLACK);
             } else {
-                gc.setStroke(Color.DARKBLUE);
+                gc.setStroke(droneColor);
             }
             gc.setLineWidth(3);
             gc.strokeOval(x - 2, y - 2, wid +4, hgt+4);

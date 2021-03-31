@@ -106,6 +106,16 @@ public final class ExcelUtils {
         return (int)getNumberForCell(cell);
     }    
 
+    public static String getStringForCell(Cell cell) {
+        if (isCellEmpty(cell) == true) {
+            return "";
+        }
+        else if (cell.getCellTypeEnum() != CellType.STRING) {
+            return "";
+        }
+        return cell.getStringCellValue();
+    }    
+
     public static boolean isCellEmpty(final Cell cell) {
         if (cell == null || cell.getCellType() == CellType.BLANK) {
             return true;

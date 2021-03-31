@@ -170,15 +170,18 @@ public class Scenario extends ScenarioLoader {
                         numRole1++;
                         d.addBehavior(GuiUtils.getBehaviorModuleNameBilingual(Constants.STR_FORM));
                         d.addBehavior(GuiUtils.getBehaviorModuleNameBilingual(Constants.STR_SPIRAL));
+                        d.setColor(Color.PURPLE);
                         break;
                     case RELAY:
                         numRole2++;
                         d.addBehavior(GuiUtils.getBehaviorModuleNameBilingual(Constants.STR_RELAY));
+                        d.setColor(Color.ORANGE);
                         break;
                     case ANTISOCIAL:
                         numRole3++;
                         d.addBehavior(GuiUtils.getBehaviorModuleNameBilingual(Constants.STR_SPIRAL));
                         d.addBehavior(GuiUtils.getBehaviorModuleNameBilingual(Constants.STR_ANTI));
+                        d.setColor(Color.SKYBLUE);
                         break;
                     default:
                         numRole_boo++;
@@ -331,6 +334,7 @@ public class Scenario extends ScenarioLoader {
         resetDeployments();
         collisions.clear();
         simTime.reset();
+        NetworkMatrix.reset();
         m_nLastSimSeconds = 0;
     }
 

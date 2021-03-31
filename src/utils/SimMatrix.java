@@ -88,6 +88,48 @@ public class SimMatrix {
         }
     }
 
+    // Template for each column / type of information we might see in a simulation matrix
+    public class SimMatrixItemTemplate {
+        public SimMatrixItemTemplate(String key) {
+            strKey = key;
+        }
+
+        int index = -1;
+        String strKey = "";
+
+        public String getKey() { return strKey; }
+        public int getIndex() { return index; }
+
+        public boolean isSet() {
+            if (index < 0 || strKey.equals("")) {
+                return false;
+            }
+            return true;
+        }
+
+        // Check to see if cell contents match key, if so,
+        // set index to i and return true.
+        public boolean checkSetIndexForCell(int i, Cell cell) {
+            // Checks empty automatically
+            String str = ExcelUtils.getStringForCell(cell);
+            if (str == null || str.equals("") || !str.equals(strKey)) {
+                return false;
+            }
+            // Match!
+            index = i;
+            return true;
+        }
+    }
+
+
+    // Indeces for each of the items we load from the matrix
+    private SimMatrixItemTemplate template_SimNum = new SimMatrixItemTemplate("Simulation");
+    private SimMatrixItemTemplate template_Relay = new SimMatrixItemTemplate("Relay");
+    private SimMatrixItemTemplate template_Social = new SimMatrixItemTemplate("Social");
+    private SimMatrixItemTemplate template_Antisocial = new SimMatrixItemTemplate("Antisocial");
+    private SimMatrixItemTemplate template_WiFiRange = new SimMatrixItemTemplate("WiFi Range");
+    private SimMatrixItemTemplate template_QoK = new SimMatrixItemTemplate("QoK");
+
     public void load(String fileName) {
         try {
             InputStream stream = ExcelUtils.class.getResourceAsStream(fileName);
@@ -97,7 +139,22 @@ public class SimMatrix {
             Cell cell;
 
             int numRows = sheet.getPhysicalNumberOfRows();
-            int numCols = 7; //ExcelUtils.getNumberOfColumns(wb, sheet);
+            int numCols = 20; // Just a guess at max number of columns; this should be far more than enough //ExcelUtils.getNumberOfColumns(wb, sheet);
+
+            // Now, look through the column names to determine which column index is which information item
+            row = sheet.getRow(0);
+            for (int c = 0; c < numCols; c++) {
+                cell = row.getCell(c);
+                template_SimNum.checkSetIndexForCell(c, cell);
+                template_Relay.checkSetIndexForCell(c, cell);
+                template_Social.checkSetIndexForCell(c, cell);
+                template_Antisocial.checkSetIndexForCell(c, cell);
+                template_WiFiRange.checkSetIndexForCell(c, cell);
+                template_QoK.checkSetIndexForCell(c, cell);
+            }
+
+            // By now, they should have all been set if we had them.
+            Utils.log(toString());
 
             // Start at row 2
             int r = 1;
@@ -106,41 +163,77 @@ public class SimMatrix {
                 if (row == null) 
                     continue;
                 SimMatrixItem item = new SimMatrixItem(numRepsPerItem);
-                matrixItems.add(item);
                 for (int c = 0; c < numCols; c++) {
                     cell = row.getCell(c);
                     if (ExcelUtils.isCellEmpty(cell)) {
-                        if (c == 1) { 
+                        //if (c == 1) { 
                             // Empty, remove it and move on
-                            matrixItems.remove(item);
-                            break;
-                        }
+                            //matrixItems.remove(item);
+                            //break;
+                        //}
                         continue;
                     }
+                    if (c == template_SimNum.getIndex()) {
+                        item.setSimulationNum(ExcelUtils.getIntForCell(cell));
+                    }
+                    else if (c == template_Relay.getIndex()) {
+                        item.setRelayNum(ExcelUtils.getIntForCell(cell));
+                    }
+                    else if (c == template_Social.getIndex()) {
+                        item.setSocialNum(ExcelUtils.getIntForCell(cell));
+                    }
+                    else if (c == template_Antisocial.getIndex()) {
+                        item.setAntiNum(ExcelUtils.getIntForCell(cell));
+                    }
+                    else if (c == template_WiFiRange.getIndex()) {
+                        item.setWifiRange(ExcelUtils.getDoubleForCell(cell));
+                    }
+                    else if (c == template_QoK.getIndex()) {
+                        item.setQoK(ExcelUtils.getDoubleForCell(cell));
+                    }
+                    /*
                     switch (c) {
-                        case 0:
+                        //case 0:
+                        case template_SimNum.getIndex():
                             item.simulationNum = ExcelUtils.getIntForCell(cell);
                             break;
-                        case 1:
+                        //case 1:
                             // Batch ID - we ignore this
-                            break;
-                        case 2:
+                            //break;
+                        //case 2:
+                        case template_Relay.getIndex():
                             item.relayNum = ExcelUtils.getIntForCell(cell);
                             break;
-                        case 3:
+                        //case 3:
+                        case template_Social.getIndex():
                             item.socialNum = ExcelUtils.getIntForCell(cell);
                             break;
-                        case 4:
+                        //case 4:
+                        case template_Antisocial.getIndex():
                             item.antiNum = ExcelUtils.getIntForCell(cell);
                             break;
-                        case 5:
+                        //case 5:
                             // Total - we ignore this
-                            break;
-                        case 6:
+                            //break;
+                        //case 6:
+                        case template_WiFiRange.getIndex():
                             item.wifiRange = ExcelUtils.getDoubleForCell(cell);
                             break;
-                }
+                        case template_QoK.getIndex():
+                            item.QoK = ExcelUtils.getDoubleForCell(cell);
+                            break;
+                    }*/
                 } 
+                
+                // Check if it's a valid item, if so, add it
+                if (item.getSimulationNum() >= 0) {
+                    if (matrixItems.size() < 1) {
+                        // TODO remove this later, for now we need it for error-checking to make sure
+                        // we properly loaded everything
+                        Utils.log(item.toString());
+                    }
+                    matrixItems.add(item);
+                }
             }
             Utils.log(fileName + " successfully loaded.");
         } catch (Exception ioe) {
@@ -148,8 +241,6 @@ public class SimMatrix {
             matrixItems.clear();
             //ioe.printStackTrace();
         }
-
-        //Utils.log(toString());
     }
     
     // This loads up a set of comma-delimeted data that had previously been recorded
