@@ -71,6 +71,9 @@ public class ScenarioCreator {
     public ArrayList<BroadcastMessage> broadcasts = new ArrayList<BroadcastMessage>();
     public ArrayList<Deployment> deployments = new ArrayList<Deployment>();
 
+    public ArrayList<Person> getVictims() { return victims; }
+    public ArrayList<Drone> getDrones() { return drones; }
+
     // The sectors for collision detection, these are actually created
     // in the subclasses when we know what the width/height of the area is
     public ArrayList<Sector> sectors = new ArrayList<Sector>();

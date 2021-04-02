@@ -135,7 +135,8 @@ public class DroneLab extends Application {
     // part of our updated simulation for SNA ILIR.  It is a little weird to have it here
     // but this is where we are recording the data for now.  This stuff would be better suited
     // to a separate class.
-    private String survivorFoundTimes = "";
+    private static String survivorFoundTimes = "";
+    public static String getSurvivorFoundTimes() { return survivorFoundTimes; }
 
     Stage stage;
     Scene scene;

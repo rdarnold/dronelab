@@ -217,11 +217,14 @@ public class Scenario extends ScenarioLoader {
     // appropriate places, and generate appropriate survivors as
     // needed.
     public void deployAll() {
+        // Could this just call a reset() here?
         clearDrones();
         clearVictims();
         collisions.clear();
         simTime.reset();
         simTime.setMaxSeconds(simParams.getTimeLimitSeconds());
+        NetworkMatrix.reset();
+
         for (Deployment dep : deployments) {
             dep.deploy(this);
         }

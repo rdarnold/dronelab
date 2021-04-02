@@ -23,8 +23,10 @@ public final class Constants {
     public static final String DATA_LOAD_PATH = "/output/data/";
     public static final String DATASET_SAVE_PATH = "output/data/datasets/";
     public static final String SEEN_DATA_SAVE_PATH = "output/data/seen/";
+    public static final String PLAYBACK_DATA_SAVE_PATH = "output/data/playback/";
     public static final String NET_MATRIX_DATA_SAVE_PATH = "output/data/net_matrix/";
     public static final String CONFIG_LOAD_PATH = "/";
+    public static final String PROFILE_LOAD_PATH = "uav_profiles/";
     public static final String CONFIG_SAVE_PATH = "";
 
     public static final String DATA_FILE_CAMERA = "matrix_output_camera.txt";

@@ -56,7 +56,7 @@ public class ControllingEntity {
             // We'll use a simple method, just look through all survivors and if their coordinate
             // is within densityRadius meters of our coordinate, it counts
             int dens = 0;
-            for (Person v : DroneLab.scenario.victims) {
+            for (Person v : DroneLab.scenario.getVictims()) {
                 if (v.isSeen() == true)
                     continue;
                 if (Physics.withinDistanceMeters(v.x(), v.y(), getX(), getY(), densityRadiusMeters) == true) {

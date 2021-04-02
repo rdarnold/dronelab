@@ -41,6 +41,7 @@ public final class Config {
     private static int drawLoaded = 1;
     private static int startNew = 0;
     private static String simMatrixFilename = "Simulation_Matrix.xlsx";  // Default to the regular one
+    private static String profileFilename = "default_profile.txt";  // Default to the regular one
     private static String scenarioName = "Arahama1";
     private static String tacticName = "MIX_SRA";
     private static SimParams.AlgorithmFlag tacticFlag = SimParams.AlgorithmFlag.MIX_SRA; 
@@ -58,6 +59,7 @@ public final class Config {
 
     public static SimMatrix getPreviousMatrix() { return previousMatrix; }
     public static String getSimMatrixFilename() { return simMatrixFilename; }
+    public static String getProfileFilename() { return profileFilename; }
     public static String getScenarioName() { return scenarioName; }
     public static String getTacticName() { return tacticName; }
     public static SimParams.AlgorithmFlag getTacticFlag() { return tacticFlag; }
@@ -79,8 +81,11 @@ public final class Config {
             return;
         }
         for (String line : lines) {
-            // If we wrote a matrix to the config file, use it, otherwise just default
-            if (Utils.stringStartsWith(line, "Matrix: ") == true) {
+            // If we wrote items to the config file, use them, otherwise just default
+            if (Utils.stringStartsWith(line, "UAV_Profile: ") == true) {
+                profileFilename = line.substring(("UAV_Profile: ").length(), line.length());
+            }
+            else if (Utils.stringStartsWith(line, "Matrix: ") == true) {
                 simMatrixFilename = line.substring(("Matrix: ").length(), line.length());
             }
             else if (Utils.stringStartsWith(line, "Scenario: ") == true) {
@@ -144,6 +149,7 @@ public final class Config {
         // Save config data
         String contents = "";
         
+        contents += "UAV_Profile: " + profileFilename + "\r\n";
         contents += "Matrix: " + simMatrixFilename + "\r\n";
         contents += "Scenario: " + scenarioName + "\r\n";
         contents += "Tactic: " + tacticName + "\r\n";

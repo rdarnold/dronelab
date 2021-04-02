@@ -6,6 +6,23 @@ public final class DroneTemplate {
     private DroneTemplate () { // private constructor
     }
 
+    public static void loadFromProfile() {
+        // last param as true is to print the log, change to true when testing
+        String contents = Utils.readFile(Constants.PROFILE_LOAD_PATH + Config.getProfileFilename(), false);
+        if (contents == null || contents.length() <= 0) {
+            return;
+        }
+        String lines[] = contents.split("\\r?\\n");
+        if (lines == null) {
+            return;
+        }
+        for (String line : lines) {
+            //if (Utils.stringStartsWith(line, "UAV_Profile: ") == true) {
+                //profileFilename = line.substring(("UAV_Profile: ").length(), line.length());
+            //}
+        }
+    }
+
     // This sets up drones correctly for various types
     // Might be better to just have like a big matrix or individual data sets
     // but this does give us more flexibility in how the drones are set up.
