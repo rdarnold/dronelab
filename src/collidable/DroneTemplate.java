@@ -20,6 +20,21 @@ public final class DroneTemplate {
             //if (Utils.stringStartsWith(line, "UAV_Profile: ") == true) {
                 //profileFilename = line.substring(("UAV_Profile: ").length(), line.length());
             //}
+            /*
+            Max Descent Speed 4 m/s (Sport mode) 
+            Max Speed 20 m/s (Sport mode) 
+
+            Weight 3 lbs. 
+            Max Ascent Speed 13.4 MPH 
+            Max Descent Speed 8.9 MPH 
+            Max Forward Speed 45 MPH 
+            Max Flight Time 28 min. 
+            Obstacle Sensory Range 2 to 49 ft. 
+            Gimbal Control Range -90° to +30° Pitch 
+            Lens FOV 94° 
+            
+            Turn rate?
+            */
         }
     }
 
