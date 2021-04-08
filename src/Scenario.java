@@ -57,6 +57,10 @@ public class Scenario extends ScenarioLoader {
     private long m_nEndTicks = 0;
     private long m_nLastRunMilliseconds = 0;
 
+    // How many seconds last time we did an "update", used to save the network matrix
+    // and can be used for any other second-based processing
+    private int m_nLastSimSeconds = 0;
+
     // Unfortunately we need a pointer back to our main application in case
     // we want to trigger any draw events outside of the mainloop update cycle
     // like when it is turned off during build mode.
@@ -140,7 +144,7 @@ public class Scenario extends ScenarioLoader {
                 processAddBehavior(Constants.STR_SEARCH);
             }
             else if (flag == SimParams.AlgorithmFlag.MIX_SRA_C) {
-                // TODO the centralized controller should establish the initial path now
+                DroneLab.operator.generateNewPath();
                 processAddBehavior(Constants.STR_ASSIGNED_PATH);
             }
             processAddBehavior(Constants.STR_WANDER);
@@ -166,15 +170,18 @@ public class Scenario extends ScenarioLoader {
                         numRole1++;
                         d.addBehavior(GuiUtils.getBehaviorModuleNameBilingual(Constants.STR_FORM));
                         d.addBehavior(GuiUtils.getBehaviorModuleNameBilingual(Constants.STR_SPIRAL));
+                        d.setColor(Color.PURPLE);
                         break;
                     case RELAY:
                         numRole2++;
                         d.addBehavior(GuiUtils.getBehaviorModuleNameBilingual(Constants.STR_RELAY));
+                        d.setColor(Color.ORANGE);
                         break;
                     case ANTISOCIAL:
                         numRole3++;
                         d.addBehavior(GuiUtils.getBehaviorModuleNameBilingual(Constants.STR_SPIRAL));
                         d.addBehavior(GuiUtils.getBehaviorModuleNameBilingual(Constants.STR_ANTI));
+                        d.setColor(Color.SKYBLUE);
                         break;
                     default:
                         numRole_boo++;
@@ -186,9 +193,16 @@ public class Scenario extends ScenarioLoader {
             }
             Utils.log("APPLIED SIM SETUP: " + flag.toLoadString() + " (" + sim.scenario.getNumVictims() + " survivors); SOCIAL: " + numRole1 + ", RELAY: " + numRole2 + ", ANTI: " + numRole3 + 
                 ", WIFI: " + wifi_range);
+            // More detailed log
+            for (Drone d : drones) {
+                String s = "Drone: " + d.printBehaviors();
+                Utils.log(s);
+            }
         }
         else {
-            // Just add 'em all if we didn't specify.
+            // Just add 'em all if we didn't specify, but that would be strange 
+            // because they don't play nicely together.
+            Utils.log("ERROR: algorithm flag is " + flag.toString());
             for (int i = 0; i < Constants.STR_BEHAVIORS.length; i++) {
                 processAddBehavior(Constants.STR_BEHAVIORS[i]);
             }
@@ -203,11 +217,14 @@ public class Scenario extends ScenarioLoader {
     // appropriate places, and generate appropriate survivors as
     // needed.
     public void deployAll() {
+        // Could this just call a reset() here?
         clearDrones();
         clearVictims();
         collisions.clear();
         simTime.reset();
         simTime.setMaxSeconds(simParams.getTimeLimitSeconds());
+        NetworkMatrix.reset();
+
         for (Deployment dep : deployments) {
             dep.deploy(this);
         }
@@ -243,6 +260,7 @@ public class Scenario extends ScenarioLoader {
 
         m_nStartTicks = System.currentTimeMillis();
         m_nEndTicks = System.currentTimeMillis();
+        m_nLastSimSeconds = 0;  // start at time zero
     }
 
     // Do whatever weird stuff I want here after load.
@@ -319,6 +337,8 @@ public class Scenario extends ScenarioLoader {
         resetDeployments();
         collisions.clear();
         simTime.reset();
+        NetworkMatrix.reset();
+        m_nLastSimSeconds = 0;
     }
 
     public void togglePause() {
@@ -557,7 +577,7 @@ public class Scenario extends ScenarioLoader {
         for (Drone d : drones) {
             if (d.wifi != null) {
                 for (String msg : d.wifi.getQueue()) {
-                    BroadcastMessage bc = new BroadcastMessage(d.getId(), d.x(), d.y(), d.wifi.getRange(), msg, Constants.CommType.WIFI);
+                    BroadcastMessage bc = new BroadcastMessage(d.getId(), d.x(), d.y(), d.wifi.getRangePixels(), msg, Constants.CommType.WIFI);
                     broadcasts.add(bc);
                 }
                 d.wifi.clearQueue();
@@ -601,6 +621,7 @@ public class Scenario extends ScenarioLoader {
     public void endRun() {
         m_nEndTicks = System.currentTimeMillis();
         m_nLastRunMilliseconds = m_nEndTicks - m_nStartTicks;
+        m_nLastSimSeconds = 0;
         sim.signalComplete();
     }
 
@@ -609,6 +630,13 @@ public class Scenario extends ScenarioLoader {
     }
 
     public boolean update() {
+
+        // Check to see if sim was reset or new run began, if so and we didn't reset the last seconds
+        // we should do that now.
+        if (simTime.getTotalSeconds() < m_nLastSimSeconds) {
+            m_nLastSimSeconds = 0;
+        }
+
         // So, we update X number of times here depending on our timeFactor
         for (int upd = 0; upd < timeFactor; upd++) {
             if (simTime.advanceFrame() == false) {
@@ -630,6 +658,13 @@ public class Scenario extends ScenarioLoader {
                 if (c.update() == false) {
                     i.remove();
                 }
+            }
+
+            // Every x seconds, write out the network matrix if we have that capablity enabled
+            int currentSimSeconds = simTime.getTotalSeconds();
+            if (currentSimSeconds - m_nLastSimSeconds >= NetworkMatrix.simSecondsBetweenSaves) {
+                NetworkMatrix.save();
+                m_nLastSimSeconds = currentSimSeconds;
             }
         }
         return true;
@@ -701,9 +736,12 @@ public class Scenario extends ScenarioLoader {
         }
 
         for (Drone d : drones) {
-            if (d.isVisibleOnScreen(canvasVisibleRect) == false) {
-                continue;
-            }
+            //if (d.isVisibleOnScreen(canvasVisibleRect) == false) {
+            //    continue;
+            //}
+            // The problem is, if we only draw drones when they're visible, some aspects of the drones, 
+            // like their waypoint paths, will only draw when the drone is literally on screen and that's not
+            // what we necessarily want.  
             d.draw(gc, drawFlags);
         }
 

@@ -47,6 +47,10 @@ public class SearchPatternModule extends BehaviorModule {
         if (nextLocation == null) 
             return false;
 
+        // Uncomment this to draw the waypoint path, CPU-intensive with a large swarm
+        // so only do it for debugging purposes or refactor to be more efficient
+        //drawPath(gc, locations);
+
         return drawLocation(gc, (int)nextLocation.getX(), (int)nextLocation.getY());
     }
 
@@ -64,6 +68,15 @@ public class SearchPatternModule extends BehaviorModule {
     @Override
     public boolean react() { 
         return search();
+    }
+
+    // For debugging we may want to be able to see what the search pattern is
+    public String printSearchPattern() {
+        String str = "";
+        for (Point2D point : locations) {
+            str += (int)point.getX() + "," + (int)point.getY() + " ";
+        }
+        return str;
     }
 
     private void setSearchPattern(double startX, double startY, double xDist, double yDist, double yInterval) {
@@ -122,6 +135,7 @@ public class SearchPatternModule extends BehaviorModule {
 
         // This one is for the paper, just showing a small portion.
         //setSearchPattern(1300, 3800, 700, 600, 300);
+        //Utils.log(printSearchPattern());
     }
 
     // Probably if we are located somewhere, we start with the closest

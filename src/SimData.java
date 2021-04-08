@@ -99,8 +99,17 @@ public class SimData {
 
         String cur;
 
+        // Does this work?  I don't know and don't think I use this class anymore anyway
         cur = getStringForKey(algorithmKey);
-        if (cur.equals(SimParams.AlgorithmFlag.STANDARD.toString())) {
+        for (SimParams.AlgorithmFlag flag : SimParams.AlgorithmFlag.values()) {
+            if (cur.equals(flag.toString())) {
+                Utils.log("Loaded: " + flag.toString());
+                algorithm = flag;
+                break;
+            }
+        }
+
+        /*if (cur.equals(SimParams.AlgorithmFlag.STANDARD.toString())) {
             algorithm = SimParams.AlgorithmFlag.STANDARD;
         }
         else if (cur.equals(SimParams.AlgorithmFlag.SPIRAL.toString())) {
@@ -111,7 +120,7 @@ public class SimData {
         }
         else if (cur.equals(SimParams.AlgorithmFlag.MIX_SRA.toString())) {
             algorithm = SimParams.AlgorithmFlag.MIX_SRA;
-        }
+        }*/
 
         cur = getStringForKey(dronesKey);
         numDrones = Utils.tryParseInt(cur);

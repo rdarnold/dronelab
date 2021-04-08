@@ -21,7 +21,7 @@ public class WiFiCommunicator {
     private double range = Distance.pixelsFromMeters(rangeMeters); 
 
     public double getRangeMeters() { return rangeMeters; }
-    public double getRange() { return range; }
+    public double getRangePixels() { return range; }
     public void setRangeMeters(double nMeters) {
         rangeMeters = nMeters;
         range = Distance.pixelsFromMeters(nMeters); 

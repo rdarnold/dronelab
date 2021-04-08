@@ -271,14 +271,20 @@ public class VBoxSimulation extends VBoxCustom {
 
         // These should generate from a set of SimParam presents created
         // programmatically and/or loaded from file.
-        cbAlgorithm = new ChoiceBox(FXCollections.observableArrayList(
+        /*cbAlgorithm = new ChoiceBox(FXCollections.observableArrayList(
             "None", 
             "Standard", 
             "Spiral",
             "Scatter",
             "MixSocialRelayAnti"
             )
-        );
+        );*/
+        ObservableList<String> oal = FXCollections.observableArrayList();
+        for (SimParams.AlgorithmFlag flag : SimParams.AlgorithmFlag.values()) {
+            oal.add(flag.getName());
+        }
+        cbAlgorithm = new ChoiceBox(oal);
+
         cbAlgorithm.getSelectionModel().selectFirst();
         // Note the use of selectedIndexProperty and not selectedItemProperty
         // Lets us use Number instead of String
@@ -344,7 +350,10 @@ public class VBoxSimulation extends VBoxCustom {
         SimParams params = scenario.simParams;
         //params.getAlgorithmFlags().clear();
         int index = cbAlgorithm.getSelectionModel().getSelectedIndex();
-        switch (index) {
+
+        params.setAlgorithmFlag((SimParams.AlgorithmFlag.fromValue(index)));
+
+        /*switch (index) {
             case 0:
                 //params.getAlgorithmFlags().add(SimParams.AlgorithmFlag.NOT_DEFINED);
                 params.setAlgorithmFlag(SimParams.AlgorithmFlag.NOT_DEFINED);
@@ -361,7 +370,10 @@ public class VBoxSimulation extends VBoxCustom {
             case 4:
                 params.setAlgorithmFlag(SimParams.AlgorithmFlag.MIX_SRA);
                 break;
-        }
+            case 5:
+                params.setAlgorithmFlag(SimParams.AlgorithmFlag.MIX_SRA_C);
+                break;
+        }*/
         // And apply it to the scenario immediately.
         scenario.applyAlgorithm();
     }
@@ -419,7 +431,9 @@ public class VBoxSimulation extends VBoxCustom {
         ltfTimeLimit.setFieldText(params.getTimeLimitSeconds());
 
         // Set the choicebox
-        if (params.getAlgorithmFlag() == SimParams.AlgorithmFlag.STANDARD) {
+        int index = params.getAlgorithmFlag().toInt();
+        cbAlgorithm.getSelectionModel().select(index);
+        /*if (params.getAlgorithmFlag() == SimParams.AlgorithmFlag.STANDARD) {
             cbAlgorithm.getSelectionModel().select(1);
         } else if (params.getAlgorithmFlag() == SimParams.AlgorithmFlag.SPIRAL) {
             cbAlgorithm.getSelectionModel().select(2);
@@ -429,7 +443,7 @@ public class VBoxSimulation extends VBoxCustom {
             cbAlgorithm.getSelectionModel().select(4);
         } else  {
             cbAlgorithm.getSelectionModel().select(0);
-        }
+        }*/
 
         ltfSimSpeed.setFieldText(scenario.getTimeFactor());
     }

@@ -75,28 +75,55 @@ public class SimParams {
         STANDARD    (1 << 1),
         SPIRAL      (1 << 2),
         SCATTER     (1 << 3);*/
-        NOT_DEFINED (0, "NotDefined",           "NOT_DEFINED"),
-        STANDARD    (1, "Standard",             "STANDARD"),
-        SPIRAL      (2, "Spiral",               "SPIRAL"),
-        SCATTER     (3, "Scatter",              "SCATTER"),
-        MIX_SRA     (4, "MixSocialRelayAnti",   "MIX_SRA"),  // Mixes are defined by a simulation matrix file
-        MIX_SRA_C   (5, "C-MixSocialRelayAnti", "MIX_SRA_C");  // MIX_SRA but the pattern search is assigned by a centralized controller
+        NOT_DEFINED (0, "NotDefined",           "NOT_DEFINED",  "nd_"),
+        STANDARD    (1, "Standard",             "STANDARD",     "st_"),
+        SPIRAL      (2, "Spiral",               "SPIRAL",       "sp_"),
+        SCATTER     (3, "Scatter",              "SCATTER",      "sc_"),
+        MIX_SRA     (4, "MixSRA",               "MIX_SRA",      "mix_"),  // Mixes are defined by a simulation matrix file
+        MIX_SRA_C   (5, "MixSRA-C",             "MIX_SRA_C",    "mixc_");  // MIX_SRA but the pattern search is assigned by a centralized controller
 
         private final long value;
         private final String name;
         private final String loadName;
-        private AlgorithmFlag(long value, String name, String loadName) {
+        private final String filePrefix;
+        private AlgorithmFlag(long value, String name, String loadName, String filePrefix) {
             this.value = value;
             this.name = name;
             this.loadName = loadName;
+            this.filePrefix = filePrefix;
+        }
+
+        public static AlgorithmFlag fromValue(int val) {
+            for (AlgorithmFlag flag : AlgorithmFlag.values()) {
+                if (flag.value == val) {
+                    return flag;
+                }
+            }
+            throw new IllegalArgumentException("AlgorithmFlag not found.");
         }
 
         public long getValue() {
             return value;
         } 
 
+        public String getName() {
+            return name;
+        }
+
+        public String getLoadName() {
+            return loadName;
+        }
+
+        public String getFilePrefix() {
+            return filePrefix;
+        }
+
         public String toString() {
             return name;
+        }
+
+        public int toInt() {
+            return (int)value;
         }
 
         public String toLoadString() {

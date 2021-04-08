@@ -72,6 +72,8 @@ public class Drone extends Mobile {
     private static final int dotSize = 6;
     private static final int rotarSize = 10;
 
+    private Color droneColor = Color.DARKBLUE;
+
     private boolean fake = false;
 
     private boolean flying = true;
@@ -133,6 +135,8 @@ public class Drone extends Mobile {
     public int getMaxHealth() { return maxHealth; }
     public int getHealth() { return health; }
 
+    public void setColor(Color col) { droneColor = col; }
+
     public ArrayList<DroneData> getDroneList() { return droneList; }
 
     private void setupDrone(int newId) {
@@ -174,8 +178,20 @@ public class Drone extends Mobile {
         behaviorOrder.add(Constants.STR_REPEL);
         behaviorOrder.add(Constants.STR_SEEK);
         behaviorOrder.add(Constants.STR_SCATTER);
+        behaviorOrder.add(Constants.STR_ASSIGNED_PATH);
         behaviorOrder.add(Constants.STR_SEARCH);
         behaviorOrder.add(Constants.STR_WANDER);
+
+        // They ALL must be ordered, even though they're not used at the same time.
+        // The system HAS to know how to prioritize them in the event that they WERE
+        // all used at the same time.
+        if (behaviorOrder.size() != Constants.STR_BEHAVIORS.length) {
+            Utils.log("************************************************");
+            Utils.log("ERROR:  Behavior not added to setupBehaviorOrder");
+            Utils.log("Did you code in a new behavior but not add it to");
+            Utils.log("setupBehaviorOrder() in Drone.java?");
+            Utils.log("************************************************");
+        }
     }
 
     /*@Override
@@ -398,7 +414,6 @@ public class Drone extends Mobile {
         wifi = new WiFiCommunicator(this);
     }
 
-    
     public void removeBehavior(String strName) {
         BehaviorLoader.removeModule(behaviors, strName);
     }
@@ -410,6 +425,14 @@ public class Drone extends Mobile {
             return;
         }
         mod.assign(this);
+    }
+
+    public String printBehaviors() {
+        String str = "";
+        for (BehaviorModule mod : behaviors) {
+            str += mod.getName() + " ";
+        }
+        return str;
     }
 
     // Duplicate the position parameters and possibly other ones
@@ -433,7 +456,7 @@ public class Drone extends Mobile {
     public void pruneDroneList() {
         // Remove entries that are stale; i.e. we havent heard from in awhile.  Assume
         // those are broken or out of range or not in the mix anymore so we dont want to
-        // consider them to be part of the game.  Give them maybe 10 seconds.
+        // consider them to be part of the sim.  Give them maybe 10 seconds.
         for (int i = droneList.size()-1; i >= 0; i--) {
             //Utils.log(droneList.get(i).id);
             //Utils.log(droneList.get(i).x);
@@ -602,7 +625,7 @@ public class Drone extends Mobile {
             if (broken == true) {
                 gc.setStroke(Color.BLACK);
             } else {
-                gc.setStroke(Color.DARKBLUE);
+                gc.setStroke(droneColor);
             }
             gc.setLineWidth(3);
             gc.strokeOval(x - 2, y - 2, wid +4, hgt+4);
@@ -753,6 +776,20 @@ public class Drone extends Mobile {
         return true;
     }
 
+    public double getWiFiRangeMeters() {
+        if (wifi == null) {
+            return 0;
+        }
+        return wifi.getRangeMeters();
+    }
+
+    public double getWiFiRangePixels() {
+        if (wifi == null) {
+            return 0;
+        }
+        return wifi.getRangePixels();
+    }
+
     // All the life of all batteries added together
     public int getBatteryLifeMinutes() {
         int mins = 0;
@@ -834,6 +871,16 @@ public class Drone extends Mobile {
             return true;
         }
         return false;
+    }
+    
+    // A way to reset a behavior module externally to the drone
+    public boolean resetModule(String strModuleName) {
+        BehaviorModule mod = BehaviorLoader.getModule(behaviors, strModuleName);
+        if (mod == null) {
+            return false;
+        }
+        mod.reset();
+        return true;
     }
 
     public void updateContinuous(Scenario scenario) {

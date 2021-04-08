@@ -14,6 +14,7 @@ public class Mobile extends Collidable {
     // sectors they are in
     public ArrayList<Sector> sectors = new ArrayList<Sector>();
 
+    // These are set properly in DroneTemplate.java
     private double maxSpeed = 3.0; // this is usually super fast actually
     private double maxAscentSpeed = maxSpeed / 3.0; // Typical speed
     private double maxDescentSpeed = maxSpeed / 3.0; // Typical speed

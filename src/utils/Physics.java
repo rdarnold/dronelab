@@ -43,7 +43,7 @@ public final class Physics {
 
     // From x1, y1, as the origin point, rotate x2, y2
     public static Point2D calcRotatedPoint(double originX, double originY, double x2, double y2, double angleDegrees) {
-        double hyp = calcDistance(originX, originY, x2, y2);
+        double hyp = calcDistancePixels(originX, originY, x2, y2);
         double angleRadians = Math.toRadians(angleDegrees);
 
         double rotX = Math.cos(angleRadians) * hyp;
@@ -56,7 +56,7 @@ public final class Physics {
     // This is the ideal x velocity to get to desired location from current position
     // if we were standing still.
     public static double calcIdealXSpeed(double x0, double y0, double x1, double y1, double speed) {
-        double dist = Physics.calcDistance(x0, y0, x1, y1);
+        double dist = Physics.calcDistancePixels(x0, y0, x1, y1);
         if (dist <= 0)
             return 0;
         return ((speed / dist) * (x1 - x0));
@@ -67,7 +67,7 @@ public final class Physics {
     }
 
     public static double calcIdealYSpeed(double x0, double y0, double x1, double y1, double speed) {
-        double dist = Physics.calcDistance(x0, y0, x1, y1);
+        double dist = Physics.calcDistancePixels(x0, y0, x1, y1);
         if (dist <= 0)
             return 0;
         return ((speed / dist) * (y1 - y0));
@@ -77,8 +77,14 @@ public final class Physics {
         return calcIdealYSpeed(mob.x(), mob.y(), targetX, targetY, mob.getTargetSpeed());
     }
 
-    public static double calcDistance(double x1, double y1, double x2, double y2) {
+    // Pixels
+    public static double calcDistancePixels(double x1, double y1, double x2, double y2) {
         return Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+    }
+
+    // Meters
+    public static double calcDistanceMeters(double x1, double y1, double x2, double y2) {
+        return Distance.metersFromPixels(Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1)));
     }
 
     public static Shape getIntersectingShape(Collidable a, Collidable b) {
@@ -170,8 +176,14 @@ public final class Physics {
        // return false;
     }
 
-    public static boolean withinDistance(double x1, double y1, double x2, double y2, double distance) {
-        return (calcDistance(x1, y1, x2, y2) <= distance);
+    // This is in PIXELS
+    public static boolean withinDistance(double x1, double y1, double x2, double y2, double distancePixels) {
+        return (calcDistancePixels(x1, y1, x2, y2) <= distancePixels);
+    }
+
+    // This is in METERS
+    public static boolean withinDistanceMeters(double x1, double y1, double x2, double y2, double distanceMeters) {
+       return (calcDistancePixels(x1, y1, x2, y2) <= Distance.pixelsFromMeters(distanceMeters));
     }
 
     public static Shape getCollisionShape(Mobile mob, ArrayList<Obstacle> obstacles) {

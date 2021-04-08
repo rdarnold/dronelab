@@ -5,6 +5,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import dronelab.*;
 import dronelab.utils.*;
 import dronelab.collidable.*;
 
@@ -24,13 +25,12 @@ public class AssignedPathModule extends BehaviorModule {
     public AssignedPathModule() {
         super(Constants.STR_ASSIGNED_PATH, Constants.STR_ASSIGNED_PATH_J);
         drawLetter = "A";
-        setSearchPattern();
     }
 
     @Override
     public void assign(Drone d) {
         super.assign(d);
-        setSearchPattern();
+        getSearchPattern();
     }
 
     @Override
@@ -40,7 +40,9 @@ public class AssignedPathModule extends BehaviorModule {
     public boolean reset() 
     { 
         nextLocation = null;
-        setSearchPattern();
+        locationIndex = -1;
+        lastLocationIndex = -1;
+        getSearchPattern();
         return true; 
     }
     
@@ -51,6 +53,9 @@ public class AssignedPathModule extends BehaviorModule {
     public boolean draw(GraphicsContext gc) {
         if (nextLocation == null) 
             return false;
+
+        // Draw the waypoint path
+        drawPath(gc, locations);
 
         return drawLocation(gc, (int)nextLocation.getX(), (int)nextLocation.getY());
     }
@@ -71,56 +76,30 @@ public class AssignedPathModule extends BehaviorModule {
         return search();
     }
 
-    private void setSearchPattern(double startX, double startY, double xDist, double yDist, double yInterval) {
-        // Right now this is actually pixels not meters,
-        // I just don't have time for the conversion
-
-        double x = startX;
-        double y = startY;
-
-        //Location zero is where we are.
-        //locations.add(new Point2D(x, y));
-
-        double yEnd = startY + yDist;
-
-        // Now go right and left, going down by yInterval pixels
-        // each time, until we reach the bottom.
-        while (y <= yEnd) {
-            locations.add(new Point2D(x, y));
-            x += xDist;
-            locations.add(new Point2D(x, y));
-            y += yInterval;
-            if (y > yEnd)
-                break;
-            locations.add(new Point2D(x, y));
-            x -= xDist;
-            locations.add(new Point2D(x, y));
-            y += yInterval;
-            //locations.add(new Point2D(x, y));
+    // For debugging we may want to be able to see what the search pattern is
+    public String printSearchPattern() {
+        String str = "";
+        for (Point2D point : locations) {
+            str += (int)point.getX() + "," + (int)point.getY() + " ";
         }
-
-        numLocations = locations.size();
+        return str;
     }
 
-	// Set up a search pattern, there should be various types we can pass in here.
-    private void setSearchPattern() {
+	// Set up the search pattern, it's just based on what the controlling entity / operator has
+    // selected for us
+    private void getSearchPattern() {
         if (drone == null) {
             return;
         }
-        // Lets start with like a basic back and forth pattern.
-        double x = drone.getStartingX();
-        double y = drone.getStartingY();
 
-        if (x <= -1 || y <= -1) {
-            // Starting position hasnt been set yet so lets not set up the pattern yet.
-            return;
-        }
-
+        // Clear the old one
         locations.clear();
-        setSearchPattern(50, 50, 6300, 4800, 100);
+        
+        // Grab the pattern from the human controller
+        locations.addAll(DroneLab.operator.getLocations());
+        numLocations = locations.size();
 
-        // This one is for the paper, just showing a small portion.
-        //setSearchPattern(1300, 3800, 700, 600, 300);
+        //Utils.log(printSearchPattern());
     }
 
     // Probably if we are located somewhere, we start with the closest
@@ -135,8 +114,8 @@ public class AssignedPathModule extends BehaviorModule {
         //Utils.log("Sent pattern index " + patternIndex);
     }
 
-    private void setNextSearchLocation() {
-        setAssignedPathIndex(locationIndex + 1);
+    private boolean setNextSearchLocation() {
+        return setAssignedPathIndex(locationIndex + 1);
         /*if (locations == null || locations.size() == 0) {
             return;
         }
@@ -148,9 +127,9 @@ public class AssignedPathModule extends BehaviorModule {
 	    nextLocation = locations.get(locationIndex);*/
     }
 
-    public void setAssignedPathIndex(int index) {
+    public boolean setAssignedPathIndex(int index) {
         if (locations == null || locations.size() == 0) {
-            return;
+            return false;
         }
 
         // If it's trying to go back to the previous one we had,
@@ -159,13 +138,18 @@ public class AssignedPathModule extends BehaviorModule {
         // as drones in a swarm fight for locations.  So, the "show must
         // go on" as they say.
         if (index == locationIndex || index == lastLocationIndex) {
-            return;
+            return false;
         }
 
         lastLocationIndex = locationIndex;
         locationIndex = index;
-        if (locationIndex > locations.size() - 1) {
-            locationIndex = 0;
+        if (locationIndex >= locations.size()) {
+            // We've done all the locations, so now get a new set of locations
+            // from the operator
+            // Inform the operator that we're done
+            DroneLab.operator.informComplete();
+            // That's it, the operator will take care of the rest.
+            return false;
         }
 
         // If we've changed locations, tell all other drones to do
@@ -182,6 +166,7 @@ public class AssignedPathModule extends BehaviorModule {
         //}
 
 	    nextLocation = locations.get(locationIndex);
+        return true;
     }
 
     private boolean search() {
@@ -222,8 +207,10 @@ public class AssignedPathModule extends BehaviorModule {
         if (Physics.withinDistance(drone.ls.x(), drone.ls.y(), nextLocation.getX(), nextLocation.getY(), distance) == true) {
             //nextLocation = null;
             //drone.setTargetLocation(Math.round(drone.x() + drone.wid/2), Math.round(drone.y() + drone.hgt/2));
-            // Now move to the next location.  If we finish, go back to the first location.
-            setNextSearchLocation();
+            // Now move to the next location.  If we finish, we inform the controller of completion and then
+            // await further instructions which will come shortly.
+            if (setNextSearchLocation() == false)
+                return true;
             drone.setTargetLocation(nextLocation.getX(), nextLocation.getY(), drone.getMaxSpeed());
             return false;
         }
