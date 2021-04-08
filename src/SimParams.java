@@ -156,25 +156,21 @@ public class SimParams {
     // Does not need to be a flag
     private AlgorithmFlag algorithmFlag = AlgorithmFlag.STANDARD;
 
+
     // Why do I have everything as properties?  Don't think I do any XML processing here???
     // These will just be normal member vars for now...
     Drone.DroneRole role1 = Drone.DroneRole.SOCIAL;
-    int role1_num = 0;
     public Drone.DroneRole getRole1() { return role1; }
-    public int getNumRole1() { return role1_num; }
-
     Drone.DroneRole role2 = Drone.DroneRole.RELAY;
-    int role2_num = 0;
     public Drone.DroneRole getRole2() { return role2; }
-    public int getNumRole2() { return role2_num; }
-
     Drone.DroneRole role3 = Drone.DroneRole.ANTISOCIAL;
-    int role3_num = 0;
     public Drone.DroneRole getRole3() { return role3; }
-    public int getNumRole3() { return role3_num; }
 
-    double wifi_range = 1.0;
-    public double getWifiRange() { return wifi_range; }
+    public int getNumRole1() { return currentItem.getSocialNum(); }
+    public int getNumRole2() { return currentItem.getRelayNum(); }
+    public int getNumRole3() { return currentItem.getAntiNum(); }
+    public double getWifiRange() { return currentItem.getWifiRange(); }
+    public double getQoK() { return currentItem.getQoK(); }
 
     public SimParams() { 
         // Set the num survivors to whatever we have set in the config
@@ -278,17 +274,7 @@ public class SimParams {
 
         currentItem = item;
 
-        role1_num = item.getSocialNum();
-        role2_num = item.getRelayNum();
-        role3_num = item.getAntiNum();
-
-        wifi_range = item.getWifiRange();
-
-        //Utils.log(role1_num);
-        //Utils.log(role2_num);
-        //Utils.log(role3_num);
-
-        setNumDrones(role1_num + role2_num + role3_num);
+        setNumDrones(item.getSocialNum() + item.getRelayNum() + item.getAntiNum());
 
         return true;
     }

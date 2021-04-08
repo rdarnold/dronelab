@@ -191,8 +191,12 @@ public class Scenario extends ScenarioLoader {
             if (numRole_boo > 0) {
                 Utils.log("UNDEFINED ROLE: " + numRole_boo);
             }
-            Utils.log("APPLIED SIM SETUP: " + flag.toLoadString() + " (" + sim.scenario.getNumVictims() + " survivors); SOCIAL: " + numRole1 + ", RELAY: " + numRole2 + ", ANTI: " + numRole3 + 
-                ", WIFI: " + wifi_range);
+            Utils.log("APPLIED SIM SETUP: " + flag.toLoadString() + " (" + sim.scenario.getNumVictims() + 
+                " survivors); SOCIAL: " + numRole1 + 
+                ", RELAY: " + numRole2 + 
+                ", ANTI: " + numRole3 + 
+                ", WIFI: " + wifi_range +
+                ", QoK: " + DroneLab.operator.getQuality());
             // More detailed log
             for (Drone d : drones) {
                 String s = "Drone: " + d.printBehaviors();

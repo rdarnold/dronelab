@@ -68,6 +68,11 @@ public class Deployment extends CanvasRectangle {
             // Set number of drones to whatever we wanted in the simulation
             Drone drone = null;
 
+            // Set the quality of knowledge if we're using a "centralized" operator, if not
+            // it doesn't matter if we set it or not.  QoK is loaded as double from 0 - 1,
+            // so we convert it to a 0-100 percent.
+            DroneLab.operator.setQuality((int)(params.getQoK() * 100.0));
+
             // Deploy all our drones randomly in the deployment area.
             int x = 0;
             int y = 0;
