@@ -55,18 +55,19 @@ public final class NetworkMatrix {
 
     private static void buildMatrix() {
         netMatrix = new boolean[DroneLab.scenario.drones.size()][DroneLab.scenario.drones.size()];
-        attrMatrix = new String[DroneLab.scenario.drones.size()][5];
+        attrMatrix = new String[DroneLab.scenario.drones.size()][6];
 
         int row = 0;
         int col = 0;
         double range = 0;
         for (Drone d : DroneLab.scenario.drones) {
             //create drone attribute matrix used for XML doc
-            attrMatrix[row][0] =Double.toString(d.getDroneType().getValue());
-            attrMatrix[row][1] =Double.toString(d.getMaxAscentSpeed());
-            attrMatrix[row][2] =Double.toString(d.getMaxDescentSpeed());
-            attrMatrix[row][3] =Double.toString(d.getMaxAccelerationRate());
-            attrMatrix[row][4] =Double.toString(d.getMaxVerticalAccelerationRate());
+            attrMatrix[row][0] =Integer.toString(d.getDroneType().getValue());
+            attrMatrix[row][1] =Integer.toString(d.getDroneRole().getValue());
+            attrMatrix[row][2] =Double.toString(d.getMaxAscentSpeed());
+            attrMatrix[row][3] =Double.toString(d.getMaxDescentSpeed());
+            attrMatrix[row][4] =Double.toString(d.getMaxAccelerationRate());
+            attrMatrix[row][5] =Double.toString(d.getMaxVerticalAccelerationRate());
 
             //populate network adjacency matrix
             col = 0;
@@ -157,29 +158,34 @@ public final class NetworkMatrix {
             nodes.appendChild(nodeClass);
             Element propertyIdentities = doc.createElement("propertyIdentities");
             nodeClass.appendChild(propertyIdentities);
+            Element propertyIdentity0 = doc.createElement("propertyIdentity");
+            propertyIdentity0.setAttribute("id","droneType");
+            propertyIdentity0.setAttribute("type","number");
+            propertyIdentity0.setAttribute("singleValued","false");
+            propertyIdentities.appendChild(propertyIdentity0);
             Element propertyIdentity1 = doc.createElement("propertyIdentity");
-            propertyIdentity1.setAttribute("id","droneType");
-            propertyIdentity1.setAttribute("type","categoryText");
+            propertyIdentity1.setAttribute("id","droneRole");
+            propertyIdentity1.setAttribute("type","number");
             propertyIdentity1.setAttribute("singleValued","false");
             propertyIdentities.appendChild(propertyIdentity1);
             Element propertyIdentity2 = doc.createElement("propertyIdentity");
             propertyIdentity2.setAttribute("id","maxAscentSpeed");
-            propertyIdentity2.setAttribute("type","categoryText");
+            propertyIdentity2.setAttribute("type","number");
             propertyIdentity2.setAttribute("singleValued","false");
             propertyIdentities.appendChild(propertyIdentity2);
             Element propertyIdentity3 = doc.createElement("propertyIdentity");
             propertyIdentity3.setAttribute("id","maxDescentSpeed");
-            propertyIdentity3.setAttribute("type","categoryText");
+            propertyIdentity3.setAttribute("type","number");
             propertyIdentity3.setAttribute("singleValued","false");
             propertyIdentities.appendChild(propertyIdentity3);
             Element propertyIdentity4 = doc.createElement("propertyIdentity");
             propertyIdentity4.setAttribute("id","maxAccelerationRate");
-            propertyIdentity4.setAttribute("type","categoryText");
+            propertyIdentity4.setAttribute("type","number");
             propertyIdentity4.setAttribute("singleValued","false");
             propertyIdentities.appendChild(propertyIdentity4);
             Element propertyIdentity5 = doc.createElement("propertyIdentity");
             propertyIdentity5.setAttribute("id","maxVerticalAccelerationRate");
-            propertyIdentity5.setAttribute("type","categoryText");
+            propertyIdentity5.setAttribute("type","number");
             propertyIdentity5.setAttribute("singleValued","false");
             propertyIdentities.appendChild(propertyIdentity5);
 
@@ -201,21 +207,25 @@ public final class NetworkMatrix {
                 droneNode.setAttribute("id",Integer.toString(row));
                 nodeClass.appendChild(droneNode);
                 Element propertyDroneType = doc.createElement("property");
+                Element propertyDroneRole = doc.createElement("property");
                 Element propertyMaxAscentSpeed = doc.createElement("property");
                 Element propertyMaxDescentSpeed = doc.createElement("property");
                 Element propertyMaxAccelerationRate = doc.createElement("property");
                 Element propertyMaxVerticalAccelerationRate = doc.createElement("property");
                 propertyDroneType.setAttribute("id","droneType");
                 propertyDroneType.setAttribute("value",attrMatrix[row][0]);
+                propertyDroneRole.setAttribute("id","droneRole");
+                propertyDroneRole.setAttribute("value",attrMatrix[row][1]);
                 propertyMaxAscentSpeed.setAttribute("id","maxAscentSpeed");
-                propertyMaxAscentSpeed.setAttribute("value",attrMatrix[row][1]);
+                propertyMaxAscentSpeed.setAttribute("value",attrMatrix[row][2]);
                 propertyMaxDescentSpeed.setAttribute("id","maxDescentSpeed");
-                propertyMaxDescentSpeed.setAttribute("value",attrMatrix[row][2]);
+                propertyMaxDescentSpeed.setAttribute("value",attrMatrix[row][3]);
                 propertyMaxAccelerationRate.setAttribute("id","maxAccelerationRate");
-                propertyMaxAccelerationRate.setAttribute("value",attrMatrix[row][3]);
+                propertyMaxAccelerationRate.setAttribute("value",attrMatrix[row][4]);
                 propertyMaxVerticalAccelerationRate.setAttribute("id","maxVerticalAccelerationRate");
-                propertyMaxVerticalAccelerationRate.setAttribute("value",attrMatrix[row][4]);
+                propertyMaxVerticalAccelerationRate.setAttribute("value",attrMatrix[row][5]);
                 droneNode.appendChild(propertyDroneType);
+                droneNode.appendChild(propertyDroneRole);
                 droneNode.appendChild(propertyMaxAscentSpeed);
                 droneNode.appendChild(propertyMaxDescentSpeed);
                 droneNode.appendChild(propertyMaxAccelerationRate);
