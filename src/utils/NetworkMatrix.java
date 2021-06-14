@@ -35,11 +35,14 @@ import dronelab.*;
 import dronelab.collidable.*;
 import dronelab.utils.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 // This class saves out the current connectivity of all the drones periodically as either a text file,
 // or an Excel file
 // and as a DynetML xml file
 public final class NetworkMatrix {
-    private NetworkMatrix () { } // private constructor
+    private NetworkMatrix () {} // private constructor
 
     public static boolean[][] netMatrix; 
     public static boolean[][] prevMatrix; 
@@ -47,6 +50,13 @@ public final class NetworkMatrix {
 
     public static int simSecondsBetweenSaves = 1; //60; // Much faster than real-time when fast-forwarding
     public static boolean checkChanges = true; // Only save out if the network connectivity is different than last time
+
+
+    public static Document doc = null;
+    public static DocumentBuilderFactory docFactory;
+    public static DocumentBuilder docBuilder;
+    private static Element rootElement;
+    private static int networkCount = 0;
 
     public static void reset() {
         netMatrix = null;
@@ -121,7 +131,6 @@ public final class NetworkMatrix {
 
     // Save out the current state of all the drones in the scenario in terms of which ones are within
     // communication range of which other ones.
-    // Also iterates via the adjacency matrix and generates XML 
     public static void save() {
         buildMatrix();
 
@@ -134,19 +143,74 @@ public final class NetworkMatrix {
         StringBuilder str = new StringBuilder();
 
         int size = DroneLab.scenario.drones.size();
+        for (int row = 0; row < size; row++) {
+            for (int col = 0; col < size; col++) {
+                if (netMatrix[row][col] == true) {
+                    str.append("1");
+                }
+                else {
+                    str.append("0");
+                }
+                if (col < size-1) {
+                    str.append(",");
+                }
+            }
+            str.append("\r\n");
+        }
 
-
-        try {
-            // Generate xml root elements
-            // initialize DynetXML
-            // http://www.casos.cs.cmu.edu/projects/dynetml/
-            // http://www.casos.cs.cmu.edu/projects/dynetml/dynetml_2_0-schema.xml
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-            Document doc = docBuilder.newDocument();
-            Element rootElement = doc.createElement("DynamicMetaNetwork");
+        // Format is runNumber_timeStampInSeconds.csv
+        String fname =  "Run-" + (DroneLab.runner.getCurrentRunNum() + 1) + 
+                        "_Time-" + DroneLab.scenario.simTime.getTotalSeconds() + 
+                        "_Located-" + DroneLab.scenario.getNumVictimsSeen() + 
+                        ".csv";
+        Utils.writeFile(str.toString(), Constants.NET_MATRIX_DATA_SAVE_PATH + fname);
+    }
+    
+    
+    public static void resetDyNetML(){
+        networkCount=0;
+        // Generate xml root elements
+        // initialize DynetXML
+        // http://www.casos.cs.cmu.edu/projects/dynetml/
+        // http://www.casos.cs.cmu.edu/projects/dynetml/dynetml_2_0-schema.xml
+       try{
+            docFactory = DocumentBuilderFactory.newInstance();
+            docBuilder = docFactory.newDocumentBuilder();
+            doc = docBuilder.newDocument();
+            rootElement = doc.createElement("DynamicMetaNetwork");
             doc.appendChild(rootElement);
+
+       } catch(Exception e) {
+            e.printStackTrace();
+            }
+
+    } 
+
+     public static void appendDyNetML() {
+        buildMatrix();
+
+        if (checkChanged() == false) {
+            return;
+        }
+        prevMatrix = netMatrix;
+
+        //System.out.println("Root Element :" + doc.getDocumentElement().getNodeName());
+        
+        // Now save it out to whatever file format.  For now it is CSV.
+        StringBuilder str = new StringBuilder();
+
+        int size = DroneLab.scenario.drones.size();
+
+        //system time
+        LocalDateTime dateObj = LocalDateTime.now();
+        DateTimeFormatter formatDateObj = DateTimeFormatter.ofPattern("yyyyMMdd'T'HH:mm:ss");
+        String  formattedDT = dateObj.format(formatDateObj);
+
+        try {  
             Element MetaNetwork =  doc.createElement("MetaNetwork");
+            MetaNetwork.setAttribute("id",Integer.toString(networkCount));
+            networkCount++;
+            MetaNetwork.setAttribute("date",formattedDT);
             rootElement.appendChild(MetaNetwork);
             
             //XML static elements & attributes
@@ -198,9 +262,7 @@ public final class NetworkMatrix {
             network.setAttribute("id","droneNetwork");
             network.setAttribute("isDirected", "false");
             networks.appendChild(network);
-                
-
-                
+                        
             for (int row = 0; row < size; row++) {
                 //Create node for each drone & add properties
                 Element droneNode = doc.createElement("node");
@@ -266,23 +328,24 @@ public final class NetworkMatrix {
                 }
                 str.append("\r\n");
             }
-
-        
-
-            // Format is runNumber_timeStampInSeconds.csv
-            String fname =  "Run-" + (DroneLab.runner.getCurrentRunNum() + 1) + 
-                            "_Time-" + DroneLab.scenario.simTime.getTotalSeconds() + 
-                            "_Located-" + DroneLab.scenario.getNumVictimsSeen() + 
-                            ".csv";
-            Utils.writeFile(str.toString(), Constants.NET_MATRIX_DATA_SAVE_PATH + fname);
-
-        
-            String xmlfname =  "Run-" + (DroneLab.runner.getCurrentRunNum() + 1) + 
-                        "_Time-" + DroneLab.scenario.simTime.getTotalSeconds() + 
-                        "_Located-" + DroneLab.scenario.getNumVictimsSeen() + 
-                        ".xml";
-            File xmlFilePath = new File( Constants.NET_MATRIX_DATA_SAVE_PATH + xmlfname);
+              
+        } catch(Exception e) {
+            e.printStackTrace();
+            }
             
+        }   
+
+    public static void saveDyNetML() {
+    
+        // Now save it out to whatever file format.  For now it is CSV.
+
+        String xmlfname =  "masterRun-" + (DroneLab.runner.getCurrentRunNum() + 1) + 
+                    "_Time-" + DroneLab.scenario.simTime.getTotalSeconds() + 
+                    "_Located-" + DroneLab.scenario.getNumVictimsSeen() + 
+                    ".xml";
+        File xmlFilePath = new File( Constants.NET_MATRIX_DATA_SAVE_PATH + xmlfname);
+        
+        try{
             FileOutputStream output = new FileOutputStream(xmlFilePath);
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
@@ -290,10 +353,13 @@ public final class NetworkMatrix {
             StreamResult result = new StreamResult(output);
 
             transformer.transform(source, result);
-                
-    } catch(Exception e) {
+         }catch(Exception e) {
             e.printStackTrace();
             }
-            
-        }
+                
+    }    
+
+
+
+
 }

@@ -228,6 +228,7 @@ public class Scenario extends ScenarioLoader {
         simTime.reset();
         simTime.setMaxSeconds(simParams.getTimeLimitSeconds());
         NetworkMatrix.reset();
+        NetworkMatrix.resetDyNetML();
 
         for (Deployment dep : deployments) {
             dep.deploy(this);
@@ -342,6 +343,7 @@ public class Scenario extends ScenarioLoader {
         collisions.clear();
         simTime.reset();
         NetworkMatrix.reset();
+        NetworkMatrix.resetDyNetML();
         m_nLastSimSeconds = 0;
     }
 
@@ -626,7 +628,11 @@ public class Scenario extends ScenarioLoader {
         m_nEndTicks = System.currentTimeMillis();
         m_nLastRunMilliseconds = m_nEndTicks - m_nStartTicks;
         m_nLastSimSeconds = 0;
+        //save dynetml
+        NetworkMatrix.saveDyNetML();
+        //NetworkMatrix.resetDyNetML();
         sim.signalComplete();
+
     }
 
     public int getLastRunSeconds() {
@@ -667,7 +673,8 @@ public class Scenario extends ScenarioLoader {
             // Every x seconds, write out the network matrix if we have that capablity enabled
             int currentSimSeconds = simTime.getTotalSeconds();
             if (currentSimSeconds - m_nLastSimSeconds >= NetworkMatrix.simSecondsBetweenSaves) {
-                NetworkMatrix.save();
+                //NetworkMatrix.save();
+                NetworkMatrix.appendDyNetML();
                 m_nLastSimSeconds = currentSimSeconds;
             }
         }
