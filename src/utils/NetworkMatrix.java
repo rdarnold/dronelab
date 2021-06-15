@@ -257,10 +257,13 @@ public final class NetworkMatrix {
             Element networks = doc.createElement("networks");
             MetaNetwork.appendChild(networks);
             Element network = doc.createElement("network");
-            network.setAttribute("source","agent");
-            network.setAttribute("target","agent");
-            network.setAttribute("id","droneNetwork");
+            network.setAttribute("source","drone");
+            network.setAttribute("sourceType","Agent");
+            network.setAttribute("target","drone");
+            network.setAttribute("targetType","Agent");
+            network.setAttribute("id","drone x drone");
             network.setAttribute("isDirected", "false");
+            network.setAttribute("allowSelfLoops", "false");
             networks.appendChild(network);
                         
             for (int row = 0; row < size; row++) {
