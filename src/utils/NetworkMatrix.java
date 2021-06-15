@@ -210,7 +210,8 @@ public final class NetworkMatrix {
             Element MetaNetwork =  doc.createElement("MetaNetwork");
             MetaNetwork.setAttribute("id",Integer.toString(networkCount));
             networkCount++;
-            MetaNetwork.setAttribute("date",formattedDT);
+            //MetaNetwork.setAttribute("date",formattedDT);
+            MetaNetwork.setAttribute("timePeriod", DroneLab.scenario.simTime.toString());
             rootElement.appendChild(MetaNetwork);
             
             //XML static elements & attributes
