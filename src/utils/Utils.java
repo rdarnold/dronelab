@@ -105,7 +105,7 @@ public final class Utils {
         return false;
     }
 
-    
+
     public static String readFile(String fileName) {
         return readFile(fileName, true);
     }
@@ -127,7 +127,7 @@ public final class Utils {
                 Utils.log("readFile: " + fileName);
             }
             BufferedReader reader = new BufferedReader(
-                new InputStreamReader(Utils.class.getResourceAsStream(fileName)));
+                    new InputStreamReader(Utils.class.getResourceAsStream(fileName)));
             String         line = null;
             StringBuilder  stringBuilder = new StringBuilder();
             String         ls = System.getProperty("line.separator");
@@ -151,7 +151,7 @@ public final class Utils {
     }
 
     /*
-    public static String readFile(String path) 
+    public static String readFile(String path)
     {
         String contents = null;
         try {
@@ -182,7 +182,7 @@ public final class Utils {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, false))) {
             //log(str);
-	        writer.write(str);
+            writer.write(str);
         } catch (IOException e) {
             err("Failed to write file " + fileName);
             e.printStackTrace();
@@ -193,7 +193,7 @@ public final class Utils {
 
     public static boolean appendFile(String str, String fileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
-	        writer.write(str);
+            writer.write(str);
         } catch (IOException e) {
             err("Failed to append to file " + fileName);
             e.printStackTrace();
@@ -212,7 +212,7 @@ public final class Utils {
     public static int clampColor(int num) {
         return clamp(num, 0, 255);
     }
-    
+
     public static int clamp(int num, int min, int max) {
         if (num < min) return min;
         if (num > max) return max;
@@ -247,33 +247,33 @@ public final class Utils {
     }
 
     // Methods that help us parse ints and doubles and allow them to interchange.
-    public static int tryParseInt(String value) {  
+    public static int tryParseInt(String value) {
         return tryParseInt(value, true);
     }
 
-    private static int tryParseInt(String value, boolean tryDoubleToo) {  
-        try {  
-            int i = Integer.parseInt(value);  
-            return i;  
-        } catch (NumberFormatException e) {  
+    private static int tryParseInt(String value, boolean tryDoubleToo) {
+        try {
+            int i = Integer.parseInt(value);
+            return i;
+        } catch (NumberFormatException e) {
             if (tryDoubleToo == true) {
                 return (int)tryParseDouble(value, false);
             }
-            return 0;  
-        }  
+            return 0;
+        }
     }
 
-    public static long tryParseLong(String value) {  
-        try {  
-            long i = Long.parseLong(value);  
-            return i;  
-        } catch (NumberFormatException e) {  
-            return 0;  
-        }  
+    public static long tryParseLong(String value) {
+        try {
+            long i = Long.parseLong(value);
+            return i;
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 
-    public static double tryParseDoublePercent(String value) {  
-        // Strip a % sign off the end of it 
+    public static double tryParseDoublePercent(String value) {
+        // Strip a % sign off the end of it
         int index = value.indexOf("%");
         if (index > 0) {
             return tryParseDouble(value.substring(0, index), true);
@@ -281,21 +281,21 @@ public final class Utils {
         return tryParseDouble(value, true);
     }
 
-    public static double tryParseDouble(String value) {  
+    public static double tryParseDouble(String value) {
         return tryParseDouble(value, true);
     }
 
-    private static double tryParseDouble(String value, boolean tryIntToo) {   
-        try {  
-            double d = Double.parseDouble(value);  
-            return d;  
-        } catch (NumberFormatException e) {  
+    private static double tryParseDouble(String value, boolean tryIntToo) {
+        try {
+            double d = Double.parseDouble(value);
+            return d;
+        } catch (NumberFormatException e) {
             // Ok so try as an int now.
             if (tryIntToo == true) {
                 return (double)tryParseInt(value, false);
             }
-            return 0;  
-        }  
+            return 0;
+        }
     }
 
     // If we're done parsing in an array, we may want to move past the array
@@ -306,19 +306,19 @@ public final class Utils {
             if (event == JsonParser.Event.END_ARRAY) {
                 return;
             }
-	    }
+        }
     }
-    
+
     // This is so stupid, I cant believe these methods arent built into the parser,
     // the java JsonParser class SUCKS.
     public static String getNextJsonValueAsString(JsonParser parser ) {
         while (parser.hasNext()) {
             JsonParser.Event event = parser.next();
             if (event == JsonParser.Event.VALUE_STRING ||
-                event == JsonParser.Event.VALUE_NUMBER) {
+                    event == JsonParser.Event.VALUE_NUMBER) {
                 return parser.getString();
             }
-	    }
+        }
         return null;
     }
 
@@ -326,10 +326,10 @@ public final class Utils {
         while (parser.hasNext()) {
             JsonParser.Event event = parser.next();
             if (event == JsonParser.Event.VALUE_STRING ||
-                event == JsonParser.Event.VALUE_NUMBER) {
+                    event == JsonParser.Event.VALUE_NUMBER) {
                 return Utils.tryParseDouble(parser.getString());
             }
-	    }
+        }
         return 0;
     }
 
@@ -337,10 +337,10 @@ public final class Utils {
         while (parser.hasNext()) {
             JsonParser.Event event = parser.next();
             if (event == JsonParser.Event.VALUE_STRING ||
-                event == JsonParser.Event.VALUE_NUMBER) {
+                    event == JsonParser.Event.VALUE_NUMBER) {
                 return Utils.tryParseInt(parser.getString());
             }
-	    }
+        }
         return 0;
     }
 }

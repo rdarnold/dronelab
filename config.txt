@@ -5,5 +5,5 @@ Tactic: MIX_SRA
 numRandomSurvivors: 300
 startNew: 0
 draw: 1
-numRuns: 2
+numRuns: 0
 auto: 0

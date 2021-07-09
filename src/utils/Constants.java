@@ -52,7 +52,7 @@ public final class Constants {
     // We can use that as a guide here.
     public static final double MAX_WIFI_RANGE = 800.0;
     // ~150 ft. is like home wifi indoors
-    public static final double MIN_WIFI_RANGE = 50.0; 
+    public static final double MIN_WIFI_RANGE = 50.0;
 
     public static final int MAX_FFW_RATE = 200;
 
@@ -72,30 +72,30 @@ public final class Constants {
     public static final String STR_ANTI = "AntiSocial";
     public static final String STR_ASSIGNED_PATH = "AssignedPath";
 
-    public static final String[] STR_BEHAVIORS = { 
-        STR_AVOID, STR_SEEK, STR_SEARCH, STR_WANDER, STR_FORM, STR_RECHARGE, STR_LAUNCH,
-        STR_MAINTAIN_HEIGHT, STR_CLIMB, STR_SPIRAL, STR_SCATTER, STR_REPEL, STR_RELAY, STR_ANTI, STR_ASSIGNED_PATH
+    public static final String[] STR_BEHAVIORS = {
+            STR_AVOID, STR_SEEK, STR_SEARCH, STR_WANDER, STR_FORM, STR_RECHARGE, STR_LAUNCH,
+            STR_MAINTAIN_HEIGHT, STR_CLIMB, STR_SPIRAL, STR_SCATTER, STR_REPEL, STR_RELAY, STR_ANTI, STR_ASSIGNED_PATH
     };
 
-    public static final String STR_AVOID_J = "避ける";
-    public static final String STR_SEEK_J = "シーク";
-    public static final String STR_SEARCH_J = "パターン検索";
-    public static final String STR_WANDER_J = "流離う";
-    public static final String STR_FORM_J= "形成を維持する";
-    public static final String STR_RECHARGE_J = "充電地";
-    public static final String STR_LAUNCH_J = "打ち上げ";
-    public static final String STR_MAINTAIN_HEIGHT_J = "高さを維持する";
-    public static final String STR_CLIMB_J = "登る";
-    public static final String STR_SPIRAL_J = "スパイラル検索";
+    public static final String STR_AVOID_J = "??????";
+    public static final String STR_SEEK_J = "??????";
+    public static final String STR_SEARCH_J = "????????????";
+    public static final String STR_WANDER_J = "??????";
+    public static final String STR_FORM_J= "??????????????";
+    public static final String STR_RECHARGE_J = "??????";
+    public static final String STR_LAUNCH_J = "????????";
+    public static final String STR_MAINTAIN_HEIGHT_J = "??????????????";
+    public static final String STR_CLIMB_J = "????";
+    public static final String STR_SPIRAL_J = "??????????????";
     public static final String STR_SCATTER_J  = "Scatter";
     public static final String STR_REPEL_J  = "Repel";
     public static final String STR_RELAY_J = "Relay";
     public static final String STR_ANTI_J = "AntiSocial";
     public static final String STR_ASSIGNED_PATH_J = "AssignedPath";
 
-    public static final String[] STR_BEHAVIORS_J = { 
-        STR_AVOID_J, STR_SEEK_J, STR_SEARCH_J, STR_WANDER_J, STR_FORM_J, STR_RECHARGE_J, 
-        STR_LAUNCH_J, STR_MAINTAIN_HEIGHT_J, STR_CLIMB_J, STR_SPIRAL_J, STR_SCATTER_J, STR_REPEL_J, STR_RELAY_J, STR_ANTI_J, STR_ASSIGNED_PATH_J
+    public static final String[] STR_BEHAVIORS_J = {
+            STR_AVOID_J, STR_SEEK_J, STR_SEARCH_J, STR_WANDER_J, STR_FORM_J, STR_RECHARGE_J,
+            STR_LAUNCH_J, STR_MAINTAIN_HEIGHT_J, STR_CLIMB_J, STR_SPIRAL_J, STR_SCATTER_J, STR_REPEL_J, STR_RELAY_J, STR_ANTI_J, STR_ASSIGNED_PATH_J
     };
 
     public static final String STR_SENSOR_SONAR = "Sonar";
@@ -104,18 +104,18 @@ public final class Constants {
     public static final String STR_SENSOR_FINDER = "FINDER";
     public static final String STR_SENSOR_FLIR = "FLIR";
 
-    public static final String[] STR_SENSORS = { 
-        STR_SENSOR_SONAR, STR_SENSOR_CAMERA, STR_SENSOR_LOCATION, STR_SENSOR_FINDER, STR_SENSOR_FLIR
+    public static final String[] STR_SENSORS = {
+            STR_SENSOR_SONAR, STR_SENSOR_CAMERA, STR_SENSOR_LOCATION, STR_SENSOR_FINDER, STR_SENSOR_FLIR
     };
 
-    public static final String STR_SENSOR_SONAR_J = "ソナー";
-    public static final String STR_SENSOR_CAMERA_J = "カメラ";
+    public static final String STR_SENSOR_SONAR_J = "??????";
+    public static final String STR_SENSOR_CAMERA_J = "??????";
     public static final String STR_SENSOR_LOCATION_J = "GPS";
     public static final String STR_SENSOR_FINDER_J = "FINDER";
     public static final String STR_SENSOR_FLIR_J = "FLIR";
 
-    public static final String[] STR_SENSORS_J = { 
-        STR_SENSOR_SONAR_J, STR_SENSOR_CAMERA_J, STR_SENSOR_LOCATION_J,  STR_SENSOR_FINDER_J, STR_SENSOR_FLIR_J
+    public static final String[] STR_SENSORS_J = {
+            STR_SENSOR_SONAR_J, STR_SENSOR_CAMERA_J, STR_SENSOR_LOCATION_J,  STR_SENSOR_FINDER_J, STR_SENSOR_FLIR_J
     };
 
     public static final String STR_DJI_PHANTOM_3 = "DJI Phantom 3";
@@ -123,13 +123,13 @@ public final class Constants {
     public static final String STR_DJI_INSPIRE_1 = "DJI Inspire 1";
     public static final String STR_MAVIC_PRO = "Mavic Pro";
 
-    public static final String[] STR_DRONE_TYPES = { 
-        STR_DJI_PHANTOM_3, STR_DJI_PHANTOM_4, STR_DJI_INSPIRE_1,  STR_MAVIC_PRO
+    public static final String[] STR_DRONE_TYPES = {
+            STR_DJI_PHANTOM_3, STR_DJI_PHANTOM_4, STR_DJI_INSPIRE_1,  STR_MAVIC_PRO
     };
-    
+
     public static final String STR_LANG_ENGLISH = "English";
-    public static final String STR_LANG_JAPANESE = "日本語";
-    public static final String STR_LANG_BOTH = "日本語 / English";
+    public static final String STR_LANG_JAPANESE = "??????";
+    public static final String STR_LANG_BOTH = "?????? / English";
 
     // Various default sizes of things
     public static final int personWidth = 8;
@@ -181,7 +181,7 @@ public final class Constants {
     public enum DrawFlag {
         //MODULES, SENSORS, WIFI;
         NOT_DEFINED (1 << 0),
-        MODULES     (1 << 1), 
+        MODULES     (1 << 1),
         SENSORS     (1 << 2),
         WIFI        (1 << 3),
         VICTIMS     (1 << 4),
@@ -196,7 +196,7 @@ public final class Constants {
 
         public long getValue() {
             return value;
-        } 
+        }
         public static final EnumSet<DrawFlag> ALL = EnumSet.allOf(DrawFlag.class);
         public static final EnumSet<DrawFlag> NONE = EnumSet.noneOf(DrawFlag.class);
     }

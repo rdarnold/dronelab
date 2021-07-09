@@ -1,0 +1,22 @@
+<component name="libraryTable">
+  <library name="ext-master">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/ext-master/xmlbeans-3.0.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/poi-excelant-4.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/javax.json-api-1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/poi-examples-4.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/javax.json-1.0.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/poi-4.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/curvesapi-1.05.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/jfxrt.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/commons-compress-1.18.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/commons-collections4-4.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/poi-ooxml-schemas-4.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/poi-scratchpad-4.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/poi-ooxml-4.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/javax.servlet-api-3.1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,35 @@
+<component name="libraryTable">
+  <library name="libs-sources">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/google-http-client-jackson2-1.22.0-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/google-oauth-client-jetty-1.22.0-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/google-api-client-jackson2-1.22.0-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/transaction-api-1.1-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/google-api-client-servlet-1.22.0-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/httpclient-4.0.1-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/google-api-client-android-1.22.0-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/google-api-client-appengine-1.22.0-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/google-oauth-client-servlet-1.22.0-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/jdo2-api-2.3-eb-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/jackson-core-2.1.3-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/gson-2.1-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/google-http-client-appengine-1.22.0-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/httpcore-4.0.1-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/google-http-client-jdo-1.22.0-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/google-oauth-client-1.22.0-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/google-api-client-gson-1.22.0-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/google-api-client-1.22.0-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/commons-logging-1.1.1-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/google-http-client-android-1.22.0-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/google-oauth-client-appengine-1.22.0-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/jetty-util-6.1.26-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/google-http-client-gson-1.22.0-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/jetty-6.1.26-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/google-http-client-1.22.0-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/google-oauth-client-java6-1.22.0-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ext-master/drive/libs-sources/google-api-client-java6-1.22.0-sources.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -44,16 +44,16 @@ public final class Config {
     private static String profileFilename = "default_profile.txt";  // Default to the regular one
     private static String scenarioName = "Arahama1";
     private static String tacticName = "MIX_SRA";
-    private static SimParams.AlgorithmFlag tacticFlag = SimParams.AlgorithmFlag.MIX_SRA; 
+    private static SimParams.AlgorithmFlag tacticFlag = SimParams.AlgorithmFlag.MIX_SRA;
 
     // This is just for the process monitor which also uses the Config class, not the main program
     private static long timeStampLoaded = 0;
     public static long getTimeStampLoaded() { return timeStampLoaded; }
-    
+
     // This matrix is not fully populated; it only has the output data from the previous/current
     // experiment in it, it doesn't contain any of the configurations or anything.
     private static SimMatrix previousMatrix = null;
-    
+
     private static String strConfigFilename = "config.txt";
     private static String strProcMonFilename = "procmon.txt";
 
@@ -68,7 +68,7 @@ public final class Config {
     public static boolean getStartNew() { if (startNew != 0)   { return true; } return false; }
     public static boolean getDrawLoaded() { if (drawLoaded != 0) { return true; } return false; }
     public static boolean getAutoLoaded() { if (autoLoaded != 0) { return true; } return false; }
-    
+
     public static void load() {
         String config = Utils.readFile(Constants.CONFIG_LOAD_PATH + strConfigFilename);
         if (config == null || config.length() <= 0) {
@@ -148,7 +148,7 @@ public final class Config {
     public static void save(int numRuns, boolean auto) {
         // Save config data
         String contents = "";
-        
+
         contents += "UAV_Profile: " + profileFilename + "\r\n";
         contents += "Matrix: " + simMatrixFilename + "\r\n";
         contents += "Scenario: " + scenarioName + "\r\n";
