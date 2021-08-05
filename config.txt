@@ -7,3 +7,4 @@ startNew: 0
 draw: 1
 numRuns: 0
 auto: 0
+name: test

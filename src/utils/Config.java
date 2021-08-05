@@ -44,6 +44,7 @@ public final class Config {
     private static String profileFilename = "default_profile.txt";  // Default to the regular one
     private static String scenarioName = "Arahama1";
     private static String tacticName = "MIX_SRA";
+    private static String displayNameLoaded = "test";
     private static SimParams.AlgorithmFlag tacticFlag = SimParams.AlgorithmFlag.MIX_SRA;
 
     // This is just for the process monitor which also uses the Config class, not the main program
@@ -62,6 +63,7 @@ public final class Config {
     public static String getProfileFilename() { return profileFilename; }
     public static String getScenarioName() { return scenarioName; }
     public static String getTacticName() { return tacticName; }
+    public static String getDisplayName() { return displayNameLoaded; }
     public static SimParams.AlgorithmFlag getTacticFlag() { return tacticFlag; }
     public static int getNumRunsLoaded() { return numRunsLoaded; }
     public static int getNumRandomSurvivorsLoaded() { return numRandomSurvivorsLoaded; }
@@ -110,6 +112,9 @@ public final class Config {
             }
             else if (Utils.stringStartsWith(line, "auto: ") == true) {
                 autoLoaded = Utils.tryParseInt(line.substring(("auto: ").length(), line.length()));
+            }
+            else if (Utils.stringStartsWith(line, "name: ") == true) {
+                displayNameLoaded = line.substring(("name: ").length(), line.length());
             }
         }
 
@@ -164,6 +169,7 @@ public final class Config {
         else {
             contents += "0";
         }
+        contents +=  "\r\n" +"name: " + displayNameLoaded + "\r\n" ;
         Utils.writeFile(contents, Constants.CONFIG_SAVE_PATH + strConfigFilename);
     }
 
