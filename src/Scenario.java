@@ -667,7 +667,8 @@ public class Scenario extends ScenarioLoader {
             // Every x seconds, write out the network matrix if we have that capablity enabled
             int currentSimSeconds = simTime.getTotalSeconds();
             if (currentSimSeconds - m_nLastSimSeconds >= NetworkMatrix.simSecondsBetweenSaves) {
-                //NetworkMatrix.save();
+                NetworkMatrix.save();
+                NetworkMatrix.saveDyNetML();
                 m_nLastSimSeconds = currentSimSeconds;
             }
         }
