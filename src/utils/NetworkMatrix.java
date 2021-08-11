@@ -72,12 +72,12 @@ public final class NetworkMatrix {
         double range = 0;
         for (Drone d : DroneLab.scenario.drones) {
             //create drone attribute matrix used for XML doc
-            attrMatrix[row][0] =Integer.toString(d.getDroneType().getValue());
-            attrMatrix[row][1] =Integer.toString(d.getDroneRole().getValue());
-            attrMatrix[row][2] =Double.toString(d.getMaxAscentSpeed());
-            attrMatrix[row][3] =Double.toString(d.getMaxDescentSpeed());
-            attrMatrix[row][4] =Double.toString(d.getMaxAccelerationRate());
-            attrMatrix[row][5] =Double.toString(d.getMaxVerticalAccelerationRate());
+            //attrMatrix[row][0] = Integer.toString(d.getDroneType().getValue());
+            attrMatrix[row][1] = Integer.toString(d.getDroneRole().getValue());
+            /*attrMatrix[row][2] = Double.toString(d.getMaxAscentSpeed());
+            attrMatrix[row][3] = Double.toString(d.getMaxDescentSpeed());
+            attrMatrix[row][4] = Double.toString(d.getMaxAccelerationRate());
+            attrMatrix[row][5] = Double.toString(d.getMaxVerticalAccelerationRate());*/
 
             //populate network adjacency matrix
             col = 0;
@@ -142,9 +142,28 @@ public final class NetworkMatrix {
         // Now save it out to whatever file format.  For now it is CSV.
         StringBuilder str = new StringBuilder();
 
-        int size = DroneLab.scenario.drones.size();
+        ArrayList<Drone> drones = DroneLab.scenario.drones;
+        int size = drones.size();
+
+        // First output the row as 1,2,3,etc. just to make it clear to the person
+        // looking at the file, which is which
+        str.append(" ,"); // Append a blank space to start in the top left corner
+        for (int i = 0; i < size; i++) {
+            str.append("" + (i + 1));
+            if (i < size-1) {
+                str.append(",");
+            }
+        }
+        str.append("\r\n");
+
+
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
+                // Start with the A, B, C, etc., for the column
+                if (col == 0) {
+                    str.append("" + (row + 1));
+                    str.append(",");
+                }
                 if (netMatrix[row][col] == true) {
                     str.append("1");
                 }
@@ -158,31 +177,44 @@ public final class NetworkMatrix {
             str.append("\r\n");
         }
 
+        StringBuilder attrStr = new StringBuilder();
+        // Now write out the attributes matrix, which is just to say, which of the drones is which role
+        for (int i = 0; i < size; i++) {
+            attrStr.append("" + (i + 1));
+            attrStr.append(",");
+            attrStr.append("" + drones.get(i).getDroneRole().getValue());
+            attrStr.append(",");
+            attrStr.append("" + drones.get(i).getDroneRole().toString());
+            attrStr.append("\r\n");
+        }
+
+
         // Format is runNumber_timeStampInSeconds.csv
         String fname =  "Run-" + (DroneLab.runner.getCurrentRunNum() + 1) + 
                         "_Time-" + DroneLab.scenario.simTime.getTotalSeconds() + 
-                        "_Located-" + DroneLab.scenario.getNumVictimsSeen() + 
-                        ".csv";
-        Utils.writeFile(str.toString(), Constants.NET_MATRIX_DATA_SAVE_PATH + fname);
+                        "_Located-" + DroneLab.scenario.getNumVictimsSeen();
+        
+        // Now write two files, one is the association matrix, the other is the attributes matrix
+        Utils.writeFile(str.toString(), Constants.NET_MATRIX_DATA_SAVE_PATH + fname + "_Assoc.csv");
+        Utils.writeFile(attrStr.toString(), Constants.NET_MATRIX_DATA_SAVE_PATH + fname + "_Attr.csv");
     }
     
     
-    public static void resetDyNetML(){
+    public static void resetDyNetML() {
         networkCount=0;
         // Generate xml root elements
         // initialize DynetXML
         // http://www.casos.cs.cmu.edu/projects/dynetml/
         // http://www.casos.cs.cmu.edu/projects/dynetml/dynetml_2_0-schema.xml
-       try{
+        try {
             docFactory = DocumentBuilderFactory.newInstance();
             docBuilder = docFactory.newDocumentBuilder();
             doc = docBuilder.newDocument();
             rootElement = doc.createElement("DynamicMetaNetwork");
             doc.appendChild(rootElement);
-
-       } catch(Exception e) {
+        } catch(Exception e) {
             e.printStackTrace();
-            }
+        }
 
     } 
 
@@ -223,17 +255,17 @@ public final class NetworkMatrix {
             nodes.appendChild(nodeClass);
             Element propertyIdentities = doc.createElement("propertyIdentities");
             nodeClass.appendChild(propertyIdentities);
-            Element propertyIdentity0 = doc.createElement("propertyIdentity");
+            /*Element propertyIdentity0 = doc.createElement("propertyIdentity");
             propertyIdentity0.setAttribute("id","droneType");
             propertyIdentity0.setAttribute("type","number");
             propertyIdentity0.setAttribute("singleValued","false");
-            propertyIdentities.appendChild(propertyIdentity0);
+            propertyIdentities.appendChild(propertyIdentity0);*/
             Element propertyIdentity1 = doc.createElement("propertyIdentity");
             propertyIdentity1.setAttribute("id","droneRole");
             propertyIdentity1.setAttribute("type","number");
             propertyIdentity1.setAttribute("singleValued","false");
             propertyIdentities.appendChild(propertyIdentity1);
-            Element propertyIdentity2 = doc.createElement("propertyIdentity");
+            /*Element propertyIdentity2 = doc.createElement("propertyIdentity");
             propertyIdentity2.setAttribute("id","maxAscentSpeed");
             propertyIdentity2.setAttribute("type","number");
             propertyIdentity2.setAttribute("singleValued","false");
@@ -252,7 +284,7 @@ public final class NetworkMatrix {
             propertyIdentity5.setAttribute("id","maxVerticalAccelerationRate");
             propertyIdentity5.setAttribute("type","number");
             propertyIdentity5.setAttribute("singleValued","false");
-            propertyIdentities.appendChild(propertyIdentity5);
+            propertyIdentities.appendChild(propertyIdentity5);*/
 
             //Create network elements
             Element networks = doc.createElement("networks");
@@ -272,84 +304,82 @@ public final class NetworkMatrix {
                 Element droneNode = doc.createElement("node");
                 droneNode.setAttribute("id",Integer.toString(row));
                 nodeClass.appendChild(droneNode);
-                Element propertyDroneType = doc.createElement("property");
+                //Element propertyDroneType = doc.createElement("property");
                 Element propertyDroneRole = doc.createElement("property");
-                Element propertyMaxAscentSpeed = doc.createElement("property");
+                /*Element propertyMaxAscentSpeed = doc.createElement("property");
                 Element propertyMaxDescentSpeed = doc.createElement("property");
                 Element propertyMaxAccelerationRate = doc.createElement("property");
-                Element propertyMaxVerticalAccelerationRate = doc.createElement("property");
-                propertyDroneType.setAttribute("id","droneType");
-                propertyDroneType.setAttribute("value",attrMatrix[row][0]);
+                Element propertyMaxVerticalAccelerationRate = doc.createElement("property");*/
+                //propertyDroneType.setAttribute("id","droneType");
+                //propertyDroneType.setAttribute("value",attrMatrix[row][0]);
                 propertyDroneRole.setAttribute("id","droneRole");
                 propertyDroneRole.setAttribute("value",attrMatrix[row][1]);
-                propertyMaxAscentSpeed.setAttribute("id","maxAscentSpeed");
+                /*propertyMaxAscentSpeed.setAttribute("id","maxAscentSpeed");
                 propertyMaxAscentSpeed.setAttribute("value",attrMatrix[row][2]);
                 propertyMaxDescentSpeed.setAttribute("id","maxDescentSpeed");
                 propertyMaxDescentSpeed.setAttribute("value",attrMatrix[row][3]);
                 propertyMaxAccelerationRate.setAttribute("id","maxAccelerationRate");
                 propertyMaxAccelerationRate.setAttribute("value",attrMatrix[row][4]);
                 propertyMaxVerticalAccelerationRate.setAttribute("id","maxVerticalAccelerationRate");
-                propertyMaxVerticalAccelerationRate.setAttribute("value",attrMatrix[row][5]);
-                droneNode.appendChild(propertyDroneType);
+                propertyMaxVerticalAccelerationRate.setAttribute("value",attrMatrix[row][5]);*/
+                //droneNode.appendChild(propertyDroneType);
                 droneNode.appendChild(propertyDroneRole);
-                droneNode.appendChild(propertyMaxAscentSpeed);
+                /*droneNode.appendChild(propertyMaxAscentSpeed);
                 droneNode.appendChild(propertyMaxDescentSpeed);
                 droneNode.appendChild(propertyMaxAccelerationRate);
-                droneNode.appendChild(propertyMaxVerticalAccelerationRate);
+                droneNode.appendChild(propertyMaxVerticalAccelerationRate);*/
 
                 //iterate through adjacency matrix
                 for (int col = 0; col < size; col++) {
                     //create edge but dont create duplicate
-                    int edgeCreated=0;
+                    int edgeCreated = 0;
                     Element link = doc.createElement("link");
                     if (col >= row) {
-                        
-                        link.setAttribute("source",Integer.toString(row));
-                        link.setAttribute("target",Integer.toString(col));
-                        edgeCreated=1;
+                        link.setAttribute("source", Integer.toString(row));
+                        link.setAttribute("target", Integer.toString(col));
+                        edgeCreated = 1;
                     }
 
                     if (netMatrix[row][col] == true) {
                         str.append("1");    
                         if (edgeCreated == 1) {               
-                            link.setAttribute("value","1");
+                            link.setAttribute("value", "1");
                         }
                     }
                     else {
                         str.append("0");
                         if (edgeCreated == 1) {
-                            link.setAttribute("value","0");
+                            link.setAttribute("value", "0");
                         }
                     }
                     if (col < size-1) {
                         str.append(",");
                     }
 
-                    if (edgeCreated ==1){
+                    if (edgeCreated == 1) {
                         network.appendChild(link);
                     }
                     
                 }
                 str.append("\r\n");
             }
-              
-        } catch(Exception e) {
+        } 
+        catch(Exception e) {
             e.printStackTrace();
-            }
-            
-        }   
+        }    
+    }   
 
     public static void saveDyNetML() {
     
         // Now save it out to whatever file format.  For now it is CSV.
 
-        String xmlfname =  "masterRun-" + (DroneLab.runner.getCurrentRunNum() + 1) + 
+        String xmlfname =  "DyNetML_Run-" + (DroneLab.runner.getCurrentRunNum() + 1) + 
                     "_Time-" + DroneLab.scenario.simTime.getTotalSeconds() + 
                     "_Located-" + DroneLab.scenario.getNumVictimsSeen() + 
                     ".xml";
-        File xmlFilePath = new File( Constants.NET_MATRIX_DATA_SAVE_PATH + xmlfname);
+        File xmlFilePath = new File(Constants.NET_MATRIX_DATA_SAVE_PATH + xmlfname);
         
-        try{
+        try {
             FileOutputStream output = new FileOutputStream(xmlFilePath);
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
@@ -357,13 +387,9 @@ public final class NetworkMatrix {
             StreamResult result = new StreamResult(output);
 
             transformer.transform(source, result);
-         }catch(Exception e) {
+        } catch(Exception e) {
             e.printStackTrace();
-            }
+        }
                 
-    }    
-
-
-
-
+    } 
 }
