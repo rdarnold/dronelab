@@ -1,0 +1,12 @@
+# ignore config files
+config.txt
+procmon.txt
+
+# ignore transient files
+scenario/current_scenario.json
+
+# ignore bin files
+bin/
+
+# ignore output files
+output/

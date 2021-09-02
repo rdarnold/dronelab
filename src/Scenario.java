@@ -228,6 +228,7 @@ public class Scenario extends ScenarioLoader {
         simTime.reset();
         simTime.setMaxSeconds(simParams.getTimeLimitSeconds());
         NetworkMatrix.reset();
+        NetworkMatrix.resetDyNetML();
 
         for (Deployment dep : deployments) {
             dep.deploy(this);
@@ -342,6 +343,7 @@ public class Scenario extends ScenarioLoader {
         collisions.clear();
         simTime.reset();
         NetworkMatrix.reset();
+        NetworkMatrix.resetDyNetML();
         m_nLastSimSeconds = 0;
     }
 
@@ -626,6 +628,7 @@ public class Scenario extends ScenarioLoader {
         m_nEndTicks = System.currentTimeMillis();
         m_nLastRunMilliseconds = m_nEndTicks - m_nStartTicks;
         m_nLastSimSeconds = 0;
+        NetworkMatrix.saveDyNetML();
         sim.signalComplete();
     }
 
@@ -667,7 +670,11 @@ public class Scenario extends ScenarioLoader {
             // Every x seconds, write out the network matrix if we have that capablity enabled
             int currentSimSeconds = simTime.getTotalSeconds();
             if (currentSimSeconds - m_nLastSimSeconds >= NetworkMatrix.simSecondsBetweenSaves) {
-                //NetworkMatrix.save();
+                // NetworkMatrix.save() will produce a set of csv files EVERY time it is called.
+                // DyNetML however, appends into ONE single file, which writes out when the entire sim
+                // run has ended.  Hence the difference here.
+                NetworkMatrix.save();
+                NetworkMatrix.appendDyNetML();
                 m_nLastSimSeconds = currentSimSeconds;
             }
         }
