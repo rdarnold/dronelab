@@ -217,6 +217,7 @@ public class DroneLab extends Application {
         simMatrix = new SimMatrix();
         simMatrix.load(Constants.INPUT_LOAD_PATH + Config.getSimMatrixFilename());
 
+        Utils.print(Config.getSimMatrixFilename());
            //Start up the tcp server to control the GUI
 
          new Thread(() -> {

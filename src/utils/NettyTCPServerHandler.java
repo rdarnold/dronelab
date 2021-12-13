@@ -83,6 +83,10 @@ public class NettyTCPServerHandler extends SimpleChannelInboundHandler<String> {
        		);
 			response = "Sim.Action.Pause|Executed|";
 		}
+		else if (msg.equals("Sim.Get.CurrentTime")){
+			System.out.println("Channel Received Message - Get Current Time ");
+			response = "Sim.Get.CurrentTime|Executed|"+DroneLab.scenario.simTime.toString();
+		}
 		else if (msg.equals("Drone.Get.ActiveBehaviors")){
 			System.out.println("Channel Received Message - Drone.Get.ActiveBehaviors");
 			response = "Drone.Get.ActiveBehaviors|Executed|";
@@ -129,6 +133,37 @@ public class NettyTCPServerHandler extends SimpleChannelInboundHandler<String> {
 
 			response = "Drone.Action.AddBehavior."+strTargetDroneId+"."+strTargetDroneRole+"|Executed|";
 		}
+		else if (msg.contains("Drone.Get.AllRoles")){
+			System.out.println("Channel Received Message - Drone.Get.AllRoles");
+			response = "Drone.Get.AllRoles|Executed|";
+			for (Drone d : DroneLab.scenario.drones) {
+				response += d.getId()+":"+d.getDroneRole()+",";
+				
+			}
+			response = response.substring(0, response.length() - 1); 
+		}
+		else if (msg.contains("Drone.Action.SetRole.")){
+			String strTargetDroneId = parts[3];
+			String strTargetDroneRole = parts[4];
+			int targetDroneId = Integer.parseInt(strTargetDroneId);
+
+			System.out.println("Channel Received Message - Drone.Action.SetRole."+targetDroneId);
+			for (Drone d : DroneLab.scenario.drones) {
+				if (d.getId() == targetDroneId){
+					switch (strTargetDroneRole) {
+						case "RELAY":  d.setDroneRole(Drone.DroneRole.RELAY);
+								 break;
+						case "SOCIAL":  d.setDroneRole(Drone.DroneRole.SOCIAL);
+								 break;
+						case "ANTISOCIAL":  d.setDroneRole(Drone.DroneRole.ANTISOCIAL);
+								 break;
+					}
+					//d.setDroneRole(Drone.DroneRole.ANTISOCIAL);
+				}
+			}
+			response = "Drone.Action.SetRole."+strTargetDroneId+"."+strTargetDroneRole+"|Executed|";
+		}
+
 		/*else if (msg.contains("Drone.Action.SetRole.")){
 			String strTargetDroneId = parts[3];
 			String strTargetDroneRole = parts[4];
