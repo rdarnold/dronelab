@@ -3,6 +3,7 @@ package dronelab;
 import java.util.Date;
 import java.util.ArrayList;
 import java.text.SimpleDateFormat;
+import javafx.application.Platform;
 import javafx.util.Duration;
 //import java.awt.Robot; // To move the mouse after scaling the canvas
 //import java.awt.AWTException; // To move the mouse after scaling the canvas
@@ -216,6 +217,20 @@ public class DroneLab extends Application {
         simMatrix = new SimMatrix();
         simMatrix.load(Constants.INPUT_LOAD_PATH + Config.getSimMatrixFilename());
 
+           //Start up the tcp server to control the GUI
+
+         new Thread(() -> {
+        NettyTCPServer RLServer = new NettyTCPServer();
+            try{
+                RLServer.server();
+            }  catch (Exception e) {
+                e.printStackTrace(); 
+            }
+            }).start();
+            
+
+        
+
         draw = Config.getDrawLoaded();
 
         setupGenericGui();
@@ -286,6 +301,10 @@ public class DroneLab extends Application {
                     System.exit(0);
                 }
         });*/
+
+        
+      
+        
     }
     
     public static void main(String[] args) {
@@ -1191,6 +1210,11 @@ public class DroneLab extends Application {
     // To set our fields in the GUI so that htey match what we auto-loaded
     public void resetVBoxSimulationFields() {
         vBoxSimulation.resetFields();
+    }
+
+    // Perform All Runs from the Simulation Matrix
+    public void performAllRuns() {
+        vBoxSimulation.performAllRuns();
     }
 
     /////////////////////////

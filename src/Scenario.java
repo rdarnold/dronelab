@@ -445,6 +445,23 @@ public class Scenario extends ScenarioLoader {
         sim.updateDroneParameterFields();
     }
 
+    public void processRemoveBehaviorForOneDrone(String sel, int id) {
+        for (Drone d : drones) {
+            if (d.getId() == id) {
+	            d.removeBehavior(GuiUtils.getBehaviorModuleNameBilingual(sel));
+            }
+        }
+        sim.updateDroneParameterFields();
+    }
+    public void processAddBehaviorForOneDrone(String sel, int id) {
+        for (Drone d : drones) {
+            if (d.getId() == id) {
+	            d.addBehavior(GuiUtils.getBehaviorModuleNameBilingual(sel));
+            }
+        }
+        sim.updateDroneParameterFields();
+    }
+
     public void processAddBehavior(Drone d, String sel) {
         if (d == null) {
             return;

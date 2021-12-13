@@ -1,4 +1,4 @@
 -encoding UTF8
 -d bin
--cp "ext-master/commons-collections4-4.2.jar:ext-master/commons-compress-1.18.jar:ext-master/curvesapi-1.05.jar:ext-master/drive:ext-master/javax.json-1.0.4.jar:ext-master/javax.json-api-1.0.jar:ext-master/javax.servlet-api-3.1.0.jar:ext-master/poi-4.0.1.jar:ext-master/poi-examples-4.0.1.jar:ext-master/poi-excelant-4.0.1.jar:ext-master/poi-ooxml-4.0.1.jar:ext-master/poi-ooxml-schemas-4.0.1.jar:ext-master/poi-scratchpad-4.0.1.jar:ext-master/xmlbeans-3.0.2.jar:ext-master/jfxrt.jar:ext-master/javax.json-api-1.0.jar"
+-cp "ext-master/netty-all-4.1.7.Final.jar:ext-master/commons-collections4-4.2.jar:ext-master/commons-compress-1.18.jar:ext-master/curvesapi-1.05.jar:ext-master/drive:ext-master/javax.json-1.0.4.jar:ext-master/javax.json-api-1.0.jar:ext-master/javax.servlet-api-3.1.0.jar:ext-master/poi-4.0.1.jar:ext-master/poi-examples-4.0.1.jar:ext-master/poi-excelant-4.0.1.jar:ext-master/poi-ooxml-4.0.1.jar:ext-master/poi-ooxml-schemas-4.0.1.jar:ext-master/poi-scratchpad-4.0.1.jar:ext-master/xmlbeans-3.0.2.jar:ext-master/jfxrt.jar:ext-master/javax.json-api-1.0.jar"
 

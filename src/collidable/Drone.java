@@ -435,6 +435,15 @@ public class Drone extends Mobile {
         return str;
     }
 
+    public String printBehaviorsDelim() {
+        String str = "";
+        for (BehaviorModule mod : behaviors) {
+            str += mod.getName() + ";";
+        }
+        str = str.substring(0, str.length() - 1); 
+        return str;
+    }
+
     // Duplicate the position parameters and possibly other ones
     // later if we need them
     public void copySizeTo(Drone other) {
