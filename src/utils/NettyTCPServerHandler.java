@@ -87,6 +87,14 @@ public class NettyTCPServerHandler extends SimpleChannelInboundHandler<String> {
 			System.out.println("Channel Received Message - Get Current Time ");
 			response = "Sim.Get.CurrentTime|Executed|"+DroneLab.scenario.simTime.toString();
 		}
+		else if (msg.equals("Sim.Get.InitialNumSurvivors")){
+			System.out.println("Channel Received Message - Get Number Survivors ");
+			response = "Sim.Get.InitialNumSurvivors|Executed|"+DroneLab.scenario.getNumVictims();
+		}
+		else if (msg.equals("Sim.Get.NumSurvivorsFound")){
+			System.out.println("Channel Received Message - Get Number Survivors ");
+			response = "Sim.Get.NumSurvivorsFound|Executed|"+DroneLab.scenario.getNumVictimsSeen();
+		}
 		else if (msg.equals("Drone.Get.ActiveBehaviors")){
 			System.out.println("Channel Received Message - Drone.Get.ActiveBehaviors");
 			response = "Drone.Get.ActiveBehaviors|Executed|";

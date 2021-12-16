@@ -274,6 +274,9 @@ public class SimParams {
 
         currentItem = item;
 
+        Utils.log("Numer of RUNS to do:");
+        Utils.log(numRuns);
+
         setNumDrones(item.getSocialNum() + item.getRelayNum() + item.getAntiNum());
 
         return true;

@@ -35,7 +35,7 @@ public final class Constants {
     public static final String RESTART_BATCH_FILE_NAME_PATH = "restart.bat";
     public static final String SCENARIO_CURRENT_FILE_NAME = "current_scenario";
 
-    public static final int NUM_MATRIX_REPETITIONS = 10;
+    public static final int NUM_MATRIX_REPETITIONS = 1;
 
     //one second in nanoseconds
     public static final long ONE_SECOND_IN_NANOSECONDS = 1000000000;

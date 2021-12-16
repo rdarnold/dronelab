@@ -239,7 +239,7 @@ public class SimMatrix {
         } catch (Exception ioe) {
             Utils.log(fileName + " failed to load.");
             matrixItems.clear();
-            //ioe.printStackTrace();
+            ioe.printStackTrace();
         }
     }
     

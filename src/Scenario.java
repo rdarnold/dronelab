@@ -237,6 +237,8 @@ public class Scenario extends ScenarioLoader {
         // First load the original survivor list from our scenario,
         // then overtop of that we load our random distribution.
         addVictims(loadedSurvivors);
+        // sim.scenario.getNumVictims(); and simParams.getNumRandomSurvivors(); only add additional random survivors
+        // to the above code. This should add 350 survivors to the arahama.json
 
         // Generate random survivors as needed, this really should
         // happen when we start the sim, like "do one sim run"
@@ -244,6 +246,7 @@ public class Scenario extends ScenarioLoader {
         // file.
         if (Config.getStartNew() == true || Config.getAutoLoaded() == false) {
             int nNumRandomSurvivors = simParams.getNumRandomSurvivors();
+            //int nNumRandomSurvivors = sim.scenario.getNumVictims();
             if (nNumRandomSurvivors > 0) {
                 generator.generateVictims(nNumRandomSurvivors);
     
