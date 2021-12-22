@@ -2,7 +2,7 @@ UAV_Profile: default_profile.txt
 Matrix: Simulation_Matrix.xlsx
 Scenario: Arahama1
 Tactic: MIX_SRA
-numRandomSurvivors: 0
+numRandomSurvivors: 300
 startNew: 0
 draw: 1
 numRuns: 0

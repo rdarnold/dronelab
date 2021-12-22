@@ -228,7 +228,7 @@ public class Scenario extends ScenarioLoader {
         simTime.reset();
         simTime.setMaxSeconds(simParams.getTimeLimitSeconds());
         NetworkMatrix.reset();
-        NetworkMatrix.resetDyNetML();
+        //NetworkMatrix.resetDyNetML();
 
         for (Deployment dep : deployments) {
             dep.deploy(this);
@@ -649,8 +649,7 @@ public class Scenario extends ScenarioLoader {
         m_nLastRunMilliseconds = m_nEndTicks - m_nStartTicks;
         m_nLastSimSeconds = 0;
         //save dynetml
-        NetworkMatrix.saveDyNetML();
-        //NetworkMatrix.resetDyNetML();
+        //NetworkMatrix.saveDyNetML();
         sim.signalComplete();
 
     }
@@ -694,7 +693,7 @@ public class Scenario extends ScenarioLoader {
             int currentSimSeconds = simTime.getTotalSeconds();
             if (currentSimSeconds - m_nLastSimSeconds >= NetworkMatrix.simSecondsBetweenSaves) {
                 //NetworkMatrix.save();
-                NetworkMatrix.appendDyNetML();
+                //NetworkMatrix.appendDyNetML();
                 m_nLastSimSeconds = currentSimSeconds;
             }
         }
