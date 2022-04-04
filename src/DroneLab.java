@@ -1218,6 +1218,11 @@ public class DroneLab extends Application {
         vBoxSimulation.performAllRuns();
     }
 
+    //Fastfoward
+    public void applyFastForward_30(){
+        vBoxSimulation.applyFastForward_30();
+    }
+
     /////////////////////////
     //// End Gui Creation ///
     /////////////////////////

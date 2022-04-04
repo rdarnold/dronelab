@@ -417,6 +417,12 @@ public class VBoxSimulation extends VBoxCustom {
             ltfSimSpeed.setFieldText(newFac);
         }
     }
+    public void applyFastForward_30() {
+        int factor = 10;
+        int newFac = scenario.setTimeFactor(factor);
+        ltfSimSpeed.setFieldText(newFac);
+        
+    }
 
     // Set sim parameters to this screen
     public void resetFields() {

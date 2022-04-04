@@ -66,7 +66,17 @@ public class NettyTCPServerHandler extends SimpleChannelInboundHandler<String> {
 				}
 			);
 			response = "Sim.Action.PerformAllRuns|Executed";
-		} else if (msg.equals("Sim.Action.Stop")){
+		}
+		else if (msg.equals("Sim.Action.FastForward")){
+			System.out.println("Channel Received Message - FastForward Button pushed ");
+			Platform.runLater(
+			() -> {
+				DroneLab.sim.applyFastForward_30();
+				}
+			);
+			response = "Sim.Action.FastForward|Executed";
+		}
+		 else if (msg.equals("Sim.Action.Stop")){
 			System.out.println("Channel Received Message - Stop Button pushed ");
 			Platform.runLater(
             () -> {
@@ -82,6 +92,15 @@ public class NettyTCPServerHandler extends SimpleChannelInboundHandler<String> {
             	}
        		);
 			response = "Sim.Action.Pause|Executed|";
+		}
+		else if (msg.equals("Sim.Action.Reset")){
+			System.out.println("Channel Received Message - Reset Button pushed ");
+			Platform.runLater(
+            () -> {
+				DroneLab.sim.reset();
+            	}
+       		);
+			response = "Sim.Action.Reset|Executed|";
 		}
 		else if (msg.equals("Sim.Get.CurrentTime")){
 			System.out.println("Channel Received Message - Get Current Time ");
