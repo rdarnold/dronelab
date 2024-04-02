@@ -60,6 +60,7 @@ public class Scenario extends ScenarioLoader {
     // How many seconds last time we did an "update", used to save the network matrix
     // and can be used for any other second-based processing
     private int m_nLastSimSeconds = 0;
+    private int m_nLastSimSecondsXYZ = 0;
 
     // Unfortunately we need a pointer back to our main application in case
     // we want to trigger any draw events outside of the mainloop update cycle
@@ -266,6 +267,7 @@ public class Scenario extends ScenarioLoader {
         m_nStartTicks = System.currentTimeMillis();
         m_nEndTicks = System.currentTimeMillis();
         m_nLastSimSeconds = 0;  // start at time zero
+        m_nLastSimSecondsXYZ = 0;
     }
 
     // Do whatever weird stuff I want here after load.
@@ -345,6 +347,7 @@ public class Scenario extends ScenarioLoader {
         NetworkMatrix.reset();
         NetworkMatrix.resetDyNetML();
         m_nLastSimSeconds = 0;
+        m_nLastSimSecondsXYZ = 0;
     }
 
     public void togglePause() {
@@ -628,6 +631,7 @@ public class Scenario extends ScenarioLoader {
         m_nEndTicks = System.currentTimeMillis();
         m_nLastRunMilliseconds = m_nEndTicks - m_nStartTicks;
         m_nLastSimSeconds = 0;
+        m_nLastSimSecondsXYZ = 0;
         NetworkMatrix.saveDyNetML();
         sim.signalComplete();
     }
@@ -642,6 +646,9 @@ public class Scenario extends ScenarioLoader {
         // we should do that now.
         if (simTime.getTotalSeconds() < m_nLastSimSeconds) {
             m_nLastSimSeconds = 0;
+        }
+        if (simTime.getTotalSeconds() < m_nLastSimSecondsXYZ) {
+            m_nLastSimSecondsXYZ = 0;
         }
 
         // So, we update X number of times here depending on our timeFactor
@@ -676,6 +683,10 @@ public class Scenario extends ScenarioLoader {
                 NetworkMatrix.save();
                 NetworkMatrix.appendDyNetML();
                 m_nLastSimSeconds = currentSimSeconds;
+            }
+            if (currentSimSeconds - m_nLastSimSecondsXYZ >= NetworkMatrix.simSecondsBetweenXYZSaves) {
+                NetworkMatrix.saveXYZ();
+                m_nLastSimSecondsXYZ = currentSimSeconds;
             }
         }
         return true;

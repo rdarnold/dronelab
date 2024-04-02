@@ -49,6 +49,9 @@ public final class NetworkMatrix {
     public static String[][] attrMatrix; 
 
     public static int simSecondsBetweenSaves = 60; // Much faster than real-time when fast-forwarding
+
+    public static int simSecondsBetweenXYZSaves = 1;
+
     public static boolean checkChanges = false; // Only save out if the network connectivity is different than last time
 
 
@@ -127,6 +130,25 @@ public final class NetworkMatrix {
             }
         }
         return false;*/
+    }
+
+    public static void saveXYZ() {
+        ArrayList<Drone> drones = DroneLab.scenario.drones;
+        int size = drones.size();
+
+        for (int i = 0; i < size; i++) {
+            //time(s),x,y,z\r\n
+            StringBuilder str = new StringBuilder();
+            str.append("" + DroneLab.scenario.simTime.getTotalSeconds());
+            str.append(",");
+            str.append("" + drones.get(i).getCurrentXYZ());
+            str.append("\r\n");
+            // Format is Run_#_Drone_###_Type_#.csv
+            String fname = "Run_" + (DroneLab.runner.getCurrentRunNum() + 1) + 
+                        "_Drone_" + drones.get(i).getDataId() + 
+                        "_Type_" + drones.get(i).getDroneRole().getValue() + ".csv";
+            Utils.appendFile(str.toString(), "output/xyzData/"+fname);
+        }
     }
 
     // Save out the current state of all the drones in the scenario in terms of which ones are within

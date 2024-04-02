@@ -81,6 +81,8 @@ public class Drone extends Mobile {
     private int maxHealth = 20;
     private int health = maxHealth; 
 
+    private int dataId = 0;
+
     // Which sector am I in for sensor picture formulation (collision detection)?
     // This is for efficiency of the simulation and is not a real life concept, it
     // ties to the simulated sensors and the building of the simulated sensor
@@ -130,6 +132,16 @@ public class Drone extends Mobile {
         super();
         fake = isFake;
         setupDrone(0);
+    }
+
+    public String getCurrentXYZ() {
+        return ""+x()+","+y()+","+z()+"";
+    }
+    public void setDataId(int hashCode) {
+        this.dataId = hashCode;
+    }
+    public int getDataId() {
+        return this.dataId;
     }
 
     public int getMaxHealth() { return maxHealth; }
@@ -840,7 +852,7 @@ public class Drone extends Mobile {
     // Some tasks we just dont need to do constantly.
     public void updateOneSecond() {
         // See if anyone on our drone list has expired.
-        pruneDroneList();
+        pruneDroneList();        
     }
     
     public void updateTwoTimesASecond() {

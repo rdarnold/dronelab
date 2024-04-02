@@ -2,6 +2,8 @@ package dronelab;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.Arrays;
+
 import javafx.scene.image.Image;
 import javafx.scene.shape.*;
 import javafx.scene.canvas.Canvas;
@@ -73,18 +75,48 @@ public class Deployment extends CanvasRectangle {
             // so we convert it to a 0-100 percent.
             DroneLab.operator.setQuality((int)(params.getQoK() * 100.0));
 
+            int runNumber;
+            if (DroneLab.runner == null)
+                runNumber = 1;
+            else
+                runNumber = DroneLab.runner.getCurrentRunNum() + 1;
             // Deploy all our drones randomly in the deployment area.
             int x = 0;
             int y = 0;
+            int[] allX = new int[params.getNumDrones()];
+            int[] allY = new int[params.getNumDrones()];
+            int absIdx = 0;
+
             for (int i = 0; i < params.getNumRole1(); i++) {
                 // For some reason I have X as the top right corner...
                 // I should fix that.  But until then, this has to
                 // be a minus for the X coord.
-                x = (int)origX - Utils.number(0, (int)origWid);
-                y = (int)origY + Utils.number(0, (int)origLen);
+                boolean overlap = false;
+                do {
+                    x = (int)origX - Utils.number(0, (int)origWid);
+                    y = (int)origY + Utils.number(0, (int)origLen);
+                    for (int j=0;j<absIdx;j++) {
+                        if (allX[j] == x && allY[j] == y) {
+                            overlap = true;
+                            break;
+                        }
+                        else {
+                            overlap = false;
+                        }
+                    }
+                } while (overlap);
+                allX[absIdx] = x;
+                allY[absIdx] = y;
+                absIdx++;
+        
                 drone = scen.addDrone(x, y);
                 drone.setDroneRole(params.getRole1());
                 drone.wifi.setRangeByVariable(params.getWifiRange());
+                
+                drone.setDataId(drone.hashCode());
+                    
+                String fname = "Run_" + runNumber + "_Drone_" + drone.getDataId() +"_Type_" + drone.getDroneRole().getValue() + ".csv";
+                Utils.writeFile("Timestamp,x,y,z\r\n0,"+drone.getCurrentXYZ()+"\r\n", "output/xyzData/"+fname);
                 //Utils.log(" " + params.getRole1());
             }
 
@@ -94,11 +126,32 @@ public class Deployment extends CanvasRectangle {
                 // For some reason I have X as the top right corner...
                 // I should fix that.  But until then, this has to
                 // be a minus for the X coord.
-                x = (int)origX - Utils.number(0, (int)origWid);
-                y = (int)origY + Utils.number(0, (int)origLen);
+                boolean overlap = false;
+                do {
+                    x = (int)origX - Utils.number(0, (int)origWid);
+                    y = (int)origY + Utils.number(0, (int)origLen);
+                    for (int j=0;j<absIdx;j++) {
+                        if (allX[j] == x && allY[j] == y) {
+                            overlap = true;
+                            break;
+                        }
+                        else {
+                            overlap = false;
+                        }
+                    }
+                } while (overlap);
+                allX[absIdx] = x;
+                allY[absIdx] = y;
+                absIdx++;
+
                 drone = scen.addDrone(x, y);
                 drone.setDroneRole(params.getRole2());
                 drone.wifi.setRangeByVariable(params.getWifiRange());
+
+                drone.setDataId(drone.hashCode());
+                    
+                String fname = "Run_" + runNumber + "_Drone_" + drone.getDataId() +"_Type_" + drone.getDroneRole().getValue() + ".csv";
+                Utils.writeFile("Timestamp,x,y,z\r\n0,"+drone.getCurrentXYZ()+"\r\n", "output/xyzData/"+fname);
                 //Utils.log(" " + params.getRole2());
             }
 
@@ -108,11 +161,32 @@ public class Deployment extends CanvasRectangle {
                 // For some reason I have X as the top right corner...
                 // I should fix that.  But until then, this has to
                 // be a minus for the X coord.
-                x = (int)origX - Utils.number(0, (int)origWid);
-                y = (int)origY + Utils.number(0, (int)origLen);
+                boolean overlap = false;
+                do {
+                    x = (int)origX - Utils.number(0, (int)origWid);
+                    y = (int)origY + Utils.number(0, (int)origLen);
+                    for (int j=0;j<absIdx;j++) {
+                        if (allX[j] == x && allY[j] == y) {
+                            overlap = true;
+                            break;
+                        }
+                        else {
+                            overlap = false;
+                        }
+                    }
+                } while (overlap);
+                allX[absIdx] = x;
+                allY[absIdx] = y;
+                absIdx++;
+
                 drone = scen.addDrone(x, y);
                 drone.setDroneRole(params.getRole3());
                 drone.wifi.setRangeByVariable(params.getWifiRange());
+
+                drone.setDataId(drone.hashCode());
+                    
+                String fname = "Run_" + runNumber + "_Drone_" + drone.getDataId() +"_Type_" + drone.getDroneRole().getValue() + ".csv";
+                Utils.writeFile("Timestamp,x,y,z\r\n0,"+drone.getCurrentXYZ()+"\r\n", "output/xyzData/"+fname);
                 //Utils.log(" " + params.getRole3());
             }
         }
@@ -125,12 +199,32 @@ public class Deployment extends CanvasRectangle {
             // Deploy all our drones randomly in the deployment area.
             int x = 0;
             int y = 0;
+            int[] allX = new int[nNumDrones];
+            int[] allY = new int[nNumDrones];
+            int absIdx = 0;
+
             for (int i = 0; i < nNumDrones; i++) {
                 // For some reason I have X as the top right corner...
                 // I should fix that.  But until then, this has to
                 // be a minus for the X coord.
-                x = (int)origX - Utils.number(0, (int)origWid);
-                y = (int)origY + Utils.number(0, (int)origLen);
+                boolean overlap = false;
+                do {
+                    x = (int)origX - Utils.number(0, (int)origWid);
+                    y = (int)origY + Utils.number(0, (int)origLen);
+                    for (int j=0;j<absIdx;j++) {
+                        if (allX[j] == x && allY[j] == y) {
+                            overlap = true;
+                            break;
+                        }
+                        else {
+                            overlap = false;
+                        }
+                    }
+                } while (overlap);
+                allX[absIdx] = x;
+                allY[absIdx] = y;
+                absIdx++;
+
                 scen.addDrone(x, y);
             }
         }

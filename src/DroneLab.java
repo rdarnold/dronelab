@@ -272,7 +272,7 @@ public class DroneLab extends Application {
 
         // Do this last, because it auto-starts the sim in some circumstances
         runner = new SimRunner(this);
-
+        
         // And then let's actually start but we are paused
         //start();
 
@@ -768,6 +768,21 @@ public class DroneLab extends Application {
 
     public void signalComplete() {
         stop();
+
+        //Create survivor locations in xyzData
+        int runNumber;
+        if (DroneLab.runner == null)
+            runNumber = 1;
+        else
+            runNumber = DroneLab.runner.getCurrentRunNum() + 1;
+        StringBuilder strBuild = new StringBuilder();
+        for (Person p : scenario.getVictims()) {
+            strBuild.append(p.x());
+            strBuild.append(",");
+            strBuild.append(p.y());
+            strBuild.append("\r\n");
+        }
+        Utils.writeFile(strBuild.toString(), "output/survivorXYZData/Run_" + runNumber + "_SurvivorLocations.csv");
 
         // We should record any data at this point.  We have all the
         // benchmarks saved on the vBoxCurrentData screen.  Somehow
