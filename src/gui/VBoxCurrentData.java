@@ -199,9 +199,9 @@ public class VBoxCurrentData extends VBoxCustom {
                 // Remove this later if we want the FINDER completness to be able to get up
                 // to 90% too; this makes it so that only camera can go up to 90%, and then
                 // once that happens, the sim will stop there
-                if (sim.signalPercentComplete(i) == true) {
-                    return;
-                }
+                // if (sim.signalPercentComplete(i) == true) {
+                //     return;
+                // }
             }
         }
 
@@ -210,6 +210,7 @@ public class VBoxCurrentData extends VBoxCustom {
 
     private void checkLocatedBenchmarks() {
         double perc = 100.0 * (double)scenario.getNumVictimsLocated() / (double)scenario.getNumVictims();
+
         // No increase, do nothing.
         if (perc <= m_fLastLocatedPercent) {
             return;
@@ -217,9 +218,9 @@ public class VBoxCurrentData extends VBoxCustom {
 
         for (int i = 10; i <= 100; i += 10) {
             if (checkOneBenchmark(benchmarkLocatedList, i, perc, m_fLastLocatedPercent) == true) {
-                /*if (sim.signalPercentComplete(i) == true) {
+                if (sim.signalPercentComplete(i) == true) {
                     return;
-                }*/
+                }
             }
         }
 

@@ -49,6 +49,14 @@ public class Sector extends Rectangle {
     public void add(Mobile mob) {
         mobiles.add(mob);
         mob.sectors.add(this);
+        // Now that some people can move, we have to add them to the
+        // appropriate list once Scenario calls updateSectors()
+        if (mob.getClass() == Ambulatory.class) {
+            people.add((Ambulatory) mob);
+        }
+        else if (mob.getClass() == Person.class) {
+            people.add((Person) mob);
+        }
     }
     
     public void add(Obstacle obs) {
@@ -62,6 +70,14 @@ public class Sector extends Rectangle {
     public void remove(Mobile mob) {
         mobiles.remove(mob);
         mob.sectors.remove(this);
+        // Now that some people can move, we have to remove them from the
+        // appropriate lists once Scenario calls updateSectors()
+        if (mob.getClass() == Ambulatory.class) {
+            people.remove((Ambulatory) mob);
+        }
+        else if (mob.getClass() == Person.class) {
+            people.remove((Person) mob);
+        }
     }
     
     public void remove(Obstacle obs) {

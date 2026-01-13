@@ -65,6 +65,9 @@ public class Deployment extends CanvasRectangle {
     public void deploy(Scenario scen) {
         SimParams params = scen.simParams;
 
+        // Inform all Ambulatory survivors of this deployment zone
+        Ambulatory.addDeploymentLocation(this);
+
         if (params.getSimMatrixItem() != null) {
             // We have a simulation matrix, use that
             // Set number of drones to whatever we wanted in the simulation
@@ -111,12 +114,16 @@ public class Deployment extends CanvasRectangle {
         
                 drone = scen.addDrone(x, y);
                 drone.setDroneRole(params.getRole1());
-                drone.wifi.setRangeByVariable(params.getWifiRange());
+                // Any given value greater than 1 will be treated as a value in meters, no max value
+                if (params.getWifiRange() <= 1)
+                    drone.wifi.setRangeByVariable(params.getWifiRange());
+                else
+                    drone.wifi.setRangeMeters(params.getWifiRange());
                 
                 drone.setDataId(drone.hashCode());
                     
                 String fname = "Run_" + runNumber + "_Drone_" + drone.getDataId() +"_Type_" + drone.getDroneRole().getValue() + ".csv";
-                Utils.writeFile("Timestamp,x,y,z\r\n0,"+drone.getCurrentXYZ()+"\r\n", "output/xyzData/"+fname);
+                Utils.writeFile("Timestamp,x,y,z\r\n0,"+drone.getCurrentXYZ()+"\r\n", Constants.XYZ_DATA_SAVE_PATH + fname);
                 //Utils.log(" " + params.getRole1());
             }
 
@@ -146,12 +153,16 @@ public class Deployment extends CanvasRectangle {
 
                 drone = scen.addDrone(x, y);
                 drone.setDroneRole(params.getRole2());
-                drone.wifi.setRangeByVariable(params.getWifiRange());
+                // Any given value greater than 1 will be treated as a value in meters, no max value
+                if (params.getWifiRange() <= 1)
+                    drone.wifi.setRangeByVariable(params.getWifiRange());
+                else
+                    drone.wifi.setRangeMeters(params.getWifiRange());
 
                 drone.setDataId(drone.hashCode());
                     
                 String fname = "Run_" + runNumber + "_Drone_" + drone.getDataId() +"_Type_" + drone.getDroneRole().getValue() + ".csv";
-                Utils.writeFile("Timestamp,x,y,z\r\n0,"+drone.getCurrentXYZ()+"\r\n", "output/xyzData/"+fname);
+                Utils.writeFile("Timestamp,x,y,z\r\n0,"+drone.getCurrentXYZ()+"\r\n", Constants.XYZ_DATA_SAVE_PATH + fname);
                 //Utils.log(" " + params.getRole2());
             }
 
@@ -181,12 +192,16 @@ public class Deployment extends CanvasRectangle {
 
                 drone = scen.addDrone(x, y);
                 drone.setDroneRole(params.getRole3());
-                drone.wifi.setRangeByVariable(params.getWifiRange());
+                // Any given value greater than 1 will be treated as a value in meters, no max value
+                if (params.getWifiRange() <= 1)
+                    drone.wifi.setRangeByVariable(params.getWifiRange());
+                else
+                    drone.wifi.setRangeMeters(params.getWifiRange());
 
                 drone.setDataId(drone.hashCode());
                     
                 String fname = "Run_" + runNumber + "_Drone_" + drone.getDataId() +"_Type_" + drone.getDroneRole().getValue() + ".csv";
-                Utils.writeFile("Timestamp,x,y,z\r\n0,"+drone.getCurrentXYZ()+"\r\n", "output/xyzData/"+fname);
+                Utils.writeFile("Timestamp,x,y,z\r\n0,"+drone.getCurrentXYZ()+"\r\n", Constants.XYZ_DATA_SAVE_PATH + fname);
                 //Utils.log(" " + params.getRole3());
             }
         }

@@ -83,6 +83,7 @@ public class SimMatrix {
             SimMatrixItem toItem = get(index);
             for (int i = 0; i < fromItem.getNumRepetitions() && i < toItem.getNumRepetitions(); i++) {
                 toItem.setSecondsTakenCamera(i, fromItem.getSecondsTakenCamera(i));
+                toItem.setSecondsTakenFINDER(i, fromItem.getSecondsTakenFINDER(i));
             }
             index++;
         }
@@ -277,7 +278,7 @@ public class SimMatrix {
             int i = 0;
             for (String entry : entries) {
                 int sec = Utils.tryParseInt(entry); // Let's hope this works every time
-                item.setSecondsTakenCamera(i, sec);
+                item.setSecondsTakenFINDER(i, sec); //OVERRIDE: We are just going to populate the FINDER block now...
                 i++;
             }
 

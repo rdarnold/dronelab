@@ -48,6 +48,13 @@ public class EnvironmentGenerator  {
         generateVictims(nMin, nMax, PersonDistribution.Random);
     }
 
+    public void generateVictims(int nNum, boolean isAmbulatory) {
+        if (isAmbulatory)
+            generateRandomAmbulatory(nNum);
+        else
+            generateVictims(nNum);
+    }
+
     public void generateVictims(int nMin, int nMax, PersonDistribution distro) {
         int nNumVictims = Utils.number(nMin, nMax);
 
@@ -76,7 +83,23 @@ public class EnvironmentGenerator  {
         for (int i = 0; i < nNum; i++) {
             int x = Utils.number(minX, maxX);
             int y = Utils.number(minY, maxY);
-            scen.addVictim(x, y, elevation);
+            scen.addVictim(x, y, elevation, false);
+        }
+    }
+
+    private void generateRandomAmbulatory(int nNum) {
+        int minX = 0;
+        int maxX = (int)scen.currentWidth - 10; // Just so we arent right on the edge
+        int minY = 0;
+        int maxY = (int)scen.currentHeight - 10; // Just so we arent right on the edge
+        int elevation = 0;
+
+        // Now based on the distribution, decide where to try to put people.
+        // If it's totally random, that's easy, just pick completely at random.
+        for (int i = 0; i < nNum; i++) {
+            int x = Utils.number(minX, maxX);
+            int y = Utils.number(minY, maxY);
+            scen.addVictim(x, y, elevation, true);
         }
     }
 

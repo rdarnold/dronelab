@@ -32,6 +32,7 @@ src/collidable/Mobile.java
 src/collidable/Obstacle.java
 src/collidable/PathTracker.java
 src/collidable/Person.java
+src/collidable/Ambulatory.java
 src/collidable/RescueWorker.java
 src/collidable/behaviors/BehaviorModule.java
 src/collidable/behaviors/AntiSocialModule.java 

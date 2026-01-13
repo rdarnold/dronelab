@@ -31,7 +31,7 @@ public class CameraSensor extends Sensor {
 
                 // Write the timestamp out to text file now
                 if (Constants.RECORD_ALL_TIMESTAMPS == true) {
-                    DroneLab.sim.addSurvivorTimestamp();
+                    DroneLab.sim.addSurvivorTimestamp(p);
                 }
             }
         }

@@ -67,12 +67,12 @@ public class Person extends Mobile {
         assignCorrectColorsForStatus();
     }
 
-    private void assignCorrectColorsForStatus() {
+    protected void assignCorrectColorsForStatus() {
         if (cs == null) {
             return;
         }
         if (rescued == true) {
-            setColors(0, 0, 230); // located
+            setColors(0, 0, 230); // rescued
         } else if (located == true) {
             setColors(0, 230, 0); // located
         } else if (seen == true) {
@@ -117,6 +117,12 @@ public class Person extends Mobile {
         // legs
         gc.strokeLine(x + wid / 2, y + hgt*1.5, x, y + hgt * 2);
         gc.strokeLine(x + wid / 2, y + hgt*1.5, x + wid, y + hgt * 2);   */
+        super.draw(gc);
+    }
+
+    // Method for Ambulatory to call the grandparent method without Person-level alterations
+    // This should be done a different way, but I'm not sure what it is
+    protected void superDraw(GraphicsContext gc) {
         super.draw(gc);
     }
 }

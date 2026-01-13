@@ -210,6 +210,18 @@ public class ScenarioCreator {
         return addVictim(vict);
     }
 
+    // Method to add an Ambulatory victim to the scenario or a standard Person
+    public Person addVictim(double x, double y, int elevation, boolean ambulatory) {
+        if (ambulatory) {
+            Person vict = new Ambulatory();
+            vict.setPos(x, y);
+            return addVictim(vict);
+        }
+        else {
+            return addVictim(x, y, elevation);
+        }
+    }
+
     // Just load it into our loaded survivors list.  Then we can
     // do whatever we need to do with this list later.
     public void loadSurvivor(Person vict) {

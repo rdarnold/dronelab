@@ -37,6 +37,7 @@ public final class Config {
 
     private static int numRunsLoaded = 0;
     private static int numRandomSurvivorsLoaded = 300;
+    private static int numRandomAmbulatoryLoaded = 0;
     private static int autoLoaded = 0;
     private static int drawLoaded = 1;
     private static int startNew = 0;
@@ -65,6 +66,7 @@ public final class Config {
     public static SimParams.AlgorithmFlag getTacticFlag() { return tacticFlag; }
     public static int getNumRunsLoaded() { return numRunsLoaded; }
     public static int getNumRandomSurvivorsLoaded() { return numRandomSurvivorsLoaded; }
+    public static int getNumRandomAmbulatoryLoaded() { return numRandomAmbulatoryLoaded; }
     public static boolean getStartNew() { if (startNew != 0)   { return true; } return false; }
     public static boolean getDrawLoaded() { if (drawLoaded != 0) { return true; } return false; }
     public static boolean getAutoLoaded() { if (autoLoaded != 0) { return true; } return false; }
@@ -99,6 +101,9 @@ public final class Config {
                 // Only used if startNew is 1 / true, or loading the previous config fails
                 numRandomSurvivorsLoaded = Utils.tryParseInt(line.substring(("numRandomSurvivors: ").length(), line.length()));
             }
+            else if (Utils.stringStartsWith(line, "numRandomAmbulatory: ") == true) {
+                numRandomAmbulatoryLoaded = Utils.tryParseInt(line.substring(("numRandomAmbulatory: ").length(), line.length()));
+            }
             else if (Utils.stringStartsWith(line, "startNew: ") == true) {
                 startNew = Utils.tryParseInt(line.substring(("startNew: ").length(), line.length()));
             }
@@ -123,7 +128,7 @@ public final class Config {
 
         // Only log these if we are starting a new batch and did not load previous
         if (startNew != 0) {
-            Utils.log("startNew: 1, numRandomSurvivorsLoaded: " + numRandomSurvivorsLoaded);
+            Utils.log("startNew: 1, numRandomSurvivorsLoaded: " + numRandomSurvivorsLoaded + ", numRandomAmbulatoryLoaded: " + numRandomAmbulatoryLoaded);
         }
     }
 
@@ -131,7 +136,7 @@ public final class Config {
         // We will try to maintain the single-file list of times, even though it's not our primary
         // source of data which is now the list of text files.  The single file of times is still
         // useful for analysis using excel and getting an idea of which approaches worked the best.
-        String data = Utils.readFile(Constants.DATA_LOAD_PATH + Constants.DATA_FILE_CAMERA);
+        String data = Utils.readFile(Constants.DATA_LOAD_PATH + Constants.DATA_FILE_FINDER);
 
         // Now we could either just try to paste this onto the beginning of the file, or actually
         // generate our simulation matrix based on the data.  I think let's actually regenerate the
@@ -154,6 +159,7 @@ public final class Config {
         contents += "Scenario: " + scenarioName + "\r\n";
         contents += "Tactic: " + tacticName + "\r\n";
         contents += "numRandomSurvivors: " + numRandomSurvivorsLoaded + "\r\n" ;  // Only used if startNew is 1 / true
+        contents += "numRandomAmbulatory: " + numRandomAmbulatoryLoaded + "\r\n" ;
         contents += "startNew: 0\r\n"; // startNew can ONLY be set manually in config file, always saves to zero/false
         contents += "draw: " + drawLoaded + "\r\n" ;
         contents += "numRuns: " + numRuns + "\r\n" ;

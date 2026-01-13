@@ -1,1 +1,1 @@
-java -classpath "../ext/jre/lib/jfxrt.jar:../ext/javax.json-1.0.4.jar:bin:." dronelab.DroneLab
+java -classpath "../ext/*:bin:." dronelab.DroneLab

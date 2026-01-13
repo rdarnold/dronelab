@@ -638,8 +638,8 @@ public class DroneLab extends Application {
     // we just write out all survivor timestamps as a list to one single file when we finish
     // a simulation run.
     public String ls = System.getProperty("line.separator");
-    public void addSurvivorTimestamp() {
-        survivorFoundTimes += "" + scenario.simTime.getTotalSeconds() + ls;
+    public void addSurvivorTimestamp(Person person) {
+        survivorFoundTimes += "" + person.getId() + "," + scenario.simTime.getTotalSeconds() + ls;
     }
 
     public void recordSimMatrixData() {
@@ -751,6 +751,17 @@ public class DroneLab extends Application {
         // Now write out the survivor time data as just a plain text file
         String fname = "" + (runner.getCurrentRunNum() + 1) + ".txt";
         Utils.writeFile(survivorFoundTimes, Constants.SEEN_DATA_SAVE_PATH + fname);
+
+        // Print out the times at which ambulatory survivors entered/exited the map area
+        String fname1 = "ambulatoryEntryExit_Run-" + (runner.getCurrentRunNum() + 1) + ".txt";
+        Utils.writeFile(Ambulatory.getDepartedList(), Constants.AMBULATORY_SAVE_PATH + fname1);
+        Ambulatory.setDepartedList("");
+        Ambulatory.setDepartedCount(0);
+
+        // Print out the times at which ambulatory survivors are notified and/or located
+        String fname2 = "ambulatoryDetected_Run-" + (runner.getCurrentRunNum() + 1) + ".txt";
+        Utils.writeFile(Ambulatory.getDetectedList(), Constants.AMBULATORY_SAVE_PATH + fname2);
+        Ambulatory.setDetectedList("");
     }
     
     // END NOTE TO SELF THE ABOVE DATA RECORDING SHOULD MOVE ELSEWHERE
@@ -776,13 +787,18 @@ public class DroneLab extends Application {
         else
             runNumber = DroneLab.runner.getCurrentRunNum() + 1;
         StringBuilder strBuild = new StringBuilder();
+        strBuild.append("id,x,y,isAmbulatory\r\n");
         for (Person p : scenario.getVictims()) {
+            strBuild.append(p.getId());
+            strBuild.append(",");
             strBuild.append(p.x());
             strBuild.append(",");
             strBuild.append(p.y());
+            strBuild.append(",");
+            strBuild.append(p.getClass() == Ambulatory.class);
             strBuild.append("\r\n");
         }
-        Utils.writeFile(strBuild.toString(), "output/survivorXYZData/Run_" + runNumber + "_SurvivorLocations.csv");
+        Utils.writeFile(strBuild.toString(), Constants.SURVIVOR_XY_DATA_SAVE_PATH + "Run_" + runNumber + "_SurvivorLocations.csv");
 
         // We should record any data at this point.  We have all the
         // benchmarks saved on the vBoxCurrentData screen.  Somehow

@@ -25,6 +25,9 @@ public final class Constants {
     public static final String SEEN_DATA_SAVE_PATH = "output/data/seen/";
     public static final String PLAYBACK_DATA_SAVE_PATH = "output/data/playback/";
     public static final String NET_MATRIX_DATA_SAVE_PATH = "output/data/net_matrix/";
+    public static final String AMBULATORY_SAVE_PATH = "output/data/ambulatory/";
+    public static final String SURVIVOR_XY_DATA_SAVE_PATH = "output/survivorXYData/";
+    public static final String XYZ_DATA_SAVE_PATH = "output/xyzData/";
     public static final String CONFIG_LOAD_PATH = "/";
     public static final String PROFILE_LOAD_PATH = "uav_profiles/";
     public static final String CONFIG_SAVE_PATH = "";
@@ -69,7 +72,7 @@ public final class Constants {
     public static final String STR_SCATTER = "Scatter";
     public static final String STR_REPEL = "Repel";
     public static final String STR_RELAY = "Relay";
-    public static final String STR_ANTI = "AntiSocial";
+    public static final String STR_ANTI = "Antisocial";
     public static final String STR_ASSIGNED_PATH = "AssignedPath";
 
     public static final String[] STR_BEHAVIORS = { 
@@ -90,7 +93,7 @@ public final class Constants {
     public static final String STR_SCATTER_J  = "Scatter";
     public static final String STR_REPEL_J  = "Repel";
     public static final String STR_RELAY_J = "Relay";
-    public static final String STR_ANTI_J = "AntiSocial";
+    public static final String STR_ANTI_J = "Antisocial";
     public static final String STR_ASSIGNED_PATH_J = "AssignedPath";
 
     public static final String[] STR_BEHAVIORS_J = { 

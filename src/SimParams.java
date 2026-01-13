@@ -146,6 +146,7 @@ public class SimParams {
     private final IntegerProperty timeLimitSeconds = new SimpleIntegerProperty(TimeData.ONE_HOUR_IN_SECONDS * 8);
     //private final IntegerProperty timeLimitSeconds = new SimpleIntegerProperty(TimeData.ONE_HOUR_IN_SECONDS);
     private final IntegerProperty numRandomSurvivors = new SimpleIntegerProperty(300);
+    private final IntegerProperty numRandomAmbulatory = new SimpleIntegerProperty(0);
     private final IntegerProperty numDrones = new SimpleIntegerProperty(1);
     private final IntegerProperty numRepetitions = new SimpleIntegerProperty(1);
     
@@ -176,6 +177,8 @@ public class SimParams {
         // Set the num survivors to whatever we have set in the config
         setNumRandomSurvivors(Config.getNumRandomSurvivorsLoaded());
         Utils.log("SimParams set to " + Config.getNumRandomSurvivorsLoaded() + " random survivors");
+        setNumRandomAmbulatory(Config.getNumRandomAmbulatoryLoaded());
+        Utils.log("SimParams set to " + Config.getNumRandomAmbulatoryLoaded() + " ambulatory survivors");
     }
 
     /*public EnumSet<AlgorithmFlag> getAlgorithmFlags() {
@@ -220,6 +223,18 @@ public class SimParams {
 
     public IntegerProperty numRandomSurvivorsProperty() {
         return numRandomSurvivors;
+    }
+
+    public int getNumRandomAmbulatory() {
+        return numRandomAmbulatory.get();
+    }
+
+    public void setNumRandomAmbulatory(int num) {
+        numRandomAmbulatory.set(num);
+    }
+
+    public IntegerProperty numRandomAmbulatoryProperty() {
+        return numRandomAmbulatory;
     }
 
     public int getNumDrones() {

@@ -147,7 +147,7 @@ public final class NetworkMatrix {
             String fname = "Run_" + (DroneLab.runner.getCurrentRunNum() + 1) + 
                         "_Drone_" + drones.get(i).getDataId() + 
                         "_Type_" + drones.get(i).getDroneRole().getValue() + ".csv";
-            Utils.appendFile(str.toString(), "output/xyzData/"+fname);
+            Utils.appendFile(str.toString(), Constants.XYZ_DATA_SAVE_PATH + fname);
         }
     }
 

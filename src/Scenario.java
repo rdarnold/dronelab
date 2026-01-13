@@ -245,13 +245,18 @@ public class Scenario extends ScenarioLoader {
         // file.
         if (Config.getStartNew() == true || Config.getAutoLoaded() == false) {
             int nNumRandomSurvivors = simParams.getNumRandomSurvivors();
+            int nNumRandomAmbulatory = simParams.getNumRandomAmbulatory();
             if (nNumRandomSurvivors > 0) {
-                generator.generateVictims(nNumRandomSurvivors);
-    
-                // Now that we've generated, let's actually save this out as the
-                // current scenario.
-                saveFile(Constants.SCENARIO_CURRENT_FILE_NAME);
+                generator.generateVictims(nNumRandomSurvivors, false);
             }
+            if (nNumRandomAmbulatory > 0) {
+                generator.generateVictims(nNumRandomAmbulatory, true);
+            }
+
+            // Now that we've generated, let's actually save this out as the
+            // current scenario.
+            saveFile(Constants.SCENARIO_CURRENT_FILE_NAME);
+
         }
 
         // At this point we can turn off the autoload

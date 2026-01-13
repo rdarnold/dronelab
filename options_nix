@@ -1,3 +1,2 @@
 -encoding UTF8
 -d bin
--cp "../ext/jre/lib/jfxrt.jar:../ext/javax.json-api-1.0.jar"
