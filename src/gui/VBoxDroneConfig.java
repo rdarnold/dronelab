@@ -26,7 +26,7 @@ import dronelab.utils.*;
 
 public class VBoxDroneConfig extends VBoxCustom {
 
-    ChoiceBox cbDroneType;
+    ChoiceBox<String> cbDroneType;
     Label lblDroneType;
     Label lblSpeed;
     Label lblAcc;
@@ -49,7 +49,7 @@ public class VBoxDroneConfig extends VBoxCustom {
 
     @Override
     public void createControls() {
-        cbDroneType = new ChoiceBox();
+        cbDroneType = new ChoiceBox<>();
         lblDroneType = new Label();
         lblSpeed = new Label();
         lblAcc = new Label();

@@ -73,7 +73,7 @@ public final class ExcelUtils {
                         cell = row.getCell(c);
                         if (cell != null) {
                             // Your code here
-                            if (cell.getCellTypeEnum() == CellType.NUMERIC) {
+                            if (cell.getCellType() == CellType.NUMERIC) {
                                 Utils.log(cell.getNumericCellValue());
                             } 
                             else  {
@@ -92,7 +92,7 @@ public final class ExcelUtils {
         if (isCellEmpty(cell) == true) {
             return 0;
         }
-        else if (cell.getCellTypeEnum() != CellType.NUMERIC) {
+        else if (cell.getCellType() != CellType.NUMERIC) {
             return 0;
         }
         return cell.getNumericCellValue();
@@ -110,7 +110,7 @@ public final class ExcelUtils {
         if (isCellEmpty(cell) == true) {
             return "";
         }
-        else if (cell.getCellTypeEnum() != CellType.STRING) {
+        else if (cell.getCellType() != CellType.STRING) {
             return "";
         }
         return cell.getStringCellValue();

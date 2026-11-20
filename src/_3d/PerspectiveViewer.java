@@ -229,7 +229,7 @@ public class PerspectiveViewer {
             }
         });*/
 
-        EventHandler filter = 
+        EventHandler<ScrollEvent> filter =
                 new EventHandler<ScrollEvent>() {
                     @Override
                     public void handle(ScrollEvent event) {

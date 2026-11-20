@@ -63,7 +63,7 @@ public class ControllingEntity {
                     dens++;
                 }
             }
-            density = new Integer(dens);
+            density = Integer.valueOf(dens);
         }
         
         // This allows us to easily sort an array containing these objects in descending order by density

@@ -153,8 +153,7 @@ public class DLProcMon extends Application {
         if (Config.getTimeStampLoaded() == prevTS) {
             // If it's the same, that means the program froze or something; first close the process
             try {
-                Runtime rt = Runtime.getRuntime();
-                rt.exec("taskkill /F /FI \"WindowTitle eq DroneLab*\" /T");
+                new ProcessBuilder("taskkill", "/F", "/FI", "WindowTitle eq DroneLab*", "/T").start();
                 
                 // Now write out a new config file with the correct number of runs and info from the
                 // original one we loaded
@@ -164,7 +163,7 @@ public class DLProcMon extends Application {
                 Thread.sleep(10000);
     
                 // Now restart the sim
-                rt.exec("cmd /c \"\"" + Constants.RESTART_BATCH_FILE_NAME_PATH);
+                new ProcessBuilder("cmd", "/c", Constants.RESTART_BATCH_FILE_NAME_PATH).start();
             }
             catch (Exception e) {
                 Utils.log("Exception: " + e.toString());

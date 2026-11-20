@@ -49,7 +49,7 @@ public class VBoxBuilderOptions extends VBoxCustom {
     Text distressedPersonsText;
     LabelTextField minPersons;
     LabelTextField maxPersons;
-    ChoiceBox cbPersonDistribution;
+    ChoiceBox<String> cbPersonDistribution;
     Text distributionText;
     Button btnDeleteAllPersons;
     Button btnGeneratePersons;
@@ -87,7 +87,7 @@ public class VBoxBuilderOptions extends VBoxCustom {
         distressedPersonsText = new Text();
         minPersons = new LabelTextField();
         maxPersons = new LabelTextField();
-        cbPersonDistribution = new ChoiceBox();
+        cbPersonDistribution = new ChoiceBox<>();
         distributionText = new Text();
         btnDeleteAllPersons = new Button();
         btnGeneratePersons = new Button();

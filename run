@@ -1,1 +1,4 @@
-java -classpath "../ext/*:bin:." dronelab.DroneLab
+#!/bin/sh
+set -e
+: "${JAVAFX_LIB:?Set JAVAFX_LIB to the lib directory of a JavaFX 21 SDK.}"
+exec "${JAVA_HOME:+${JAVA_HOME}/bin/}java" --module-path "$JAVAFX_LIB" --add-modules javafx.controls -classpath "../ext/*:bin:." dronelab.DroneLab "$@"

@@ -28,8 +28,8 @@ import dronelab.utils.*;
 
 public class VBoxSensor extends VBoxCustom {
 
-    ChoiceBox cbAdd;
-    ChoiceBox cbRemove;
+    ChoiceBox<String> cbAdd;
+    ChoiceBox<String> cbRemove;
     //TextArea behaviorTa = new TextArea();
     Label lblSensorText;
     Label lblAdd;
@@ -42,8 +42,8 @@ public class VBoxSensor extends VBoxCustom {
 
     @Override
     public void createControls() {
-        cbAdd = new ChoiceBox();
-        cbRemove = new ChoiceBox();
+        cbAdd = new ChoiceBox<>();
+        cbRemove = new ChoiceBox<>();
         // behaviorTa = new TextArea();
         lblSensorText = new Label();
         lblSensorText.setTextFill(Color.DARKGREEN);

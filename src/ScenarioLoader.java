@@ -79,7 +79,6 @@ public class ScenarioLoader extends ScenarioCreator {
         }
         backGround = null;
         System.gc();
-        System.runFinalization();
         try {
             //backGround = new Image(path, currentWidth, 0, true, true); 
             backGround = GraphicsHelper.loadImage(fileName, (int)currentWidth, 0, true, true); 

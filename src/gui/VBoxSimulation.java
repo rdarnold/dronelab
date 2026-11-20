@@ -35,11 +35,11 @@ public class VBoxSimulation extends VBoxCustom {
     Button btnBegin;
     Button btnPerformAllRuns;
 
-    ChoiceBox cbPreset;
+    ChoiceBox<String> cbPreset;
     LabelTextField ltfNumRandomSurvivors;
     LabelTextField ltfNumDrones;
     LabelTextField ltfTimeLimit;
-    ChoiceBox cbAlgorithm;
+    ChoiceBox<String> cbAlgorithm;
 
     Button btnApply;
     Button btnMax;
@@ -65,11 +65,11 @@ public class VBoxSimulation extends VBoxCustom {
 
         btnBegin = new Button();
         btnPerformAllRuns = new Button();
-        cbPreset = new ChoiceBox();
+        cbPreset = new ChoiceBox<>();
         ltfNumRandomSurvivors = new LabelTextField();
         ltfNumDrones = new LabelTextField();
         ltfTimeLimit = new LabelTextField();
-        cbAlgorithm = new ChoiceBox();
+        cbAlgorithm = new ChoiceBox<>();
         btnApply = new Button();
         btnMax = new Button();
         btnMin = new Button();
@@ -248,7 +248,7 @@ public class VBoxSimulation extends VBoxCustom {
 
         // These should generate from a set of SimParam presents created
         // programmatically and/or loaded from file.
-        cbPreset = new ChoiceBox(FXCollections.observableArrayList(
+        cbPreset = new ChoiceBox<>(FXCollections.observableArrayList(
             "300p /  1dr / 8h", 
             "300p /  5dr / 8h", 
             "300p / 20dr / 8h"
@@ -283,7 +283,7 @@ public class VBoxSimulation extends VBoxCustom {
         for (SimParams.AlgorithmFlag flag : SimParams.AlgorithmFlag.values()) {
             oal.add(flag.getName());
         }
-        cbAlgorithm = new ChoiceBox(oal);
+        cbAlgorithm = new ChoiceBox<>(oal);
 
         cbAlgorithm.getSelectionModel().selectFirst();
         // Note the use of selectedIndexProperty and not selectedItemProperty

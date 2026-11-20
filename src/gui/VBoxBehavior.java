@@ -29,8 +29,8 @@ import dronelab.utils.*;
 
 public class VBoxBehavior extends VBoxCustom {
 
-    ChoiceBox cbAddBehavior;
-    ChoiceBox cbRemoveBehavior;
+    ChoiceBox<String> cbAddBehavior;
+    ChoiceBox<String> cbRemoveBehavior;
     //TextArea behaviorTa = new TextArea();
     Label lblBehaviorText;
     Label lblAddBehavior;
@@ -45,8 +45,8 @@ public class VBoxBehavior extends VBoxCustom {
 
     @Override
     public void createControls() {
-        cbAddBehavior = new ChoiceBox();
-        cbRemoveBehavior = new ChoiceBox();
+        cbAddBehavior = new ChoiceBox<>();
+        cbRemoveBehavior = new ChoiceBox<>();
         // behaviorTa = new TextArea();
         lblBehaviorText = new Label();
         lblBehaviorText.setTextFill(Color.DARKGREEN);

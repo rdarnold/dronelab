@@ -37,7 +37,7 @@ public class SimCanvas extends Canvas {
     private void create(DroneLab s) {
         setSim(s);
 
-        EventHandler filter2 = 
+        EventHandler<MouseEvent> filter2 =
                 new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {

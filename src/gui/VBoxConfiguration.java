@@ -35,8 +35,8 @@ public class VBoxConfiguration extends VBoxCustom {
     Label lblVictims;
     Label lblModules;
     Label lblWifi;
-    ChoiceBox languageCb;
-    ChoiceBox scenarioCb;
+    ChoiceBox<String> languageCb;
+    ChoiceBox<String> scenarioCb;
 
     CheckBox cbStructures;
     CheckBox cbCollisions;
@@ -133,7 +133,7 @@ public class VBoxConfiguration extends VBoxCustom {
 
     public void addLanguageCB() {
         Label label = new Label("言語 / Language:");
-        languageCb = new ChoiceBox(FXCollections.observableArrayList(
+        languageCb = new ChoiceBox<>(FXCollections.observableArrayList(
             Constants.STR_LANG_ENGLISH, Constants.STR_LANG_JAPANESE, Constants.STR_LANG_BOTH)
         );
         languageCb.getSelectionModel().selectFirst();
@@ -151,7 +151,7 @@ public class VBoxConfiguration extends VBoxCustom {
 
         // These should read off of the files in the scenario folder.  Or just have them
         // hard coded for good measure.
-        scenarioCb = new ChoiceBox(FXCollections.observableArrayList(
+        scenarioCb = new ChoiceBox<>(FXCollections.observableArrayList(
             "Arahama", "Kobe")
         );
         scenarioCb.getSelectionModel().selectFirst();

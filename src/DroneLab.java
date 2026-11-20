@@ -923,7 +923,7 @@ public class DroneLab extends Application {
 
         //spCanvasContainer.setHmax(canvas.getWidth());
         //spCanvasContainer.setVmax(canvas.getHeight());
-        EventHandler filter = 
+        EventHandler<ScrollEvent> filter =
                 new EventHandler<ScrollEvent>() {
                     @Override
                     public void handle(ScrollEvent event) {

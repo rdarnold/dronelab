@@ -55,25 +55,16 @@ public final class BehaviorLoader {
     public static BehaviorModule createModuleForClassName(String strFullyQualifiedClassName) {
         BehaviorModule newModule = null;
         try {
-            Object newObj = Class.forName(strFullyQualifiedClassName).newInstance();
-            if (newObj == null) {
-                // This is not supposed to happen according to the documentation.
-                Utils.err("Null class " + strFullyQualifiedClassName);
-            }
-            newModule = (BehaviorModule)newObj;
+            newModule = (BehaviorModule) Class.forName(strFullyQualifiedClassName)
+                    .getDeclaredConstructor().newInstance();
         }
         catch (ClassNotFoundException e) {
             Utils.err(e.toString());
             Utils.err("Class not found: " + strFullyQualifiedClassName);
         }
-        catch (InstantiationException e) {
+        catch (ReflectiveOperationException e) {
             Utils.err(e.toString());
             Utils.err("Could not create an instance of class " + strFullyQualifiedClassName);
-        }
-        catch (IllegalAccessException e) {
-            Utils.err(e.toString());
-            Utils.err("Could not invoke getFileExtension()"
-            + " method from class " + strFullyQualifiedClassName);
         }
         return newModule;
     }

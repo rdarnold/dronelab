@@ -63,7 +63,7 @@ public class SimRunner {
             Config.save(numRuns, true);
             // Restart now
             try {
-                Runtime.getRuntime().exec("cmd /c \"\"" + Constants.RESTART_BATCH_FILE_NAME_PATH);
+                new ProcessBuilder("cmd", "/c", Constants.RESTART_BATCH_FILE_NAME_PATH).start();
                 System.exit(0);
             }
             catch (IOException e) {
