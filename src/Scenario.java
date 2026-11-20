@@ -289,7 +289,7 @@ public class Scenario extends ScenarioLoader {
             return false;
         }
         if (drones != null && drones.size() > 0) {
-            setSelectedDrone(drones.get(0));
+            drone = drones.get(0);
         }
         customProcess();
         reset();

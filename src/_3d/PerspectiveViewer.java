@@ -27,7 +27,11 @@ import javafx.scene.input.MouseButton;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
+import javafx.scene.image.PixelFormat;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.WritableImage;
 import javafx.scene.AmbientLight;
+import javafx.scene.DirectionalLight;
 import javafx.scene.PointLight;
 import dronelab.utils.*;
 import dronelab.collidable.*;
@@ -36,12 +40,15 @@ import dronelab.Scenario;
 public class PerspectiveViewer {
 
     private SubScene subScene;
+    private SurvivorView survivorView;
     Scenario scenario;
-    ArrayList<ObstacleMesh> obstacleMeshes;
-    ArrayList<SimCylinder> obstacleCylinders;
+    private final Group buildings = new Group();
+    private final Group cylinders = new Group();
     PerspectiveCamera camera;
     CameraGroup cameraGroup;
-    Box backgroundBox;
+    private final Box backgroundBox = new Box(1, 1, 1);
+    private final PhongMaterial backgroundMaterial = new PhongMaterial(Color.BLACK);
+    private String mapTextureSource;
     //DroneSphere droneSphere;
     ArrayList<Drone3D> drones;
     Drone3D drone3D;
@@ -58,37 +65,88 @@ public class PerspectiveViewer {
 
     public PerspectiveViewer(Scenario scen) {
         scenario = scen;
-        obstacleMeshes = new ArrayList<ObstacleMesh>();
-        obstacleCylinders = new ArrayList<SimCylinder>();
         drones = new ArrayList<Drone3D>();
         create();
     }
 
     public SubScene getSubScene() { return subScene; }
 
-    private void setupBackground(Group root) {
-        // Set up our background
-        //Appearance app = new Appearance();
-        //URL texImage = new java.net.URL("file:" + f);
-        PhongMaterial mat = new PhongMaterial(); 
-        mat.setDiffuseMap(scenario.backGround);
-        //mat.setDiffuseMap(new Image(
-          //  getClass().getResource(Constants.RES_PATH + "Scenario1_BG_Sendai.jpg").toExternalForm())); 
-
-        /*Texture tex = new TextureLoader(Constants.RES_PATH + "Scenario1_BG_Sendai.jpg", this).getTexture();
-        app.setTexture(tex);
-        TextureAttributes texAttr = new TextureAttributes();
-        texAttr.setTextureMode(TextureAttributes.MODULATE);
-        app.setTextureAttributes(texAttr);*/
-        backgroundBox = new Box(scenario.currentWidth, scenario.currentHeight, 1);
-        // Fix this so that 0, 0 is top left like our regular scene
+    public void refreshScenario() {
+        refreshMapTexture();
+        backgroundBox.setWidth(scenario.currentWidth);
+        backgroundBox.setHeight(scenario.currentHeight);
+        // Box coordinates are centered. Put the map's upper-left corner at the origin.
         backgroundBox.setTranslateX(scenario.currentWidth / 2);
         backgroundBox.setTranslateY(scenario.currentHeight / 2);
 
-       // backgroundBox.setTranslateY(0);
-        backgroundBox.setMaterial(mat);
-        root.getChildren().add(backgroundBox);
+        buildings.getChildren().clear();
+        cylinders.getChildren().clear();
+        for (Obstacle obstacle : scenario.obstacles) {
+            switch (obstacle.getShapeType()) {
+                case CIRCLE:
+                    cylinders.getChildren().add(new SimCylinder(obstacle));
+                    break;
+                default:
+                    buildings.getChildren().add(new ObstacleMesh(obstacle));
+                    break;
+            }
+        }
     }
+
+    private void refreshMapTexture() {
+        String source = scenario.getBackgroundImageName();
+        if (source.equals(mapTextureSource) && backgroundMaterial.getSelfIlluminationMap() != null) {
+            return;
+        }
+
+        Image original = GraphicsHelper.loadImage(source);
+        PixelReader reader = original == null ? null : original.getPixelReader();
+        if (reader == null) {
+            backgroundMaterial.setSelfIlluminationMap(scenario.backGround);
+            mapTextureSource = null;
+            return;
+        }
+
+        // Keep the aerial photo independent of the scene and drone lights.
+        backgroundMaterial.setSelfIlluminationMap(sharpenMap(original, reader));
+        mapTextureSource = source;
+    }
+
+    private Image sharpenMap(Image original, PixelReader reader) {
+        int width = (int) original.getWidth();
+        int height = (int) original.getHeight();
+        var format = PixelFormat.getIntArgbInstance();
+        int[] pixels = new int[width * height];
+        reader.getPixels(0, 0, width, height, format, pixels, 0, width);
+        int[] sharpened = pixels.clone();
+
+        // Sharpen fine detail in the original image before stretching it across the map.
+        for (int y = 1; y < height - 1; y++) {
+            for (int x = 1; x < width - 1; x++) {
+                int i = y * width + x;
+                int pixel = pixels[i];
+                int detail = (4 * luminance(pixel) - luminance(pixels[i - 1]) - luminance(pixels[i + 1])
+                        - luminance(pixels[i - width]) - luminance(pixels[i + width])) / 8;
+                if (Math.abs(detail) < 2) {
+                    continue;
+                }
+                int adjustment = Math.clamp(detail, -12, 12);
+                int red = Math.clamp(((pixel >>> 16) & 255) + adjustment, 0, 255);
+                int green = Math.clamp(((pixel >>> 8) & 255) + adjustment, 0, 255);
+                int blue = Math.clamp((pixel & 255) + adjustment, 0, 255);
+                sharpened[i] = (pixel & 0xff000000) | (red << 16) | (green << 8) | blue;
+            }
+        }
+
+        WritableImage result = new WritableImage(width, height);
+        result.getPixelWriter().setPixels(0, 0, width, height, format, sharpened, 0, width);
+        return result;
+    }
+
+    private int luminance(int pixel) {
+        return (54 * ((pixel >>> 16) & 255) + 183 * ((pixel >>> 8) & 255) + 19 * (pixel & 255)) >>> 8;
+    }
+
 
     private void setupCamera(Group root) {
         // Create and position camera
@@ -100,66 +158,35 @@ public class PerspectiveViewer {
         //camera.rotate(5);
         camera.setFieldOfView(62); // Standard 40-62
         camera.setNearClip(1); // If this is zero the z-order doesnt work...
-        camera.setFarClip(3000);
+        camera.setFarClip(9000);
 
         cameraGroup.setPos(1200, 2500, -100);
         cameraGroup.lookAt(scenario.drone);
     }
 
     private void setupLights(Group root) {
-        //PointLight light = new PointLight();
-        PointLight light = new PointLight();
-        light.setColor(Color.WHITE);
-        light.setTranslateX(800);
-        light.setTranslateY(2000);
-        light.setTranslateZ(-2000);
-        root.getChildren().add(light);
+        AmbientLight fill = new AmbientLight(Color.color(0.44, 0.47, 0.52));
+        DirectionalLight sun = new DirectionalLight(Color.color(0.80, 0.76, 0.69));
+        sun.setDirection(new Point3D(0.5, -0.7, 1));
+        fill.getScope().add(buildings);
+        sun.getScope().add(buildings);
+
+        PointLight sceneLight = new PointLight(Color.WHITE);
+        sceneLight.setTranslateX(800);
+        sceneLight.setTranslateY(2000);
+        sceneLight.setTranslateZ(-2000);
+        sceneLight.getExclusionScope().add(buildings);
+        root.getChildren().addAll(sceneLight, fill, sun);
     }
     private void create3DObjects(Group root) {
-        //drone3D = new Drone3D(scenario.drone, root);
+        backgroundBox.setMaterial(backgroundMaterial);
+        root.getChildren().addAll(backgroundBox, buildings, cylinders);
+        refreshScenario();
         createDrones(root);
-        //droneSphere = new DroneSphere(scenario.drone);
-        //root.getChildren().add(droneSphere);
-
-        for (Obstacle obs : scenario.obstacles) {
-            /*SimBox box = new SimBox(50, 50, obs.getElevation());
-            box.theObs = obs;
-            shapes.add(box);
-            //box.setMaterial(new PhongMaterial(Color.RED));
-            box.setDrawMode(DrawMode.FILL);
-
-            box.setTranslateX(obs.getX());
-            box.setTranslateY(obs.getY()); // Since the coordinates are in the middle ...
-            box.setTranslateZ(-1 * (obs.getElevation() / 2));
-            PhongMaterial m = new PhongMaterial();
-            m.setDiffuseColor(new Color(Math.random(),Math.random(),Math.random(),1));
-            m.setSpecularColor(Color.BLACK);
-            box.setMaterial(m);
-            root.getChildren().add(box);*/
-
-
-            // Maybe for ones that are exact rectangles we just use SimBox instead of
-            // building our own meshes.
-            switch (obs.getShapeType()) {
-                case CIRCLE:
-                    // Cylinder...
-                    SimCylinder cyl = new SimCylinder(obs);
-                    obstacleCylinders.add(cyl);
-                    root.getChildren().add(cyl);
-                    break;
-                default:
-                    ObstacleMesh bm = new ObstacleMesh(obs);
-                    obstacleMeshes.add(bm);
-                    root.getChildren().add(bm);
-                    break;
-            }
-
-        }
-
         setupLights(root);
-        setupBackground(root);
         setupCamera(root);
     }
+
 
     private void create() {
         //System.out.println("3D supported? " +  
@@ -175,6 +202,7 @@ public class PerspectiveViewer {
         subScene.setFill(Color.ALICEBLUE);
         subScene.setCamera(camera);
         subScene.setPickOnBounds(true);
+        survivorView = new SurvivorView(scenario, root, subScene);
 
         subScene.setOnMousePressed((MouseEvent event) -> {
             mouseX = event.getSceneX();
@@ -246,6 +274,14 @@ public class PerspectiveViewer {
         gui3D.setViewer(this);
     }
 
+    public javafx.scene.canvas.Canvas getSurvivorOverlay() {
+        return survivorView.overlay();
+    }
+
+    void revealSurvivors(boolean reveal) {
+        survivorView.revealAll(reveal);
+    }
+
     public boolean processDroneLight(boolean turnOn) {
  	    return drone3D.setLightOn(turnOn);
     }
@@ -312,6 +348,7 @@ public class PerspectiveViewer {
 
     public void reset() {
         createDrones(rootGroup);
+        survivorView.reset();
         //resetDrone();
     }
 
@@ -338,6 +375,7 @@ public class PerspectiveViewer {
         //drone3D.update();
  
         cameraGroup.track(scenario.drone);
+        survivorView.update();
         //cameraGroup.setPos(scenario.drone.getX() -100, scenario.drone.getY() - 100, -40 - scenario.drone.getElevation());
         //cameraGroup.lookAt(scenario.drone);
         // Starting location of the drone

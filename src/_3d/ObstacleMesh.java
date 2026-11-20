@@ -1,52 +1,40 @@
 package dronelab._3d;
 
 import java.util.List;
-import javafx.geometry.Point2D;
-import java.util.ArrayList;
+import javafx.scene.Group;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
-import javafx.scene.shape.Shape3D;
-import javafx.scene.shape.Cylinder;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.CullFace;
-import javafx.scene.image.Image;
 import dronelab.utils.*;
 import dronelab.collidable.*;
 
-public class ObstacleMesh extends MeshView {
+public class ObstacleMesh extends Group {
+    private static final PhongMaterial LOW_WALL = BuildingFacade.material(Color.web("#d8cbb5"), false);
+    private static final PhongMaterial LOW_ROOF = new PhongMaterial(Color.web("#53697a"));
+    private static final PhongMaterial TALL_WALL = BuildingFacade.material(Color.web("#a9afb4"), true);
+    private static final PhongMaterial TALL_ROOF = new PhongMaterial(Color.web("#454950"));
+
     public Obstacle bldg;
 
     public ObstacleMesh(Obstacle obs) {
-
         bldg = obs;
-        setMesh(createMesh());
-        //super(new Shape3DRectangle(200, 200));
+        boolean tall = obs.getElevation() > 25;
+        TriangleMesh roof = new TriangleMesh();
+        TriangleMesh walls = new TriangleMesh();
+        createMeshes(roof, walls, tall);
 
-        //setRotationAxis(Rotate.Y_AXIS);
-        //setTranslateX(250);
-        //setTranslateY(250);
-        setCullFace(CullFace.NONE);
-
-        setDrawMode(DrawMode.FILL);
-        PhongMaterial mat = new PhongMaterial();
-        //m.setDiffuseColor(new Color(Math.random(),Math.random(),Math.random(), 1));
-        //m.setSpecularColor(new Color(Math.random(),Math.random(),Math.random(), 1));
-        if (obs.getElevation() > 25) {
-            //mat.setDiffuseMap(GraphicsHelper.bldgTexture1); //6000, 0, true, true);
-        } else {
-            //mat.setDiffuseMap(GraphicsHelper.houseTexture1); //6000, 0, true, true);
-        }
-            //new Image(getResource("res/Duke3DprogressionSmall.jpg").toExternalForm())); 
-        mat.setDiffuseColor(Color.rgb(100, 100, 0));
-        mat.setSpecularColor(Color.rgb(150, 150, 0));
-        mat.setSpecularPower(100);
-        //mat.setDiffuseColor(Color.rgb(150, 50, 50, 1));
-        //mat.setSpecularColor(Color.PINK);
-        setMaterial(mat);
-        //setMaterial(new PhongMaterial(Color.RED));
+        getChildren().addAll(surface(roof, tall ? TALL_ROOF : LOW_ROOF),
+                surface(walls, tall ? TALL_WALL : LOW_WALL));
         update();
+    }
+
+    private MeshView surface(TriangleMesh mesh, PhongMaterial material) {
+        MeshView view = new MeshView(mesh);
+        view.setCullFace(CullFace.NONE);
+        view.setMaterial(material);
+        return view;
     }
 
     // Take an array with only the face corners, not
@@ -240,15 +228,7 @@ public class ObstacleMesh extends MeshView {
         X, Y, Z
     }
 
-    private TriangleMesh createMesh() {
-        TriangleMesh mesh = new TriangleMesh();
-
-        switch (bldg.getShapeType()) {
-            case CIRCLE:
-                // Cylinder...
-                return null;
-        }
-
+    private void createMeshes(TriangleMesh roof, TriangleMesh walls, boolean tall) {
         // Ok, let's do this...
         CanvasPolygon poly = bldg.getCanvasPolygon();
         List<Double> polyPoints = poly.getPoints();
@@ -289,7 +269,6 @@ public class ObstacleMesh extends MeshView {
             0, 1, // idx t2
             0, 0.5f  // idx t3
         };
-        mesh.getTexCoords().addAll(texCoords);
 
         // We will need to normalize them by subtracting this coordinate so that
         // the origin 0 0 centers on the leftmost x,y which is also the getX()
@@ -334,10 +313,9 @@ public class ObstacleMesh extends MeshView {
         // But do a corners only which is half the number of points as the faces.
         // That way we can just auto-populate with texture coords which makes things
         // easier to understand.
-        int[] faces = new int[getTotalTriangles() * 6];
+        int[] faces = new int[getNumTopTriangles() * 12];
         populatePolygonMeshTop(faces);
         populatePolygonMeshBottom(faces);
-        populatePolygonMeshSides(faces);
 
         /*for (int i = 0; i < faces.length; i++) {
             // If we are putting in a texture coordinate just put zero.  We
@@ -442,11 +420,27 @@ public class ObstacleMesh extends MeshView {
         };*/
 
 
-        mesh.getPoints().setAll(points);
-        //mesh.getTexCoords().setAll(texCoords);
-        mesh.getFaces().setAll(faces);
-        return mesh;
+        // The roof triangles come first, followed by the bottom triangles.
+        int roofTriangles = getNumTopTriangles();
+        setMeshData(roof, points, texCoords, faces, 0, roofTriangles);
+        for (int i = roofTriangles * walls.getFaceElementSize() + 1; i < faces.length; i += 2) {
+            faces[i] = 0;
+        }
+        setMeshData(walls, points, new float[] {0, 0}, faces, roofTriangles, roofTriangles);
+        BuildingFacade.addWalls(walls, points, getNumSides(), bldg.getElevation(), tall);
+        walls.getFaceSmoothingGroups().setAll(new int[walls.getFaces().size() / walls.getFaceElementSize()]);
     }
+
+    private void setMeshData(TriangleMesh mesh, float[] points, float[] texCoords,
+            int[] faces, int firstTriangle, int triangleCount) {
+        mesh.getPoints().setAll(points);
+        mesh.getTexCoords().setAll(texCoords);
+        int faceSize = mesh.getFaceElementSize();
+        mesh.getFaces().setAll(faces, firstTriangle * faceSize, triangleCount * faceSize);
+        // Zero assigns a hard edge between neighboring triangles.
+        mesh.getFaceSmoothingGroups().setAll(new int[triangleCount]);
+    }
+
 
     public void update() {
         setTranslateX(bldg.getX());

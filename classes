@@ -16,6 +16,7 @@ src/SimDataSet.java
 src/SimParams.java
 src/SimRunner.java
 src/_3d/CameraGroup.java
+src/_3d/BuildingFacade.java
 src/_3d/Drone3D.java 
 src/_3d/DroneSphere.java 
 src/_3d/Gui3D.java
@@ -23,6 +24,7 @@ src/_3d/ObstacleMesh.java
 src/_3d/PerspectiveViewer.java 
 src/_3d/SimBox.java 
 src/_3d/SimCylinder.java 
+src/_3d/SurvivorView.java
 src/collidable/BehaviorLoader.java
 src/collidable/Collidable.java
 src/collidable/Drone.java 

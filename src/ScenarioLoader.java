@@ -58,6 +58,10 @@ public class ScenarioLoader extends ScenarioCreator {
 
     public Image backGround = null;
 
+    public String getBackgroundImageName() {
+        return strMainBackgroundImage;
+    }
+
     public void loadNewBackground(String fileName) {
         loadNewBackground(fileName, currentWidth);
     }
@@ -247,7 +251,7 @@ public class ScenarioLoader extends ScenarioCreator {
     }
 
     public boolean loadFile(String scenarioName) {
-        if (scenarioName == null || scenarioName == "") {
+        if (scenarioName == null || scenarioName.isBlank()) {
             return false;
         }
 
@@ -255,7 +259,7 @@ public class ScenarioLoader extends ScenarioCreator {
 
         String jsonData = Utils.readFile(fileName);
 
-        if (jsonData == null) {
+        if (jsonData == null || jsonData.isBlank()) {
             return false;
         }
 
@@ -357,7 +361,9 @@ public class ScenarioLoader extends ScenarioCreator {
                         if (parser.getString().equals("el")) {
                             // This sucks, I cant just get a key value pair as a json object?
                             // I have to like call a second parse?  Dumb as brix
-                            vict.setElevation(Utils.getNextJsonValueAsInt(parser));
+                            int elevation = Utils.getNextJsonValueAsInt(parser);
+                            vict.setElevation(elevation);
+                            vict.setStartPos(vict.getStartingX(), vict.getStartingY(), elevation);
                             //Utils.log("Elevation is " + obs.getElevation());
                         } else if (parser.getString().equals("loc")) {
                             int x = Utils.getNextJsonValueAsInt(parser);

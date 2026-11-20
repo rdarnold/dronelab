@@ -206,7 +206,8 @@ public class ScenarioCreator {
 
     public Person addVictim(double x, double y, int elevation) {
         Person vict = new Person();
-        vict.setPos(x, y);
+        vict.setStartPos(x, y, elevation);
+        vict.resetPos();
         return addVictim(vict);
     }
 
@@ -214,7 +215,8 @@ public class ScenarioCreator {
     public Person addVictim(double x, double y, int elevation, boolean ambulatory) {
         if (ambulatory) {
             Person vict = new Ambulatory();
-            vict.setPos(x, y);
+            vict.setStartPos(x, y, elevation);
+            vict.resetPos();
             return addVictim(vict);
         }
         else {

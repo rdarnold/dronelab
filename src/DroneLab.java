@@ -1,5 +1,7 @@
 package dronelab;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Date;
 import java.util.ArrayList;
 import java.text.SimpleDateFormat;
@@ -35,6 +37,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 //import javafx.scene.shape.ArcType;
 import javafx.scene.control.Button;
+import javafx.scene.control.Alert;
 //import javafx.scene.control.Hyperlink;
 //import javafx.scene.control.TextField;
 //import javafx.scene.control.TextArea;
@@ -127,6 +130,22 @@ public class DroneLab extends Application {
     //acumulated difference between current time and last time
     private double delta = 0;
     private AnimationTimer mainLoop;
+    private final AnimationTimer panRedraw = new AnimationTimer() {
+        private long lastRedraw;
+
+        @Override
+        public void handle(long now) {
+            if (running || !draw || scenarioLoadInProgress) {
+                stop();
+                return;
+            }
+            if (now - lastRedraw >= 33_000_000) {
+                stop();
+                lastRedraw = now;
+                redrawCanvas();
+            }
+        }
+    };
 
     //private int skipCount = 0;
     //int desiredSkipCount = 0; //1;
@@ -268,7 +287,7 @@ public class DroneLab extends Application {
         // Actually lets start in a paused mode.
         //handlePauseButton();
         initMainLoop();
-        reset();
+        reset(true);
 
         // Do this last, because it auto-starts the sim in some circumstances
         runner = new SimRunner(this);
@@ -376,19 +395,11 @@ public class DroneLab extends Application {
     }
 
     public void updateCanvasVisibleArea() {
-        // Update our local canvas coordinates, really we only need to do this when the viewport changes.
-        Point2D coordinates = canvas.sceneToLocal(centerStack.getLayoutX(), centerStack.getLayoutY());
-        canvasVisibleX = coordinates.getX();
-        canvasVisibleY = coordinates.getY();
-
-        // Width and height are close enough.  I really want the layoutwidth and layout height but those arent
-        // gettable for some reason.  I'd have to do getLayoutBounds and I dont really want to do that.
-        coordinates = canvas.sceneToLocal(
-            centerStack.getLayoutX() + centerStack.getWidth(), 
-            centerStack.getLayoutY() + centerStack.getHeight());
-
-        canvasVisibleWid = coordinates.getX() - canvasVisibleX;
-        canvasVisibleHgt = coordinates.getY() - canvasVisibleY;
+        var visible = spCanvasContainer.getVisibleContentBounds();
+        canvasVisibleX = Math.clamp(visible.getMinX(), 0, canvas.getWidth());
+        canvasVisibleY = Math.clamp(visible.getMinY(), 0, canvas.getHeight());
+        canvasVisibleWid = Math.clamp(visible.getMaxX(), canvasVisibleX, canvas.getWidth()) - canvasVisibleX;
+        canvasVisibleHgt = Math.clamp(visible.getMaxY(), canvasVisibleY, canvas.getHeight()) - canvasVisibleY;
 
         canvasVisibleRect.setX(canvasVisibleX);
         canvasVisibleRect.setY(canvasVisibleY);
@@ -432,13 +443,22 @@ public class DroneLab extends Application {
     ///////////////////////
 
     public void reset() {
+        reset(false);
+    }
+
+    private void reset(boolean fitMap) {
         //scenario.reset();
         survivorFoundTimes = "";
         scenario.deployAll();
         vBoxCurrentData.clear();
         vBoxCurrentData.update();
-        spCanvasContainer.setHvalue(scenario.getStartingHvalue()); // 0 is top, 1.0 is bottom 
-        spCanvasContainer.setVvalue(scenario.getStartingVvalue()); // 0 is left, 1.0 is right
+        if (fitMap) {
+            spCanvasContainer.fitContent();
+            scenario.zoomFactor = spCanvasContainer.getScale();
+        } else {
+            spCanvasContainer.setHvalue(scenario.getStartingHvalue());
+            spCanvasContainer.setVvalue(scenario.getStartingVvalue());
+        }
         //spCanvasContainer.scale(scenario.zoomLevel, scenario.startingX, scenario.startingY);
         updateCanvasVisibleArea();
         updateDroneParameterFields();
@@ -506,25 +526,65 @@ public class DroneLab extends Application {
         }
     }             
 
-    String newScenario = null;
-    public void selectScenario(String newScen) {
-        newScenario = newScen;
+    private boolean scenarioLoadInProgress;
+    private String pendingScenario;
 
-        // Attempt to load the new scenario
+    public void selectScenario(String newScenario) {
+        if (newScenario == null || newScenario.isBlank()) {
+            return;
+        }
+        if (scenarioLoadInProgress) {
+            pendingScenario = newScenario;
+            return;
+        }
+        Path file = Path.of(Constants.SCENARIO_SAVE_PATH, newScenario + ".json");
+        if (Files.notExists(file)) {
+            vBoxConfiguration.completeScenarioSelection(newScenario, false);
+            showScenarioLoadError(file);
+            return;
+        }
+
+        scenarioLoadInProgress = true;
         stop();
         drawLoading();
         redrawCanvas();
 
-        Task task = new Task<Void>() {
-            @Override public Void call() {
-                scenario.load(newScenario);
-                return null;
+        Task<Boolean> task = new Task<>() {
+            @Override protected Boolean call() {
+                return scenario.load(newScenario);
             }
         };
+        task.setOnSucceeded(event -> finishScenarioLoad(newScenario, file, task.getValue()));
+        task.setOnFailed(event -> {
+            Utils.err("Could not load scenario " + newScenario + ": " + task.getException());
+            finishScenarioLoad(newScenario, file, false);
+        });
+        new Thread(task, "scenario-loader").start();
+    }
 
-        //ProgressBar bar = new ProgressBar();
-        //bar.progressProperty().bind(task.progressProperty());
-        new Thread(task).start();
+    private void finishScenarioLoad(String name, Path file, boolean loaded) {
+        scenarioLoadInProgress = false;
+        vBoxConfiguration.completeScenarioSelection(name, loaded);
+        if (!loaded) {
+            hideLoading();
+            showScenarioLoadError(file);
+        }
+        if (pendingScenario != null) {
+            String next = pendingScenario;
+            pendingScenario = null;
+            selectScenario(next);
+        }
+    }
+
+    private void showScenarioLoadError(Path file) {
+        boolean missing = Files.notExists(file);
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.initOwner(stage);
+        alert.setTitle("Scenario load error");
+        alert.setHeaderText(missing ? "Scenario file not found" : "Could not load scenario");
+        alert.setContentText(missing ? "DroneLab could not find " + file + "."
+                : "DroneLab could not read a scenario from " + file + ".");
+        alert.show();
     }
 
     public void setLanguage(Constants.Language newLang) { 
@@ -863,7 +923,7 @@ public class DroneLab extends Application {
         border.setCenter(centerStack);
 
         StackPane bottomStack = new StackPane();
-        bottomStack.getChildren().addAll(perspectiveViewer.getSubScene(), gui3D);
+        bottomStack.getChildren().addAll(perspectiveViewer.getSubScene(), perspectiveViewer.getSurvivorOverlay(), gui3D);
         border.setBottom(bottomStack);
     }
 
@@ -911,7 +971,13 @@ public class DroneLab extends Application {
         spCanvasContainer = new ScalableScrollPane(canvas);
         //group.getChildren().add(canvas); 
         //spCanvasContainer.setContent(group);
-        spCanvasContainer.setPannable(true);
+        spCanvasContainer.setOnPan(() -> {
+            scenario.zoomFactor = spCanvasContainer.getScale();
+            if (!running && draw && !scenarioLoadInProgress) {
+                // The viewport moves with every event. Coalesce map paints across those events.
+                panRedraw.start();
+            }
+        });
 
         /*canvas.setFocusTraversable(true);
         canvas.setOnKeyReleased(new EventHandler<KeyEvent>() {
@@ -937,9 +1003,10 @@ public class DroneLab extends Application {
                                 zoomFactor = 1 / zoomFactor;
                             }
 
-                            spCanvasContainer.scale(zoomFactor, event.getSceneX(), event.getSceneY());
-                            scenario.zoomFactor = spCanvasContainer.getScale();
-                            signalRedraw();
+                            spCanvasContainer.scale(zoomFactor, event.getSceneX(), event.getSceneY(), () -> {
+                                scenario.zoomFactor = spCanvasContainer.getScale();
+                                signalRedraw();
+                            });
                         }
  	                    event.consume();
 
@@ -1243,9 +1310,11 @@ public class DroneLab extends Application {
         // Remake the canvas.
         canvas.setWidth(scenario.backGround.getWidth());
         canvas.setHeight(scenario.backGround.getHeight());
+        perspectiveViewer.refreshScenario();
 
         // And reset/redraw everything.
- 	    reset();
+        reset(true);
+        updateAllCurrentDroneInfo();
 
         // Call update once just so that everything updates and redraws properly.
         updateOneFrame();

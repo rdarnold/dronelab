@@ -1,46 +1,27 @@
 package dronelab.gui;
 
+import java.util.function.DoubleConsumer;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.util.Duration;
-import javafx.scene.Node;
-import javafx.geometry.Bounds;
 
 public class AnimatedZoomOperator {
-    private Timeline timeline;
+    private final Timeline timeline = new Timeline(60);
 
-    public AnimatedZoomOperator() {
-        this.timeline = new Timeline(60);
+    public void zoom(double from, double to, DoubleConsumer applyScale, Runnable finished) {
+        stop();
+        DoubleProperty scale = new SimpleDoubleProperty(from);
+        scale.addListener((property, previous, current) -> applyScale.accept(current.doubleValue()));
+        timeline.getKeyFrames().setAll(new KeyFrame(Duration.millis(50), new KeyValue(scale, to)));
+        timeline.setOnFinished(event -> finished.run());
+        timeline.playFromStart();
     }
 
-    private double scale = 1.0;
-    public void zoom(Node node, double factor, double x, double y) {
-        // determine scale
-        double oldScale = node.getScaleX();
-        scale = oldScale * factor;
-        double f = (scale / oldScale) - 1;
-
-        // determine offset that we will have to move the node
-        Bounds bounds = node.localToScene(node.getBoundsInLocal());
-        double dx = (x - (bounds.getWidth() / 2 + bounds.getMinX()));
-        double dy = (y - (bounds.getHeight() / 2 + bounds.getMinY()));
-
-        // timeline that scales and moves the node
-        timeline.getKeyFrames().clear();
-
-        timeline.getKeyFrames().addAll(
-            new KeyFrame(Duration.millis(50), new KeyValue(node.translateXProperty(), node.getTranslateX() - f * dx)),
-            new KeyFrame(Duration.millis(50), new KeyValue(node.translateYProperty(), node.getTranslateY() - f * dy)),
-            new KeyFrame(Duration.millis(50), new KeyValue(node.scaleXProperty(), scale)),
-            new KeyFrame(Duration.millis(50), new KeyValue(node.scaleYProperty(), scale))
-
-            // can call instead, node.setTranslateX and node.setScaleX, etc.
-        );
-        timeline.play();
-    }
-
-    public double getScale() {
-        return scale;
+    public void stop() {
+        timeline.stop();
     }
 }

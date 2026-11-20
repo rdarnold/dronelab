@@ -37,6 +37,8 @@ public class VBoxConfiguration extends VBoxCustom {
     Label lblWifi;
     ChoiceBox<String> languageCb;
     ChoiceBox<String> scenarioCb;
+    private String loadedScenarioChoice;
+    private boolean restoringScenarioChoice;
 
     CheckBox cbStructures;
     CheckBox cbCollisions;
@@ -155,14 +157,30 @@ public class VBoxConfiguration extends VBoxCustom {
             "Arahama", "Kobe")
         );
         scenarioCb.getSelectionModel().selectFirst();
+        loadedScenarioChoice = scenarioCb.getValue();
         scenarioCb.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-	            sim.selectScenario(newValue);
-                sim.signalRedraw();
+                if (!restoringScenarioChoice && newValue != null) {
+                    sim.selectScenario(newValue);
+                    sim.signalRedraw();
+                }
             }
 	    });
 	    this.getChildren().add(GuiUtils.addLabelChoiceHBox(label, scenarioCb));
+    }
+
+    public void completeScenarioSelection(String name, boolean loaded) {
+        if (loaded && scenarioCb.getItems().contains(name)) {
+            loadedScenarioChoice = name;
+        } else if (!loaded && name.equals(scenarioCb.getValue())) {
+            restoringScenarioChoice = true;
+            try {
+                scenarioCb.getSelectionModel().select(loadedScenarioChoice);
+            } finally {
+                restoringScenarioChoice = false;
+            }
+        }
     }
 
     @Override

@@ -66,6 +66,11 @@ public class Gui3D extends BorderPane {
         cbLight.setPrefHeight(25);
         box.getChildren().add(cbLight);
 
+        CheckBox reveal = new CheckBox("Reveal survivors");
+        reveal.setTooltip(new javafx.scene.control.Tooltip("Scenario review: show undetected survivors in the 3D view"));
+        reveal.selectedProperty().addListener((property, previous, selected) -> viewer.revealSurvivors(selected));
+        box.getChildren().add(reveal);
+
         setupCheckBoxListeners();
 
         setLeft(box);
